@@ -9,12 +9,33 @@
   "source_citation": "arXiv:2602.00575",
   "ground_truth_schema": {
     "type": "object",
-    "required": ["command", "expected_output"],
+    "required": [
+      "command",
+      "expected_output"
+    ],
     "properties": {
-      "command": { "type": "string", "description": "Shell command to execute (must be in sandbox allowlist)" },
-      "expected_output": { "type": "string", "description": "Expected stdout (stripped) from the command" },
-      "cwd": { "type": ["string", "null"], "description": "Working directory for command execution" },
-      "timeout": { "type": ["number", "null"], "description": "Timeout in seconds (default 15)" }
+      "command": {
+        "type": "string",
+        "description": "Shell command to execute (must be in sandbox allowlist)"
+      },
+      "expected_output": {
+        "type": "string",
+        "description": "Expected stdout (stripped) from the command"
+      },
+      "cwd": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Working directory for command execution"
+      },
+      "timeout": {
+        "type": [
+          "number",
+          "null"
+        ],
+        "description": "Timeout in seconds (default 15)"
+      }
     }
   },
   "scorecard": {
@@ -28,11 +49,16 @@
     "intended_use": "eval-and-train",
     "gating_required": false,
     "recommended_gates": [],
-    "permissions_required": ["subprocess:readonly"],
+    "permissions_required": [
+      "subprocess:readonly"
+    ],
     "source_benchmark": "VAGEN",
     "source_citation": "arXiv:2602.00575"
   },
-  "permissions_required": ["subprocess:readonly"],
+  "permissions_required": [
+    "subprocess:readonly"
+  ],
   "contributor": "vr.dev",
-  "created_at": "2026-03-04"
+  "created_at": "2026-03-04",
+  "latency_p50_ms": 12000
 }

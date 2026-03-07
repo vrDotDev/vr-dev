@@ -74,6 +74,10 @@
       "type": "string",
       "description": "Known limitations or caveats"
     },
+    "latency_p50_ms": {
+      "type": "integer",
+      "description": "Expected p50 latency in milliseconds (e.g., 10 for HARD, 2000 for SOFT, 15000 for AGENTIC)"
+    },
     "contributor": {
       "type": "string",
       "description": "Who contributed this verifier (e.g., vr-dev/core)"

@@ -120,11 +120,11 @@ def _name_to_domain(name: str) -> str:
 
 @click.command()
 @click.option(
-    "--name", "-n", required=True,
+    "--name", "-n", default=None,
     help="Verifier name (e.g. database.row.updated)",
 )
 @click.option(
-    "--tier", "-t", required=True,
+    "--tier", "-t", default=None,
     type=click.Choice(["hard", "soft", "agentic"], case_sensitive=False),
     help="Verifier tier",
 )
@@ -136,12 +136,51 @@ def _name_to_domain(name: str) -> str:
     "--output", "-o", default=None, type=click.Path(),
     help="Output directory (default: registry/verifiers/<name>/)",
 )
-def generate(name: str, tier: str, description: str, output: str | None) -> None:
-    """Scaffold a new verifier from a template.
+@click.option(
+    "--task", default=None,
+    help="Natural language task description for AI-powered generation (requires OPENAI_API_KEY)",
+)
+@click.option(
+    "--api", "api_spec", default=None, type=click.Path(exists=True),
+    help="OpenAPI/Swagger spec file for grounding AI generation",
+)
+@click.option(
+    "--schema", "sql_schema", default=None, type=click.Path(exists=True),
+    help="SQL schema file for grounding AI generation",
+)
+@click.option(
+    "--model", default="gpt-4o",
+    help="OpenAI model for AI generation (default: gpt-4o)",
+)
+def generate(
+    name: str | None,
+    tier: str | None,
+    description: str,
+    output: str | None,
+    task: str | None,
+    api_spec: str | None,
+    sql_schema: str | None,
+    model: str,
+) -> None:
+    """Scaffold a new verifier from a template, or generate one with AI.
 
-    Creates the directory structure, VERIFIER.json, verify.py template,
-    and empty fixture files.
+    Template mode (default):
+        vr generate --name database.row.updated --tier hard
+
+    AI-powered mode (requires OPENAI_API_KEY):
+        vr generate --task "Cancel order and confirm refund" --api swagger.json
+        vr generate --task "Verify database row updated" --schema schema.sql
+        vr generate --task "Check if file exists at path" --tier hard
     """
+    if task:
+        _generate_ai(task, tier, output, api_spec, sql_schema, model)
+        return
+
+    # Template mode — requires --name and --tier
+    if not name:
+        raise click.UsageError("--name is required in template mode. Use --task for AI generation.")
+    if not tier:
+        raise click.UsageError("--tier is required in template mode. Use --task for AI generation.")
     verifier_id = f"vr/{name}"
     class_name = _name_to_class(name)
     domain = _name_to_domain(name)
@@ -203,3 +242,76 @@ def generate(name: str, tier: str, description: str, output: str | None) -> None
     click.echo(f"    2. Add to registry.py: \"{verifier_id}\": \"module:{class_name}\"")
     click.echo(f"    3. Add fixture data to positive/negative/adversarial.json")
     click.echo(f"    4. Run: vr registry validate {out_dir}")
+
+
+def _generate_ai(
+    task: str,
+    tier: str | None,
+    output: str | None,
+    api_spec: str | None,
+    sql_schema: str | None,
+    model: str,
+) -> None:
+    """AI-powered verifier generation using LLM synthesis."""
+    from .synth import synthesize_verifier
+
+    click.echo(f"🤖 AI Verifier Synthesis")
+    click.echo(f"  Task: {task}")
+
+    spec_path = api_spec or sql_schema
+    spec_type = None
+    if api_spec:
+        spec_type = "OpenAPI"
+        click.echo(f"  Spec: {api_spec} (OpenAPI)")
+    elif sql_schema:
+        spec_type = "SQL Schema"
+        click.echo(f"  Spec: {sql_schema} (SQL)")
+
+    if tier:
+        click.echo(f"  Tier: {tier.upper()}")
+
+    click.echo()
+
+    try:
+        result = synthesize_verifier(
+            task=task,
+            tier=tier.upper() if tier else None,
+            spec_path=spec_path,
+            spec_type=spec_type,
+            model=model,
+            verbose=True,
+        )
+    except ImportError as e:
+        raise click.ClickException(str(e))
+
+    # Determine output path
+    if output:
+        out_dir = Path(output)
+    else:
+        out_dir = Path("registry") / "verifiers" / result.name
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write all artifacts
+    (out_dir / "verify.py").write_text(result.verify_py)
+    (out_dir / "VERIFIER.json").write_text(json.dumps(result.verifier_json, indent=2) + "\n")
+    (out_dir / "positive.json").write_text(json.dumps(result.positive_fixtures, indent=2) + "\n")
+    (out_dir / "negative.json").write_text(json.dumps(result.negative_fixtures, indent=2) + "\n")
+    (out_dir / "adversarial.json").write_text(json.dumps(result.adversarial_fixtures, indent=2) + "\n")
+
+    click.echo()
+    click.echo(f"✓ Generated verifier: vr/{result.name}")
+    click.echo(f"  Tier: {result.tier}")
+    click.echo(f"  Description: {result.description}")
+    click.echo(f"  Directory: {out_dir}")
+    click.echo(f"  Files:")
+    click.echo(f"    verify.py         — AI-generated implementation")
+    click.echo(f"    VERIFIER.json     — spec with ground_truth_schema")
+    click.echo(f"    positive.json     — {len(result.positive_fixtures.get('fixtures', []))} fixtures")
+    click.echo(f"    negative.json     — {len(result.negative_fixtures.get('fixtures', []))} fixtures")
+    click.echo(f"    adversarial.json  — {len(result.adversarial_fixtures.get('fixtures', []))} fixtures")
+
+    if result.warnings:
+        click.echo()
+        click.echo("  ⚠ Warnings (review before use):")
+        for w in result.warnings:
+            click.echo(f"    - {w}")

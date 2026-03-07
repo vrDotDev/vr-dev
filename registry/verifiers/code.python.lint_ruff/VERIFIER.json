@@ -33,5 +33,6 @@
   "permissions_required": [
     "fs:write_tmp",
     "exec:ruff"
-  ]
+  ],
+  "latency_p50_ms": 35
 }

@@ -52,5 +52,6 @@
   "source_citation": "",
   "permissions_required": [
     "db:read"
-  ]
+  ],
+  "latency_p50_ms": 30
 }

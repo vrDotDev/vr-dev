@@ -49,5 +49,6 @@
   "source_citation": "arXiv:2307.13854",
   "permissions_required": [
     "net:http"
-  ]
+  ],
+  "latency_p50_ms": 25
 }

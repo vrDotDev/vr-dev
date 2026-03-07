@@ -9,11 +9,22 @@
   "source_citation": "arXiv:2307.13854",
   "ground_truth_schema": {
     "type": "object",
-    "required": ["url", "reference_screenshot"],
+    "required": [
+      "url",
+      "reference_screenshot"
+    ],
     "properties": {
-      "url": { "type": "string" },
-      "reference_screenshot": { "type": "string", "description": "Base64-encoded PNG" },
-      "min_ssim": { "type": "number", "default": 0.95 }
+      "url": {
+        "type": "string"
+      },
+      "reference_screenshot": {
+        "type": "string",
+        "description": "Base64-encoded PNG"
+      },
+      "min_ssim": {
+        "type": "number",
+        "default": 0.95
+      }
     }
   },
   "scorecard": {
@@ -27,11 +38,16 @@
     "intended_use": "eval-and-train",
     "gating_required": false,
     "recommended_gates": [],
-    "permissions_required": ["net:browser"],
+    "permissions_required": [
+      "net:browser"
+    ],
     "source_benchmark": "WebArena",
     "source_citation": "arXiv:2307.13854"
   },
-  "permissions_required": ["net:browser"],
+  "permissions_required": [
+    "net:browser"
+  ],
   "contributor": "vr.dev",
-  "created_at": "2026-03-04"
+  "created_at": "2026-03-04",
+  "latency_p50_ms": 20000
 }

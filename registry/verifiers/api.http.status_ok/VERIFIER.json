@@ -47,5 +47,6 @@
   "source_citation": "",
   "permissions_required": [
     "net:http"
-  ]
+  ],
+  "latency_p50_ms": 40
 }

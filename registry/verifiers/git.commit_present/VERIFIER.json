@@ -45,5 +45,6 @@
   "source_citation": "arXiv:2310.06770",
   "permissions_required": [
     "exec:git"
-  ]
+  ],
+  "latency_p50_ms": 35
 }

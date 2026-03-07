@@ -37,17 +37,24 @@ def create_mcp_server() -> Any:
 
     mcp = FastMCP(
         "vr.dev",
-        version="0.3.0",
-        description="Verifiable Rewards for Real-World AI Agent Tasks",
+        version="1.0.0",
+        description="Verify real-world AI agent outcomes against ground truth. "
+        "30+ verifiers across 14 domains: retail, email, code, database, "
+        "filesystem, web, git, and more. Compose verification pipelines "
+        "with hard-gating to prevent reward hacking.",
     )
 
     # ── Tool: list_verifiers ─────────────────────────────────────────
 
     @mcp.tool()
     def list_verifiers() -> str:
-        """List all registered verifier IDs.
+        """List all registered verifier IDs in the vr.dev registry.
 
-        Returns a JSON array of verifier ID strings.
+        Returns a JSON array of verifier ID strings such as:
+        ["vr/filesystem.file_created", "vr/code.python.lint_ruff", ...]
+
+        Use this to discover available verifiers, then call run_verifier
+        or compose_chain with the IDs you need.
         """
         from vrdev.core.registry import list_verifiers as _list
 
@@ -62,16 +69,24 @@ def create_mcp_server() -> Any:
         ground_truth: dict[str, Any] | None = None,
         context: dict[str, Any] | None = None,
     ) -> str:
-        """Run a single verifier against agent completions.
+        """Run a single verifier against agent completions to check real-world outcomes.
+
+        Example: Verify a file was created:
+            run_verifier("vr/filesystem.file_created", ["Created output.txt"],
+                         {"expected_path": "/tmp/output.txt"})
+
+        Example: Verify a Python file passes linting:
+            run_verifier("vr/code.python.lint_ruff", ["def hello(): pass"],
+                         {"file_path": "hello.py"})
 
         Args:
-            verifier_id: The verifier registry ID (e.g. "vr/filesystem.file_created")
-            completions: List of agent completion strings to verify
-            ground_truth: Expected outcome dict for the verifier
-            context: Optional runtime context (API URLs, configs, etc.)
+            verifier_id: Registry ID (e.g. "vr/filesystem.file_created", "vr/code.python.lint_ruff")
+            completions: Agent completion strings — what the agent said/did
+            ground_truth: Expected outcome (schema varies per verifier)
+            context: Optional runtime context (API URLs, credentials, configs)
 
         Returns:
-            JSON array of VerificationResult objects.
+            JSON array of VerificationResult with verdict (PASS/FAIL), score, evidence, and breakdown.
         """
         from vrdev.core.registry import get_verifier
         from vrdev.core.types import VerifierInput
@@ -98,17 +113,29 @@ def create_mcp_server() -> Any:
         context: dict[str, Any] | None = None,
         policy: str = "fail_closed",
     ) -> str:
-        """Run a composed chain of verifiers (AND logic by default).
+        """Run a composed chain of verifiers with hard-gating (prevents reward hacking).
+
+        Combines multiple verifiers into a pipeline. With fail_closed policy,
+        if any HARD verifier fails, the entire chain scores 0.0 regardless
+        of SOFT verifier scores — this prevents agents from gaming LLM judges.
+
+        Example: Verify order cancellation end-to-end:
+            compose_chain(
+                ["vr/tau2.retail.order_cancelled", "vr/aiv.email.sent_folder_confirmed"],
+                ["I cancelled order ORD-42 and sent confirmation"],
+                {"order_id": "ORD-42", "email_subject": "Cancellation confirmed"},
+                policy="fail_closed"
+            )
 
         Args:
             verifier_ids: Ordered list of verifier IDs to compose
-            completions: Agent completions
+            completions: Agent completions to verify
             ground_truth: Shared ground truth dict
             context: Shared runtime context
-            policy: "fail_closed" or "fail_open"
+            policy: "fail_closed" (hard gates block) or "fail_open" (only FAIL blocks)
 
         Returns:
-            JSON array of composed VerificationResult objects.
+            JSON composed VerificationResult with per-verifier breakdown.
         """
         from vrdev.core.compose import compose
         from vrdev.core.registry import get_verifier
@@ -185,10 +212,13 @@ def create_mcp_server() -> Any:
 
     @mcp.tool()
     def search_verifiers(query: str) -> str:
-        """Search verifiers by keyword.
+        """Search verifiers by keyword to find the right one for your task.
+
+        Example queries: "email", "database row", "file created", "python lint",
+        "order cancelled", "http status", "git commit"
 
         Args:
-            query: Space-separated keywords to match against verifier IDs
+            query: Space-separated keywords to match against verifier IDs and descriptions
 
         Returns:
             JSON array of matching verifier ID strings.
