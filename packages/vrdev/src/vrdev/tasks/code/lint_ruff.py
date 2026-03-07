@@ -122,10 +122,18 @@ class LintRuffVerifier(BaseVerifier):
                 verdict = Verdict.FAIL
                 score = clean_ratio
 
+            hints: list[str] = []
+            if verdict == Verdict.FAIL and violations:
+                top = violations[:5]
+                for v in top:
+                    hints.append(f"{v.get('code', '?')}: {v.get('message', '?')} (line {v.get('row', '?')})")
+                hints.append("Run 'ruff check --fix' to auto-fix eligible violations")
+
             return self._make_result(
                 verdict, round(score, 4), breakdown, evidence, input_data,
                 permissions=["fs:write_tmp", "exec:ruff"],
                 source_benchmark="Zeno-bench", source_citation="code-quality",
+                repair_hints=hints,
             )
         finally:
             try:

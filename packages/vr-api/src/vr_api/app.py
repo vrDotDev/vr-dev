@@ -18,6 +18,7 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
 from fastapi.responses import StreamingResponse
 
 from vrdev.core.compose import compose
+from vrdev.core.ensemble import EnsembleVerifier
 from vrdev.core.export import export_jsonl_lines
 from vrdev.core.registry import get_verifier, list_verifiers
 from vrdev.core.types import PolicyMode, StepInput, VerificationResult, VerifierInput
@@ -45,6 +46,8 @@ from .schemas import (
     BatchVerifyResponse,
     ComposeRequest,
     ComposeResponse,
+    EnsembleRequest,
+    EnsembleResponse,
     EvidenceListResponse,
     EvidenceResponse,
     ExportRequest,
@@ -135,6 +138,9 @@ def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
             evidence=r.evidence,
             artifact_hash=r.artifact_hash or "",
             passed=r.passed,
+            repair_hints=r.repair_hints,
+            retryable=r.retryable,
+            suggested_action=r.suggested_action,
             step_rewards=r.step_rewards,
             signature=r.signature,
             signing_key_id=r.signing_key_id,
@@ -238,6 +244,70 @@ async def batch_verify_v1(
     return BatchVerifyResponse(items=items)
 
 
+# ── Ensemble endpoint (C4 — experimental) ─────────────────────────────────────────
+
+
+@v1.post("/ensemble", response_model=EnsembleResponse, dependencies=_AUTH_DEPS)
+async def ensemble_verify_v1(
+    body: EnsembleRequest,
+    api_key: str = Depends(require_api_key),
+) -> EnsembleResponse:
+    """Run a verifier multiple times and merge via consensus voting."""
+    verifier_id = body.verifier_id
+    if not verifier_id.startswith("vr/"):
+        verifier_id = f"vr/{verifier_id}"
+
+    def factory():
+        return get_verifier(verifier_id)
+
+    valid_strategies = {"majority", "unanimous", "any_pass", "weighted"}
+    if body.strategy not in valid_strategies:
+        raise HTTPException(status_code=400, detail=f"strategy must be one of {valid_strategies}")
+
+    num = max(1, min(body.num_instances, 10))
+    threshold = max(0.0, min(body.consensus_threshold, 1.0))
+
+    ens = EnsembleVerifier(
+        verifier_factory=factory,
+        num_instances=num,
+        consensus_threshold=threshold,
+        strategy=body.strategy,
+    )
+
+    inp = VerifierInput(
+        completions=body.completions,
+        ground_truth=body.ground_truth,
+        context=body.context or {},
+    )
+    raw = await ens.async_verify(inp)
+
+    def to_items(results: list[VerificationResult]) -> list[ResultItem]:
+        return [
+            ResultItem(
+                verdict=r.verdict.value,
+                score=r.score,
+                tier=r.tier.value,
+                breakdown=r.breakdown,
+                evidence=r.evidence,
+                artifact_hash=r.artifact_hash,
+                passed=r.verdict.value == "PASS",
+                repair_hints=r.repair_hints,
+                retryable=r.retryable,
+                suggested_action=r.suggested_action,
+            )
+            for r in results
+        ]
+
+    items = to_items(raw)
+    meta = {
+        "strategy": body.strategy,
+        "num_instances": num,
+        "consensus_threshold": threshold,
+    }
+
+    return EnsembleResponse(results=items, ensemble_metadata=meta)
+
+
 # ── Quota admin endpoints (VR_ADMIN_KEY gated) ────────────────────────────────────────
 
 @v1.get("/quota/{api_key}", response_model=QuotaResponse)
@@ -314,6 +384,9 @@ async def stream_verify_v1(
                 evidence=r.evidence,
                 artifact_hash=r.artifact_hash or "",
                 passed=r.passed,
+                repair_hints=r.repair_hints,
+                retryable=r.retryable,
+                suggested_action=r.suggested_action,
                 step_rewards=r.step_rewards,
                 signature=r.signature,
                 signing_key_id=r.signing_key_id,

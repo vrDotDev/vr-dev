@@ -89,6 +89,12 @@ class FileCreatedVerifier(BaseVerifier):
                 Verdict.FAIL, 0.0, breakdown, evidence, input_data,
                 permissions=["fs:read"],
                 source_benchmark="OSWorld", source_citation="arXiv:2404.07972",
+                repair_hints=[
+                    f"File not found at expected path: {expected_path}",
+                    "Check directory permissions",
+                    "Ensure parent directory exists before writing",
+                ],
+                suggested_action="Verify the file path and re-create the file",
             )
 
         breakdown["file_exists"] = 1.0
@@ -131,8 +137,15 @@ class FileCreatedVerifier(BaseVerifier):
         score = sum(checks) / len(checks) if checks else 1.0
         verdict = Verdict.PASS if all(v >= 1.0 for v in checks) else Verdict.FAIL
 
+        hints: list[str] = []
+        if breakdown.get("size_check", 1.0) < 1.0:
+            hints.append(f"File size {evidence.get('actual_size', '?')} below minimum {min_size}")
+        if breakdown.get("content_hash", 1.0) < 1.0:
+            hints.append("Content hash mismatch — file contents differ from expected")
+
         return self._make_result(
             verdict, score, breakdown, evidence, input_data,
             permissions=["fs:read"],
             source_benchmark="OSWorld", source_citation="arXiv:2404.07972",
+            repair_hints=hints if verdict == Verdict.FAIL else [],
         )

@@ -116,9 +116,17 @@ class CommitPresentVerifier(BaseVerifier):
         all_pass = all(v == 1.0 for v in breakdown.values())
         score = sum(breakdown.values()) / len(breakdown) if breakdown else 0.0
 
+        hints: list[str] = []
+        if not all_pass:
+            if breakdown.get("sha_match", 1.0) < 1.0:
+                hints.append("Commit SHA not found in branch — ensure changes were pushed")
+            if breakdown.get("message_match", 1.0) < 1.0:
+                hints.append("Commit message substring not found — check commit message text")
+
         return self._make_result(
             Verdict.PASS if all_pass else Verdict.FAIL,
             round(score, 4), breakdown, evidence, input_data,
             permissions=["exec:git"],
             source_benchmark="SWE-bench", source_citation="arXiv:2310.06770",
+            repair_hints=hints,
         )

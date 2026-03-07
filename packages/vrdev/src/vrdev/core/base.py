@@ -72,6 +72,9 @@ class BaseVerifier(ABC):
         attack_resistance: AttackResistance | None = None,
         source_benchmark: str | None = None,
         source_citation: str = "",
+        repair_hints: list[str] | None = None,
+        retryable: bool = False,
+        suggested_action: str | None = None,
     ) -> VerificationResult:
         """Create a VerificationResult with standard provenance and hashes.
 
@@ -103,6 +106,9 @@ class BaseVerifier(ABC):
             metadata=ResultMetadata(
                 permissions_used=permissions or [],
             ),
+            repair_hints=repair_hints or [],
+            retryable=retryable,
+            suggested_action=suggested_action,
         )
         result.compute_hashes(input_data.model_dump())
         return result

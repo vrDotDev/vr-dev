@@ -47,6 +47,18 @@ _VERIFIER_MAP: dict[str, str] = {
     "vr/api.http.status_ok": "vrdev.tasks.api:HttpStatusOkVerifier",
     "vr/api.http.response_matches": "vrdev.tasks.api:HttpResponseMatchesVerifier",
     "vr/api.http.header_present": "vrdev.tasks.api:HttpHeaderPresentVerifier",
+    # Phase C — git enterprise
+    "vr/git.pr.merged": "vrdev.tasks.git:PrMergedVerifier",
+    "vr/git.ci.passed": "vrdev.tasks.git:CiPassedVerifier",
+    "vr/ci.github.workflow_passed": "vrdev.tasks.git:WorkflowPassedVerifier",
+    # Phase C — messaging
+    "vr/messaging.slack.message_sent": "vrdev.tasks.messaging:SlackMessageSentVerifier",
+    "vr/messaging.slack.reaction_added": "vrdev.tasks.messaging:SlackReactionAddedVerifier",
+    # Phase C — payment
+    "vr/payment.stripe.charge_succeeded": "vrdev.tasks.payment:ChargeSucceededVerifier",
+    "vr/payment.stripe.refund_processed": "vrdev.tasks.payment:RefundProcessedVerifier",
+    # Phase C — project management
+    "vr/project.jira.ticket_transitioned": "vrdev.tasks.project:TicketTransitionedVerifier",
 }
 
 

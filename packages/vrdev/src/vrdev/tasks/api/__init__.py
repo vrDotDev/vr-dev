@@ -75,7 +75,18 @@ class HttpStatusOkVerifier(BaseVerifier):
         breakdown["status_match"] = 1.0 if actual_status == expected_status else 0.0
         score = breakdown["status_match"]
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["net:http"])
+        hints: list[str] = []
+        is_retryable = False
+        if verdict == Verdict.FAIL:
+            hints.append(f"Got status {actual_status} instead of {expected_status}")
+            if actual_status >= 500:
+                hints.append("Server error — may be transient, consider retrying")
+                is_retryable = True
+            elif actual_status == 401 or actual_status == 403:
+                hints.append("Check auth headers and API credentials")
+            hints.append("Check endpoint URL is correct")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["net:http"],
+                                 repair_hints=hints, retryable=is_retryable)
 
 
 class HttpResponseMatchesVerifier(BaseVerifier):
@@ -132,7 +143,13 @@ class HttpResponseMatchesVerifier(BaseVerifier):
 
         score = breakdown["substring_match"]
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["net:http"])
+        hints: list[str] = []
+        if verdict == Verdict.FAIL:
+            missing = [s for s in expected if s not in body]
+            for m in missing[:3]:
+                hints.append(f"Expected substring not found: '{m[:80]}'")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["net:http"],
+                                 repair_hints=hints)
 
 
 class HttpHeaderPresentVerifier(BaseVerifier):
@@ -195,4 +212,10 @@ class HttpHeaderPresentVerifier(BaseVerifier):
 
         score = breakdown["headers_match"]
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["net:http"])
+        hints: list[str] = []
+        if verdict == Verdict.FAIL:
+            missing = [h for h in expected_headers if headers.get(h.lower()) is None]
+            for h in missing[:3]:
+                hints.append(f"Expected header '{h}' not found in response")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["net:http"],
+                                 repair_hints=hints)

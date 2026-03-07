@@ -35,6 +35,7 @@ class PolicyMode(str, Enum):
     FAIL_CLOSED = "fail_closed"
     FAIL_OPEN = "fail_open"
     ESCALATION = "escalation"
+    ENSEMBLE = "ensemble"
 
 
 class DeterminismType(str, Enum):
@@ -113,6 +114,9 @@ class VerificationResult(BaseModel):
     metadata: ResultMetadata = Field(default_factory=ResultMetadata)
     artifact_hash: str = ""
     input_hash: str = ""
+    repair_hints: list[str] = Field(default_factory=list)
+    retryable: bool = False
+    suggested_action: str | None = None
     step_rewards: list[float] | None = None
     step_index: int | None = None
     is_terminal: bool = True

@@ -204,6 +204,14 @@ def create_mcp_server() -> Any:
             if r.verdict.value != "PASS":
                 lines.append("\n**Why it failed**: Check the breakdown scores — "
                             "any sub-check at 0.0 indicates the specific failure point.")
+            if r.repair_hints:
+                lines.append("\n## How to Fix")
+                for hint in r.repair_hints:
+                    lines.append(f"- {hint}")
+                if r.retryable:
+                    lines.append("\n*This failure may be transient — retrying could help.*")
+                if r.suggested_action:
+                    lines.append(f"\n**Suggested action**: {r.suggested_action}")
             lines.append("")
 
         return "\n".join(lines)

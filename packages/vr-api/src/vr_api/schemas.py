@@ -46,6 +46,9 @@ class ResultItem(BaseModel):
     evidence: dict[str, Any]
     artifact_hash: str
     passed: bool
+    repair_hints: list[str] = []
+    retryable: bool = False
+    suggested_action: str | None = None
     step_rewards: list[float] | None = None
     signature: str | None = None
     signing_key_id: str | None = None
@@ -115,6 +118,24 @@ class BatchVerifyResponse(BaseModel):
 class EvidenceListResponse(BaseModel):
     evidence: list[EvidenceResponse]
     count: int
+
+
+# ── Ensemble (C4) ───────────────────────────────────────────────────────────
+
+
+class EnsembleRequest(BaseModel):
+    verifier_id: str
+    completions: list[str]
+    ground_truth: dict[str, Any]
+    context: dict[str, Any] | None = None
+    num_instances: int = 3
+    consensus_threshold: float = 0.66
+    strategy: str = "majority"
+
+
+class EnsembleResponse(BaseModel):
+    results: list[ResultItem]
+    ensemble_metadata: dict[str, Any] = {}
 
 
 # ── Quota ────────────────────────────────────────────────────────────────────

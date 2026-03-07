@@ -88,7 +88,12 @@ class RowExistsVerifier(BaseVerifier):
         breakdown["row_exists"] = 1.0 if exists else 0.0
         score = breakdown["row_exists"]
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["db:read"])
+        hints: list[str] = []
+        if verdict == Verdict.FAIL:
+            hints.append(f"Row not found in table '{table}' with given criteria")
+            hints.append("Check table name and column values")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["db:read"],
+                                 repair_hints=hints)
 
 
 class RowUpdatedVerifier(BaseVerifier):
@@ -154,7 +159,13 @@ class RowUpdatedVerifier(BaseVerifier):
         breakdown["values_match"] = matched / len(expected_values) if expected_values else 1.0
         score = breakdown["values_match"]
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["db:read"])
+        hints: list[str] = []
+        if verdict == Verdict.FAIL:
+            for k, expected_v in expected_values.items():
+                if str(row.get(k)) != str(expected_v):
+                    hints.append(f"Column '{k}': expected '{expected_v}', got '{row.get(k)}'")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["db:read"],
+                                 repair_hints=hints)
 
 
 class TableRowCountVerifier(BaseVerifier):

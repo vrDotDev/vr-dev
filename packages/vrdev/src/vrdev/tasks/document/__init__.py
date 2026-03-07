@@ -52,7 +52,8 @@ class JsonValidVerifier(BaseVerifier):
 
         if not file_path or not os.path.isfile(file_path):
             evidence["error"] = "file not found"
-            return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"])
+            return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"],
+                                     repair_hints=[f"File not found: {file_path}", "Check the file_path in ground_truth"])
 
         try:
             with open(file_path) as f:
@@ -61,7 +62,8 @@ class JsonValidVerifier(BaseVerifier):
         except (json.JSONDecodeError, OSError) as exc:
             evidence["error"] = str(exc)
             breakdown["valid_json"] = 0.0
-            return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"])
+            return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"],
+                                     repair_hints=[f"Invalid JSON: {exc}", "Check for trailing commas or unquoted keys"])
 
         if expected_type:
             type_map = {"object": dict, "array": list}
@@ -76,7 +78,14 @@ class JsonValidVerifier(BaseVerifier):
 
         score = sum(breakdown.values()) / len(breakdown) if breakdown else 1.0
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["fs:read"])
+        hints: list[str] = []
+        if verdict == Verdict.FAIL:
+            if breakdown.get("type_match", 1.0) < 1.0:
+                hints.append(f"Expected JSON type '{expected_type}', got {type(data).__name__}")
+            if breakdown.get("keys_match", 1.0) < 1.0:
+                hints.append(f"Missing expected keys in JSON object")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["fs:read"],
+                                 repair_hints=hints)
 
 
 class CsvRowCountVerifier(BaseVerifier):
@@ -192,7 +201,16 @@ class TextContainsVerifier(BaseVerifier):
 
         score = breakdown["substring_match"]
         verdict = Verdict.PASS if score >= 1.0 else Verdict.FAIL
-        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["fs:read"])
+        hints: list[str] = []
+        if verdict == Verdict.FAIL:
+            missing = len(expected) - found
+            hints.append(f"{missing} of {len(expected)} expected substrings not found in document")
+            if not case_sensitive:
+                hints.append("Search was case-insensitive")
+            else:
+                hints.append("Check case sensitivity — set case_sensitive: false if needed")
+        return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["fs:read"],
+                                 repair_hints=hints)
 
 
 class YamlValidVerifier(BaseVerifier):
@@ -244,7 +262,8 @@ class YamlValidVerifier(BaseVerifier):
         except (yaml.YAMLError, OSError) as exc:
             evidence["error"] = str(exc)
             breakdown["valid_yaml"] = 0.0
-            return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"])
+            return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"],
+                                     repair_hints=[f"YAML parse error: {exc}", "Check indentation consistency"])
 
         if expected_keys and isinstance(data, dict):
             present = sum(1 for k in expected_keys if k in data)

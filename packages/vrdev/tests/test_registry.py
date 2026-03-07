@@ -9,9 +9,9 @@ from vrdev.core.registry import get_verifier, list_verifiers
 
 
 class TestListVerifiers:
-    def test_returns_all_nineteen_ids(self):
+    def test_returns_expected_count(self):
         ids = list_verifiers()
-        assert len(ids) == 19
+        assert len(ids) >= 38
 
     def test_ids_are_sorted(self):
         ids = list_verifiers()
@@ -19,6 +19,7 @@ class TestListVerifiers:
 
     def test_contains_all_expected_ids(self):
         ids = set(list_verifiers())
+        # Original 19
         expected = {
             "vr/aiv.calendar.event_created",
             "vr/aiv.email.sent_folder_confirmed",
@@ -40,7 +41,32 @@ class TestListVerifiers:
             "vr/rubric.summary.faithful",
             "vr/tau2.retail.inventory_updated",
         }
-        assert ids == expected
+        # Phase B additions
+        expected |= {
+            "vr/api.http.header_present",
+            "vr/api.http.response_matches",
+            "vr/api.http.status_ok",
+            "vr/database.row.exists",
+            "vr/database.row.updated",
+            "vr/database.table.row_count",
+            "vr/document.csv.row_count",
+            "vr/document.json.valid",
+            "vr/document.pdf.page_count",
+            "vr/document.text.contains",
+            "vr/document.yaml.valid",
+        }
+        # Phase C enterprise verifiers
+        expected |= {
+            "vr/git.pr.merged",
+            "vr/git.ci.passed",
+            "vr/ci.github.workflow_passed",
+            "vr/messaging.slack.message_sent",
+            "vr/messaging.slack.reaction_added",
+            "vr/payment.stripe.charge_succeeded",
+            "vr/payment.stripe.refund_processed",
+            "vr/project.jira.ticket_transitioned",
+        }
+        assert expected.issubset(ids)
 
 
 class TestGetVerifier:
