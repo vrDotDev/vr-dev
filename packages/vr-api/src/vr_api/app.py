@@ -15,22 +15,28 @@ from typing import Optional
 import structlog
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
+from fastapi.responses import StreamingResponse
 
 from vrdev.core.compose import compose
 from vrdev.core.export import export_jsonl_lines
 from vrdev.core.registry import get_verifier, list_verifiers
-from vrdev.core.types import PolicyMode, VerificationResult, VerifierInput
+from vrdev.core.types import PolicyMode, StepInput, VerificationResult, VerifierInput
 
 from .auth import require_admin_key, require_api_key
 from .db import (
     close_db,
+    get_anchor,
     get_evidence,
+    get_latest_anchor,
     get_quota,
     get_usage,
     init_db,
     list_evidence,
+    list_evidence_since,
     set_quota,
+    store_anchor,
     store_evidence,
+    update_evidence_batch_id,
 )
 from .rate_limit import check_rate_limit
 from .schemas import (
@@ -44,10 +50,14 @@ from .schemas import (
     ExportRequest,
     ExportResponse,
     HealthResponse,
+    KeyItem,
+    KeysResponse,
+    ProofResponse,
     QuotaItem,
     QuotaResponse,
     ResultItem,
     SetQuotaRequest,
+    StreamVerifyRequest,
     UsageResponse,
     UsageSummaryItem,
     VerifiersResponse,
@@ -83,8 +93,17 @@ async def lifespan(app: FastAPI):
             cleanup_loop(ttl_days=ttl_days, interval_hours=interval_hours)
         )
 
+    # Start anchor batch loop if signing key is configured
+    anchor_task = None
+    anchor_interval = float(os.environ.get("VR_ANCHOR_INTERVAL_HOURS", "24"))
+    if os.environ.get("VR_ANCHOR_PRIVATE_KEY"):
+        from .anchor import anchor_loop
+        anchor_task = asyncio.create_task(anchor_loop(interval_hours=anchor_interval))
+
     yield
 
+    if anchor_task:
+        anchor_task.cancel()
     if cleanup_task:
         cleanup_task.cancel()
     await close_bucket()
@@ -117,6 +136,8 @@ def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
             artifact_hash=r.artifact_hash or "",
             passed=r.passed,
             step_rewards=r.step_rewards,
+            signature=r.signature,
+            signing_key_id=r.signing_key_id,
         )
         for r in results
     ]
@@ -248,6 +269,149 @@ async def set_quota_v1(
     ))
 
 
+# ── SSE stream endpoint ─────────────────────────────────────────────────────────
+
+
+@v1.post("/verify/stream", dependencies=_AUTH_DEPS)
+async def stream_verify_v1(
+    body: StreamVerifyRequest,
+    api_key: str = Depends(require_api_key),
+):
+    """Stream step-level verification results via SSE."""
+    try:
+        verifiers = [get_verifier(vid) for vid in body.verifier_ids]
+    except Exception:
+        raise HTTPException(status_code=422, detail="One or more verifier IDs not found")
+
+    mode = PolicyMode(body.policy_mode)
+    composed = compose(verifiers, require_hard=body.require_hard, policy_mode=mode)
+
+    steps = [
+        StepInput(
+            step_index=s.step_index,
+            completions=s.completions,
+            ground_truth=s.ground_truth,
+            context=s.context,
+            is_terminal=s.is_terminal,
+        )
+        for s in body.steps
+    ]
+
+    async def event_generator():
+        trajectory = composed.verify_trajectory(steps)
+        for step_results in trajectory:
+            for r in results_to_items(step_results):
+                yield f"data: {json.dumps(r)}\n\n"
+        yield "data: {\"done\": true}\n\n"
+
+    def results_to_items(results: list[VerificationResult]) -> list[dict]:
+        return [
+            ResultItem(
+                verdict=r.verdict.value,
+                score=r.score,
+                tier=r.tier.value if hasattr(r.tier, "value") else str(r.tier),
+                breakdown=r.breakdown,
+                evidence=r.evidence,
+                artifact_hash=r.artifact_hash or "",
+                passed=r.passed,
+                step_rewards=r.step_rewards,
+                signature=r.signature,
+                signing_key_id=r.signing_key_id,
+            ).model_dump()
+            for r in results
+        ]
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+# ── Proof endpoint ───────────────────────────────────────────────────────────────
+
+
+@v1.get("/evidence/{artifact_hash}/proof", response_model=ProofResponse, dependencies=_AUTH_DEPS)
+async def evidence_proof_v1(
+    artifact_hash: str,
+    api_key: str = Depends(require_api_key),
+) -> ProofResponse:
+    """Return Merkle inclusion proof for anchored evidence."""
+    record = await get_evidence(artifact_hash)
+    if record is None:
+        raise HTTPException(status_code=404, detail="Evidence not found")
+    if record.batch_id is None:
+        raise HTTPException(status_code=404, detail="Evidence not yet anchored")
+
+    anchor = await get_anchor(record.batch_id)
+    if anchor is None:
+        raise HTTPException(status_code=404, detail="Anchor record not found")
+
+    # Re-build Merkle tree for the batch to get the proof
+    from datetime import datetime, timezone
+    from .merkle import build_merkle_tree, get_inclusion_proof, verify_inclusion
+
+    batch_evidence = await list_evidence_since(
+        datetime.min.replace(tzinfo=timezone.utc)
+    )
+    batch_hashes = [
+        e.artifact_hash for e in batch_evidence if e.batch_id == record.batch_id
+    ]
+
+    if not batch_hashes:
+        raise HTTPException(status_code=404, detail="No evidence in batch")
+
+    tree = build_merkle_tree(batch_hashes)
+    proof = get_inclusion_proof(tree, artifact_hash)
+    verified = verify_inclusion(anchor.merkle_root, artifact_hash, proof)
+
+    return ProofResponse(
+        artifact_hash=artifact_hash,
+        merkle_root=anchor.merkle_root,
+        proof=[{"sibling": s, "direction": d} for s, d in proof],
+        batch_id=anchor.batch_id,
+        tx_hash=anchor.tx_hash,
+        chain=anchor.chain,
+        verified=verified,
+    )
+
+
+# ── Keys endpoint ────────────────────────────────────────────────────────────────
+
+
+@v1.get("/keys", response_model=KeysResponse)
+async def keys_v1() -> KeysResponse:
+    """Return active signing public keys (no auth required)."""
+    keys: list[KeyItem] = []
+    try:
+        from .signing import load_signing_key, public_key_pem, _compute_key_id
+        sk = load_signing_key()
+        if sk:
+            pub = sk.public_key()
+            keys.append(KeyItem(
+                key_id=_compute_key_id(pub),
+                public_key_pem=public_key_pem(pub),
+            ))
+    except Exception:
+        pass
+    return KeysResponse(keys=keys)
+
+
+# ── Anchor admin endpoint ────────────────────────────────────────────────────────
+
+
+@v1.post("/anchor")
+async def anchor_v1(
+    admin_key: str = Depends(require_admin_key),
+):
+    """Trigger an on-demand anchor batch (admin only)."""
+    from .anchor import anchor_batch
+    result = await anchor_batch()
+    if result is None:
+        return {"status": "no_evidence", "message": "No un-anchored evidence to anchor"}
+    return {"status": "anchored", **result}
+
+
 app.include_router(v1)
 
 
@@ -274,6 +438,19 @@ async def _do_verify(body: VerifyRequest) -> VerifyResponse:
     )
     results = await v.async_verify(inp)
 
+    # Sign evidence if signing key is configured
+    try:
+        from .signing import load_signing_key, sign_evidence, _compute_key_id
+        signing_key = load_signing_key()
+        if signing_key:
+            key_id = _compute_key_id(signing_key.public_key())
+            for r in results:
+                if r.artifact_hash:
+                    r.signature = sign_evidence(r.artifact_hash, signing_key)
+                    r.signing_key_id = key_id
+    except Exception:
+        pass  # Signing is best-effort
+
     # Record OTel span attributes when tracing is active
     try:
         from opentelemetry import trace as otel_trace
@@ -296,6 +473,8 @@ async def _do_verify(body: VerifyRequest) -> VerifyResponse:
                     verdict=r.verdict.value,
                     score=r.score,
                     evidence_json=json.dumps(r.evidence, default=str),
+                    signature=r.signature,
+                    signing_key_id=r.signing_key_id,
                 )
             except Exception:
                 pass  # Best-effort evidence storage

@@ -24,6 +24,7 @@ class ComposeRequest(BaseModel):
     context: dict[str, Any] | None = None
     require_hard: bool = True
     policy_mode: str = "fail_closed"
+    budget_limit_usd: float | None = None
 
 
 class ExportRequest(BaseModel):
@@ -46,6 +47,8 @@ class ResultItem(BaseModel):
     artifact_hash: str
     passed: bool
     step_rewards: list[float] | None = None
+    signature: str | None = None
+    signing_key_id: str | None = None
 
 
 class VerifyResponse(BaseModel):
@@ -130,3 +133,48 @@ class QuotaResponse(BaseModel):
 class SetQuotaRequest(BaseModel):
     daily_limit: int = 1000
     monthly_limit: int = 10000
+
+
+# ── Step / Stream ────────────────────────────────────────────────────────────
+
+
+class StepInputItem(BaseModel):
+    step_index: int
+    completions: list[str]
+    ground_truth: dict[str, Any] = {}
+    context: dict[str, Any] | None = None
+    is_terminal: bool = False
+
+
+class StreamVerifyRequest(BaseModel):
+    verifier_ids: list[str]
+    steps: list[StepInputItem]
+    require_hard: bool = True
+    policy_mode: str = "fail_closed"
+
+
+# ── Proof / Anchor ───────────────────────────────────────────────────────────
+
+
+class ProofResponse(BaseModel):
+    artifact_hash: str
+    merkle_root: str
+    proof: list[dict[str, str]]
+    batch_id: int
+    tx_hash: str | None = None
+    chain: str
+    verified: bool
+
+
+# ── Keys ─────────────────────────────────────────────────────────────────────
+
+
+class KeyItem(BaseModel):
+    key_id: str
+    public_key_pem: str
+    algorithm: str = "Ed25519"
+    active: bool = True
+
+
+class KeysResponse(BaseModel):
+    keys: list[KeyItem]

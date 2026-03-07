@@ -10,6 +10,7 @@ from .types import (
     AttackResistance,
     Provenance,
     ResultMetadata,
+    StepInput,
     Tier,
     VerificationResult,
     Verdict,
@@ -105,3 +106,21 @@ class BaseVerifier(ABC):
         )
         result.compute_hashes(input_data.model_dump())
         return result
+
+    def verify_step(self, step: StepInput) -> list[VerificationResult]:
+        """Verify a single step in a trajectory.
+
+        Wraps ``StepInput`` into ``VerifierInput``, delegates to
+        :meth:`verify`, and stamps ``step_index`` / ``is_terminal`` on
+        each result.
+        """
+        inp = VerifierInput(
+            completions=step.completions,
+            ground_truth=step.ground_truth,
+            context={**(step.context or {}), "step_index": step.step_index},
+        )
+        results = self.verify(inp)
+        for r in results:
+            r.step_index = step.step_index
+            r.is_terminal = step.is_terminal
+        return results

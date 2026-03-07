@@ -34,6 +34,26 @@ class EvidenceRecord(Base):
     verdict = Column(String(16), nullable=False)
     score = Column(Float, nullable=False)
     evidence_json = Column(Text, nullable=False)  # serialised JSON
+    signature = Column(String(128), nullable=True)
+    signing_key_id = Column(String(32), nullable=True)
+    batch_id = Column(Integer, nullable=True, index=True)
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+    )
+
+
+class AnchorRecord(Base):
+    """Merkle root anchor submitted to L2."""
+
+    __tablename__ = "anchor_records"
+
+    batch_id = Column(Integer, primary_key=True, autoincrement=True)
+    merkle_root = Column(String(71), nullable=False)
+    leaf_count = Column(Integer, nullable=False)
+    tx_hash = Column(String(66), nullable=True)
+    chain = Column(String(32), nullable=False, default="base-sepolia")
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
@@ -100,6 +120,11 @@ async def init_db(url: str | None = None) -> None:
     """Create the engine, session factory, and tables."""
     global _engine, _session_factory
     db_url = url or _default_url()
+    # Normalise postgresql:// → postgresql+asyncpg:// for async engine
+    if db_url.startswith("postgresql://"):
+        db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    elif db_url.startswith("postgres://"):
+        db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
     engine_kwargs: dict[str, Any] = {"echo": False}
     if db_url.startswith("postgresql"):
         engine_kwargs.update(pool_size=5, max_overflow=10)
@@ -133,6 +158,9 @@ async def store_evidence(
     verdict: str,
     score: float,
     evidence_json: str,
+    *,
+    signature: str | None = None,
+    signing_key_id: str | None = None,
 ) -> EvidenceRecord:
     """Insert a new evidence record (append-only, ignore duplicates)."""
     factory = get_session_factory()
@@ -146,6 +174,8 @@ async def store_evidence(
             verdict=verdict,
             score=score,
             evidence_json=evidence_json,
+            signature=signature,
+            signing_key_id=signing_key_id,
         )
         session.add(record)
         await session.commit()
@@ -299,3 +329,81 @@ async def get_usage_count(api_key: str, since: datetime) -> int:
         )
         result = await session.execute(stmt)
         return result.scalar_one()
+
+
+# ── Anchor CRUD ──────────────────────────────────────────────────────────────
+
+
+async def store_anchor(
+    merkle_root: str,
+    leaf_count: int,
+    tx_hash: str | None = None,
+    chain: str = "base-sepolia",
+) -> AnchorRecord:
+    """Insert an anchor record and return it with the auto-generated batch_id."""
+    factory = get_session_factory()
+    async with factory() as session:
+        record = AnchorRecord(
+            merkle_root=merkle_root,
+            leaf_count=leaf_count,
+            tx_hash=tx_hash,
+            chain=chain,
+        )
+        session.add(record)
+        await session.commit()
+        await session.refresh(record)
+        return record
+
+
+async def get_anchor(batch_id: int) -> AnchorRecord | None:
+    """Retrieve an anchor record by batch_id."""
+    factory = get_session_factory()
+    async with factory() as session:
+        return await session.get(AnchorRecord, batch_id)
+
+
+async def get_latest_anchor() -> AnchorRecord | None:
+    """Retrieve the most recent anchor record."""
+    factory = get_session_factory()
+    async with factory() as session:
+        stmt = (
+            select(AnchorRecord)
+            .order_by(AnchorRecord.created_at.desc())
+            .limit(1)
+        )
+        result = await session.execute(stmt)
+        return result.scalar_one_or_none()
+
+
+async def list_evidence_since(since: datetime) -> list[EvidenceRecord]:
+    """Return evidence records created after *since* that have no batch_id."""
+    factory = get_session_factory()
+    async with factory() as session:
+        stmt = (
+            select(EvidenceRecord)
+            .where(EvidenceRecord.created_at >= since)
+            .where(EvidenceRecord.batch_id.is_(None))
+            .order_by(EvidenceRecord.created_at.asc())
+        )
+        result = await session.execute(stmt)
+        return list(result.scalars().all())
+
+
+async def update_evidence_batch_id(
+    artifact_hashes: list[str],
+    batch_id: int,
+) -> int:
+    """Set batch_id on evidence records. Returns number of rows updated."""
+    if not artifact_hashes:
+        return 0
+    factory = get_session_factory()
+    async with factory() as session:
+        from sqlalchemy import update
+        stmt = (
+            update(EvidenceRecord)
+            .where(EvidenceRecord.artifact_hash.in_(artifact_hashes))
+            .values(batch_id=batch_id)
+        )
+        result = await session.execute(stmt)
+        await session.commit()
+        return result.rowcount  # type: ignore[return-value]

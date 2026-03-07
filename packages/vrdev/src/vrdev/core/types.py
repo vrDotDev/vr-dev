@@ -34,6 +34,7 @@ class PolicyMode(str, Enum):
     """Controls how ERROR and UNVERIFIABLE verdicts propagate in composition."""
     FAIL_CLOSED = "fail_closed"
     FAIL_OPEN = "fail_open"
+    ESCALATION = "escalation"
 
 
 class DeterminismType(str, Enum):
@@ -113,6 +114,10 @@ class VerificationResult(BaseModel):
     artifact_hash: str = ""
     input_hash: str = ""
     step_rewards: list[float] | None = None
+    step_index: int | None = None
+    is_terminal: bool = True
+    signature: str | None = None
+    signing_key_id: str | None = None
 
     @computed_field  # type: ignore[prop-decorator]
     @property
@@ -147,6 +152,16 @@ class VerifierInput(BaseModel):
     completions: list[str]
     ground_truth: dict = Field(default_factory=dict)
     context: Optional[dict] = None
+
+
+class StepInput(BaseModel):
+    """A single step in a multi-step trajectory for process verification."""
+
+    step_index: int
+    completions: list[str]
+    ground_truth: dict = Field(default_factory=dict)
+    context: Optional[dict] = None
+    is_terminal: bool = False
 
 
 # ---------------------------------------------------------------------------
