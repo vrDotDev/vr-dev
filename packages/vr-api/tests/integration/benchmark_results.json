@@ -1,0 +1,188 @@
+{
+  "total_tests": 25,
+  "verifiers": {
+    "compose": {
+      "count": 3,
+      "min_ms": 8.96,
+      "max_ms": 9.7,
+      "mean_ms": 9.3,
+      "p50_ms": 9.23,
+      "p95_ms": 9.7
+    },
+    "vr/tau2.airline.rebooking_correct": {
+      "count": 4,
+      "min_ms": 10.1,
+      "max_ms": 29.63,
+      "mean_ms": 17.11,
+      "p50_ms": 18.49,
+      "p95_ms": 29.63
+    },
+    "vr/tau2.policy.constraint_not_violated": {
+      "count": 3,
+      "min_ms": 0.05,
+      "max_ms": 0.06,
+      "mean_ms": 0.05,
+      "p50_ms": 0.05,
+      "p95_ms": 0.06
+    },
+    "vr/tau2.retail.inventory_updated": {
+      "count": 4,
+      "min_ms": 9.67,
+      "max_ms": 10.19,
+      "mean_ms": 9.88,
+      "p50_ms": 9.89,
+      "p95_ms": 10.19
+    },
+    "vr/tau2.retail.order_cancelled": {
+      "count": 4,
+      "min_ms": 10.06,
+      "max_ms": 12.94,
+      "mean_ms": 11.43,
+      "p50_ms": 12.48,
+      "p95_ms": 12.94
+    },
+    "vr/tau2.retail.refund_processed": {
+      "count": 4,
+      "min_ms": 9.86,
+      "max_ms": 10.47,
+      "mean_ms": 10.05,
+      "p50_ms": 9.96,
+      "p95_ms": 10.47
+    },
+    "vr/tau2.telecom.plan_changed": {
+      "count": 3,
+      "min_ms": 11.34,
+      "max_ms": 19.51,
+      "mean_ms": 14.52,
+      "p50_ms": 12.71,
+      "p95_ms": 19.51
+    }
+  },
+  "all_results": [
+    {
+      "test": "airline_pass",
+      "verifier_id": "vr/tau2.airline.rebooking_correct",
+      "latency_ms": 10.21
+    },
+    {
+      "test": "airline_fail_cabin",
+      "verifier_id": "vr/tau2.airline.rebooking_correct",
+      "latency_ms": 10.1
+    },
+    {
+      "test": "airline_not_found",
+      "verifier_id": "vr/tau2.airline.rebooking_correct",
+      "latency_ms": 18.49
+    },
+    {
+      "test": "airline_multi",
+      "verifier_id": "vr/tau2.airline.rebooking_correct",
+      "latency_ms": 29.63
+    },
+    {
+      "test": "order_cancel_pass",
+      "verifier_id": "vr/tau2.retail.order_cancelled",
+      "latency_ms": 12.94
+    },
+    {
+      "test": "order_cancel_fail",
+      "verifier_id": "vr/tau2.retail.order_cancelled",
+      "latency_ms": 10.06
+    },
+    {
+      "test": "order_cancel_404",
+      "verifier_id": "vr/tau2.retail.order_cancelled",
+      "latency_ms": 10.22
+    },
+    {
+      "test": "order_cancel_custom_status",
+      "verifier_id": "vr/tau2.retail.order_cancelled",
+      "latency_ms": 12.48
+    },
+    {
+      "test": "refund_pass",
+      "verifier_id": "vr/tau2.retail.refund_processed",
+      "latency_ms": 10.47
+    },
+    {
+      "test": "refund_fail_pending",
+      "verifier_id": "vr/tau2.retail.refund_processed",
+      "latency_ms": 9.92
+    },
+    {
+      "test": "refund_fail_amount",
+      "verifier_id": "vr/tau2.retail.refund_processed",
+      "latency_ms": 9.86
+    },
+    {
+      "test": "refund_fail_denied",
+      "verifier_id": "vr/tau2.retail.refund_processed",
+      "latency_ms": 9.96
+    },
+    {
+      "test": "inventory_pass",
+      "verifier_id": "vr/tau2.retail.inventory_updated",
+      "latency_ms": 10.19
+    },
+    {
+      "test": "inventory_fail_qty",
+      "verifier_id": "vr/tau2.retail.inventory_updated",
+      "latency_ms": 9.67
+    },
+    {
+      "test": "inventory_zero",
+      "verifier_id": "vr/tau2.retail.inventory_updated",
+      "latency_ms": 9.78
+    },
+    {
+      "test": "inventory_404",
+      "verifier_id": "vr/tau2.retail.inventory_updated",
+      "latency_ms": 9.89
+    },
+    {
+      "test": "telecom_pass",
+      "verifier_id": "vr/tau2.telecom.plan_changed",
+      "latency_ms": 19.51
+    },
+    {
+      "test": "telecom_fail_plan",
+      "verifier_id": "vr/tau2.telecom.plan_changed",
+      "latency_ms": 11.34
+    },
+    {
+      "test": "telecom_404",
+      "verifier_id": "vr/tau2.telecom.plan_changed",
+      "latency_ms": 12.71
+    },
+    {
+      "test": "policy_pass",
+      "verifier_id": "vr/tau2.policy.constraint_not_violated",
+      "latency_ms": 0.06
+    },
+    {
+      "test": "policy_fail",
+      "verifier_id": "vr/tau2.policy.constraint_not_violated",
+      "latency_ms": 0.05
+    },
+    {
+      "test": "policy_multi_rules",
+      "verifier_id": "vr/tau2.policy.constraint_not_violated",
+      "latency_ms": 0.05
+    },
+    {
+      "test": "compose_all_pass",
+      "verifier_id": "compose",
+      "latency_ms": 8.96
+    },
+    {
+      "test": "compose_hard_gate_fail",
+      "verifier_id": "compose",
+      "latency_ms": 9.7
+    },
+    {
+      "test": "compose_evidence_merge",
+      "verifier_id": "compose",
+      "latency_ms": 9.23
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: packages/vr-api/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - packages/vr-api/.env
+    environment:
+      VR_DATABASE_URL: "postgresql+asyncpg://vrdev:vrdev_local@postgres:5432/vrdev"
+      VR_REDIS_URL: "redis://redis:6379/0"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  cleanup-worker:
+    build:
+      context: .
+      dockerfile: packages/vr-api/Dockerfile
+    command: ["python", "-m", "vr_api.cleanup_worker"]
+    environment:
+      VR_DATABASE_URL: "postgresql+asyncpg://vrdev:vrdev_local@postgres:5432/vrdev"
+      VR_EVIDENCE_TTL_DAYS: "90"
+      VR_CLEANUP_INTERVAL_HOURS: "6"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vrdev
+      POSTGRES_PASSWORD: vrdev_local
+      POSTGRES_DB: vrdev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vrdev"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  pgdata:
+  redisdata:
