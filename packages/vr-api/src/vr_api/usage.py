@@ -15,7 +15,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request as StarletteRequest
 from starlette.responses import Response
 
-from .auth import require_api_key
+from .auth import require_auth
 from .db import get_quota, get_usage_count, record_usage
 
 
@@ -51,15 +51,20 @@ class UsageMiddleware(BaseHTTPMiddleware):
 
 async def check_quota(
     request: Request,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> None:
     """FastAPI dependency — enforces per-key daily/monthly quotas.
 
     Reads limits from the ``quota_records`` table.  Keys with no record
-    are unrestricted.  Returns HTTP 429 with a ``Retry-After`` header
+    are unrestricted.  x402 payers bypass quota (they pay per-request).
+    Returns HTTP 429 with a ``Retry-After`` header
     when a limit is exceeded.
     """
-    quota = await get_quota(api_key)
+    # x402 payers bypass quota — they pay per-request on-chain
+    if auth_id.startswith("x402:"):
+        return
+
+    quota = await get_quota(auth_id)
     if quota is None:
         return  # no quota configured → unrestricted
 
@@ -67,7 +72,7 @@ async def check_quota(
 
     # Daily check
     day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    daily_count = await get_usage_count(api_key, day_start)
+    daily_count = await get_usage_count(auth_id, day_start)
     if daily_count >= quota.daily_limit:
         seconds_left = int((day_start + timedelta(days=1) - now).total_seconds())
         raise HTTPException(
@@ -78,7 +83,7 @@ async def check_quota(
 
     # Monthly check
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    monthly_count = await get_usage_count(api_key, month_start)
+    monthly_count = await get_usage_count(auth_id, month_start)
     if monthly_count >= quota.monthly_limit:
         # Next month start
         if now.month == 12:

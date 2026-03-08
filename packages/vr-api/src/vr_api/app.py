@@ -14,7 +14,7 @@ from typing import Optional
 
 import structlog
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import StreamingResponse
 
 from vrdev.core.compose import compose
@@ -23,13 +23,15 @@ from vrdev.core.export import export_jsonl_lines
 from vrdev.core.registry import get_verifier, list_verifiers
 from vrdev.core.types import PolicyMode, StepInput, VerificationResult, VerifierInput
 
-from .auth import require_admin_key, require_api_key
+from .auth import require_admin_key, require_api_key, require_auth
 from .db import (
     close_db,
     get_anchor,
     get_evidence,
     get_latest_anchor,
+    get_payments_by_address,
     get_quota,
+    get_revenue_summary,
     get_usage,
     init_db,
     list_evidence,
@@ -55,10 +57,16 @@ from .schemas import (
     HealthResponse,
     KeyItem,
     KeysResponse,
+    PaymentItem,
+    PaymentsResponse,
+    PricingResponse,
+    PricingTierItem,
     ProofResponse,
     QuotaItem,
     QuotaResponse,
     ResultItem,
+    RevenueItem,
+    RevenueResponse,
     SetQuotaRequest,
     StreamVerifyRequest,
     UsageResponse,
@@ -128,6 +136,22 @@ app.add_middleware(UsageMiddleware)
 _AUTH_DEPS = [Depends(check_rate_limit), Depends(check_quota)]
 
 
+async def _record_payment(request: Request, result: object) -> None:
+    """Record an x402 payment if one was used for this request."""
+    payment = getattr(request.state, "payment", None)
+    if payment is None:
+        return
+    artifact_hash = None
+    results = getattr(result, "results", None)
+    if results and hasattr(results[0], "artifact_hash"):
+        artifact_hash = results[0].artifact_hash or None
+    try:
+        from .payments.x402 import get_x402_provider
+        await get_x402_provider().record_charge(payment, artifact_hash)
+    except Exception:
+        pass  # payment recording is best-effort
+
+
 def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
     return [
         ResultItem(
@@ -158,23 +182,26 @@ v1 = APIRouter(prefix="/v1", tags=["v1"])
 
 @v1.post("/verify", response_model=VerifyResponse, dependencies=_AUTH_DEPS)
 async def verify_v1(
+    request: Request,
     body: VerifyRequest,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> VerifyResponse:
-    return await _do_verify(body)
+    result = await _do_verify(body)
+    await _record_payment(request, result)
+    return result
 
 
 @v1.get("/evidence/{artifact_hash}", response_model=EvidenceResponse, dependencies=_AUTH_DEPS)
 async def evidence_v1(
     artifact_hash: str,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> EvidenceResponse:
     return await _do_evidence(artifact_hash)
 
 
 @v1.get("/evidence", response_model=EvidenceListResponse, dependencies=_AUTH_DEPS)
 async def evidence_list_v1(
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
     verifier_id: Optional[str] = Query(None),
     limit: int = Query(100, ge=1, le=1000),
 ) -> EvidenceListResponse:
@@ -195,15 +222,18 @@ async def evidence_list_v1(
 
 @v1.post("/compose", response_model=ComposeResponse, dependencies=_AUTH_DEPS)
 async def compose_v1(
+    request: Request,
     body: ComposeRequest,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> ComposeResponse:
-    return await _do_compose(body)
+    result = await _do_compose(body)
+    await _record_payment(request, result)
+    return result
 
 
 @v1.get("/verifiers", response_model=VerifiersResponse, dependencies=_AUTH_DEPS)
 async def list_verifiers_v1(
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> VerifiersResponse:
     return VerifiersResponse(verifiers=list_verifiers())
 
@@ -211,22 +241,23 @@ async def list_verifiers_v1(
 @v1.post("/export", response_model=ExportResponse, dependencies=_AUTH_DEPS)
 async def export_v1(
     body: ExportRequest,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> ExportResponse:
     return await _do_export(body)
 
 
 @v1.get("/usage", response_model=UsageResponse, dependencies=_AUTH_DEPS)
 async def usage_v1(
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> UsageResponse:
     return await _do_usage()
 
 
 @v1.post("/batch", response_model=BatchVerifyResponse, dependencies=_AUTH_DEPS)
 async def batch_verify_v1(
+    request: Request,
     body: BatchVerifyRequest,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> BatchVerifyResponse:
     """Verify multiple items concurrently."""
     tasks = [_do_verify_single(item) for item in body.items]
@@ -241,7 +272,9 @@ async def batch_verify_v1(
             items.append(BatchResultItem(
                 verifier_id=req.verifier_id, results=res.results,
             ))
-    return BatchVerifyResponse(items=items)
+    result = BatchVerifyResponse(items=items)
+    await _record_payment(request, result)
+    return result
 
 
 # ── Ensemble endpoint (C4 — experimental) ─────────────────────────────────────────
@@ -249,8 +282,9 @@ async def batch_verify_v1(
 
 @v1.post("/ensemble", response_model=EnsembleResponse, dependencies=_AUTH_DEPS)
 async def ensemble_verify_v1(
+    request: Request,
     body: EnsembleRequest,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> EnsembleResponse:
     """Run a verifier multiple times and merge via consensus voting."""
     verifier_id = body.verifier_id
@@ -305,7 +339,9 @@ async def ensemble_verify_v1(
         "consensus_threshold": threshold,
     }
 
-    return EnsembleResponse(results=items, ensemble_metadata=meta)
+    result = EnsembleResponse(results=items, ensemble_metadata=meta)
+    await _record_payment(request, result)
+    return result
 
 
 # ── Quota admin endpoints (VR_ADMIN_KEY gated) ────────────────────────────────────────
@@ -345,7 +381,7 @@ async def set_quota_v1(
 @v1.post("/verify/stream", dependencies=_AUTH_DEPS)
 async def stream_verify_v1(
     body: StreamVerifyRequest,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ):
     """Stream step-level verification results via SSE."""
     try:
@@ -407,7 +443,7 @@ async def stream_verify_v1(
 @v1.get("/evidence/{artifact_hash}/proof", response_model=ProofResponse, dependencies=_AUTH_DEPS)
 async def evidence_proof_v1(
     artifact_hash: str,
-    api_key: str = Depends(require_api_key),
+    auth_id: str = Depends(require_auth),
 ) -> ProofResponse:
     """Return Merkle inclusion proof for anchored evidence."""
     record = await get_evidence(artifact_hash)
@@ -483,6 +519,68 @@ async def anchor_v1(
     if result is None:
         return {"status": "no_evidence", "message": "No un-anchored evidence to anchor"}
     return {"status": "anchored", **result}
+
+
+# ── Payment / Pricing endpoints ──────────────────────────────────────────────────
+
+
+@v1.get("/pricing", response_model=PricingResponse)
+async def pricing_v1() -> PricingResponse:
+    """Return per-tier USDC pricing (no auth required)."""
+    from .payments import COMPOSE_SURCHARGE, TIER_PRICES
+    from .payments.x402 import _is_x402_enabled
+
+    tiers = [
+        PricingTierItem(tier=t, price_usdc=float(p))
+        for t, p in TIER_PRICES.items()
+    ]
+    return PricingResponse(
+        tiers=tiers,
+        compose_surcharge_usdc=float(COMPOSE_SURCHARGE),
+        x402_enabled=_is_x402_enabled(),
+    )
+
+
+@v1.get("/payments/{address}", response_model=PaymentsResponse, dependencies=_AUTH_DEPS)
+async def payments_v1(
+    address: str,
+    auth_id: str = Depends(require_auth),
+    limit: int = Query(100, ge=1, le=1000),
+) -> PaymentsResponse:
+    """Return payment history for a wallet address."""
+    records = await get_payments_by_address(address, limit=limit)
+    items = [
+        PaymentItem(
+            payer_address=r.payer_address,
+            amount_usdc=float(r.amount_usdc),
+            tx_hash=r.tx_hash,
+            verification_id=r.verification_id,
+            endpoint=r.endpoint,
+            tier=r.tier,
+            provider=r.provider,
+            created_at=r.created_at.isoformat(),
+        )
+        for r in records
+    ]
+    return PaymentsResponse(payments=items, count=len(items))
+
+
+@v1.get("/revenue", response_model=RevenueResponse)
+async def revenue_v1(
+    admin_key: str = Depends(require_admin_key),
+) -> RevenueResponse:
+    """Return revenue summary (admin only)."""
+    rows = await get_revenue_summary()
+    items = [
+        RevenueItem(
+            provider=r["provider"],
+            tier=r["tier"],
+            tx_count=r["tx_count"],
+            total_usdc=r["total_usdc"],
+        )
+        for r in rows
+    ]
+    return RevenueResponse(revenue=items)
 
 
 app.include_router(v1)

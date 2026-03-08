@@ -10,7 +10,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Text, delete, func, select
+from sqlalchemy import Column, DateTime, Float, Integer, Numeric, String, Text, delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
@@ -100,6 +100,26 @@ class QuotaRecord(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
+    )
+
+
+class PaymentRecord(Base):
+    """Per-verification payment record for x402 USDC and legacy API key charges."""
+
+    __tablename__ = "payment_records"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    payer_address = Column(String(42), nullable=False, index=True)  # 0x... or "api_key:prefix"
+    amount_usdc = Column(Numeric(10, 6), nullable=False)
+    tx_hash = Column(String(66), nullable=True, index=True)  # on-chain tx hash
+    verification_id = Column(String(71), nullable=True)  # linked artifact_hash
+    endpoint = Column(String(256), nullable=False)
+    tier = Column(String(16), nullable=False, default="HARD")
+    provider = Column(String(16), nullable=False, default="api_key")  # "x402" or "api_key"
+    created_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
     )
 
 
@@ -407,3 +427,76 @@ async def update_evidence_batch_id(
         result = await session.execute(stmt)
         await session.commit()
         return result.rowcount  # type: ignore[return-value]
+
+
+# ── Payment CRUD ─────────────────────────────────────────────────────────────
+
+
+async def store_payment(
+    payer_address: str,
+    amount_usdc: float,
+    tx_hash: str | None = None,
+    verification_id: str | None = None,
+    endpoint: str = "",
+    tier: str = "HARD",
+    provider: str = "api_key",
+) -> PaymentRecord:
+    """Insert a payment record."""
+    factory = get_session_factory()
+    async with factory() as session:
+        record = PaymentRecord(
+            payer_address=payer_address,
+            amount_usdc=amount_usdc,
+            tx_hash=tx_hash,
+            verification_id=verification_id,
+            endpoint=endpoint,
+            tier=tier,
+            provider=provider,
+        )
+        session.add(record)
+        await session.commit()
+        await session.refresh(record)
+        return record
+
+
+async def get_payments_by_address(
+    payer_address: str,
+    limit: int = 100,
+) -> list[PaymentRecord]:
+    """List payments for a given payer address."""
+    factory = get_session_factory()
+    async with factory() as session:
+        stmt = (
+            select(PaymentRecord)
+            .where(PaymentRecord.payer_address == payer_address)
+            .order_by(PaymentRecord.created_at.desc())
+            .limit(limit)
+        )
+        result = await session.execute(stmt)
+        return list(result.scalars().all())
+
+
+async def get_revenue_summary() -> list[dict]:
+    """Return revenue summary grouped by provider and tier."""
+    factory = get_session_factory()
+    async with factory() as session:
+        stmt = (
+            select(
+                PaymentRecord.provider,
+                PaymentRecord.tier,
+                func.count(PaymentRecord.id).label("tx_count"),
+                func.sum(PaymentRecord.amount_usdc).label("total_usdc"),
+            )
+            .group_by(PaymentRecord.provider, PaymentRecord.tier)
+            .order_by(func.sum(PaymentRecord.amount_usdc).desc())
+        )
+        result = await session.execute(stmt)
+        return [
+            {
+                "provider": row.provider,
+                "tier": row.tier,
+                "tx_count": row.tx_count,
+                "total_usdc": float(row.total_usdc or 0),
+            }
+            for row in result.all()
+        ]

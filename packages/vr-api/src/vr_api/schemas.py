@@ -199,3 +199,44 @@ class KeyItem(BaseModel):
 
 class KeysResponse(BaseModel):
     keys: list[KeyItem]
+
+
+# ── Payments ─────────────────────────────────────────────────────────────────
+
+
+class PaymentItem(BaseModel):
+    payer_address: str
+    amount_usdc: float
+    tx_hash: str | None = None
+    verification_id: str | None = None
+    endpoint: str
+    tier: str
+    provider: str
+    created_at: str
+
+
+class PaymentsResponse(BaseModel):
+    payments: list[PaymentItem]
+    count: int
+
+
+class RevenueItem(BaseModel):
+    provider: str
+    tier: str
+    tx_count: int
+    total_usdc: float
+
+
+class RevenueResponse(BaseModel):
+    revenue: list[RevenueItem]
+
+
+class PricingTierItem(BaseModel):
+    tier: str
+    price_usdc: float
+
+
+class PricingResponse(BaseModel):
+    tiers: list[PricingTierItem]
+    compose_surcharge_usdc: float
+    x402_enabled: bool

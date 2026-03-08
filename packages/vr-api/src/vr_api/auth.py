@@ -14,7 +14,7 @@ import hashlib
 import os
 from datetime import datetime, timezone
 
-from fastapi import HTTPException, Security
+from fastapi import HTTPException, Request, Security
 from fastapi.security import APIKeyHeader
 from sqlalchemy import text
 
@@ -42,25 +42,28 @@ async def _validate_db_key(api_key: str) -> bool:
         return False  # DB not initialised — skip DB check
 
     key_hash = _hash_key(api_key)
-    async with factory() as session:
-        row = await session.execute(
-            text(
-                "SELECT id FROM api_keys "
-                "WHERE key_hash = :h AND revoked_at IS NULL "
-                "LIMIT 1"
-            ),
-            {"h": key_hash},
-        )
-        result = row.first()
-        if result is None:
-            return False
+    try:
+        async with factory() as session:
+            row = await session.execute(
+                text(
+                    "SELECT id FROM api_keys "
+                    "WHERE key_hash = :h AND revoked_at IS NULL "
+                    "LIMIT 1"
+                ),
+                {"h": key_hash},
+            )
+            result = row.first()
+            if result is None:
+                return False
 
-        await session.execute(
-            text("UPDATE api_keys SET last_used_at = :now WHERE id = :id"),
-            {"now": datetime.now(timezone.utc), "id": result[0]},
-        )
-        await session.commit()
-        return True
+            await session.execute(
+                text("UPDATE api_keys SET last_used_at = :now WHERE id = :id"),
+                {"now": datetime.now(timezone.utc), "id": result[0]},
+            )
+            await session.commit()
+            return True
+    except Exception:
+        return False  # Table missing (SQLite tests) or DB error — skip
 
 
 async def require_api_key(
@@ -101,3 +104,53 @@ async def require_admin_key(
     if api_key != admin_key:
         raise HTTPException(status_code=403, detail="Admin access required")
     return api_key
+
+
+async def require_auth(request: Request) -> str:
+    """Dual-auth dependency: API key **or** x402 USDC payment.
+
+    Returns the authenticated identity:
+    - Raw API key string for key-based auth
+    - ``"x402:{address}"`` for x402 payment
+    - ``"dev"`` when auth is disabled (no env keys configured)
+
+    Raises 402 when x402 is enabled but no valid payment is provided.
+    Raises 401 when key auth fails and x402 is disabled.
+    """
+    env_keys = _get_env_keys()
+
+    # 1. Try API key auth (X-API-Key header) ───────────────────────────────
+    api_key = request.headers.get("X-API-Key")
+    if api_key:
+        if env_keys and api_key in env_keys:
+            return api_key
+        if await _validate_db_key(api_key):
+            return api_key
+
+    # 2. Try x402 payment (X-PAYMENT header) ───────────────────────────────
+    from .payments.x402 import _is_x402_enabled, get_x402_provider
+
+    if _is_x402_enabled():
+        provider = get_x402_provider()
+        payment = await provider.check_payment(request)
+        if payment:
+            request.state.payment = payment
+            return f"x402:{payment.payer_address}"
+
+        # x402 enabled but no valid payment → 402 Payment Required
+        from .payments import get_price_for_tier
+
+        headers = provider.create_payment_requirement(
+            endpoint=str(request.url.path),
+            tier="SOFT",
+            amount=get_price_for_tier("SOFT"),
+        )
+        raise HTTPException(
+            status_code=402, detail="Payment required", headers=headers,
+        )
+
+    # 3. Dev mode — no env keys configured → allow unauthenticated access
+    if not env_keys:
+        return "dev"
+
+    raise HTTPException(status_code=401, detail="Invalid or missing API key")
