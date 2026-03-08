@@ -34,10 +34,10 @@ def _hash_key(raw: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-async def _validate_db_key(api_key: str) -> str | None:
+async def _validate_db_key(api_key: str) -> tuple[str, int] | None:
     """Check the key hash against the ``api_keys`` table and bump last_used_at.
 
-    Returns the key's UUID (``api_keys.id``) on success, or ``None``.
+    Returns ``(key_uuid, user_id)`` on success, or ``None``.
     """
     try:
         factory = get_session_factory()
@@ -49,7 +49,7 @@ async def _validate_db_key(api_key: str) -> str | None:
         async with factory() as session:
             row = await session.execute(
                 text(
-                    "SELECT id FROM api_keys "
+                    "SELECT id, user_id FROM api_keys "
                     "WHERE key_hash = :h AND revoked_at IS NULL "
                     "LIMIT 1"
                 ),
@@ -60,14 +60,47 @@ async def _validate_db_key(api_key: str) -> str | None:
                 return None
 
             key_id = str(result[0])
+            user_id = int(result[1])
             await session.execute(
                 text("UPDATE api_keys SET last_used_at = :now WHERE id = :id"),
                 {"now": datetime.now(timezone.utc).replace(tzinfo=None), "id": key_id},
             )
             await session.commit()
-            return key_id
+            return key_id, user_id
     except Exception:
         return None  # Table missing (SQLite tests) or DB error — skip
+
+
+async def _get_user_payment_info(user_id: int) -> dict | None:
+    """Look up a user's payment tier and counters from the ``users`` table.
+
+    Returns ``{"payment_tier": str, "total_keys_created": int, "lifetime_verifications": int}``
+    or ``None`` on error / not found.
+    """
+    try:
+        factory = get_session_factory()
+    except RuntimeError:
+        return None
+
+    try:
+        async with factory() as session:
+            row = await session.execute(
+                text(
+                    "SELECT payment_tier, total_keys_created, lifetime_verifications "
+                    "FROM users WHERE id = :uid LIMIT 1"
+                ),
+                {"uid": user_id},
+            )
+            result = row.first()
+            if result is None:
+                return None
+            return {
+                "payment_tier": result[0] or "free",
+                "total_keys_created": result[1] or 0,
+                "lifetime_verifications": result[2] or 0,
+            }
+    except Exception:
+        return None
 
 
 async def require_api_key(
@@ -85,8 +118,9 @@ async def require_api_key(
 
     # 2. Check NeonDB api_keys table
     if api_key:
-        key_id = await _validate_db_key(api_key)
-        if key_id:
+        db_result = await _validate_db_key(api_key)
+        if db_result:
+            key_id, _user_id = db_result
             return f"keyid:{key_id}"
 
     # 3. Dev mode — no env keys configured and DB has no keys table yet
@@ -130,9 +164,17 @@ async def require_auth(request: Request) -> str:
     if api_key:
         if env_keys and api_key in env_keys:
             return api_key
-        key_id = await _validate_db_key(api_key)
-        if key_id:
+        db_result = await _validate_db_key(api_key)
+        if db_result:
+            key_id, user_id = db_result
             request.state.api_key_id = key_id
+            request.state.user_id = user_id
+            # Look up graduated payment tier
+            payment_info = await _get_user_payment_info(user_id)
+            if payment_info:
+                request.state.payment_tier = payment_info["payment_tier"]
+                request.state.lifetime_verifications = payment_info["lifetime_verifications"]
+                request.state.total_keys_created = payment_info["total_keys_created"]
             return f"keyid:{key_id}"
 
     # 2. Try x402 payment (X-PAYMENT header) ───────────────────────────────
@@ -148,10 +190,15 @@ async def require_auth(request: Request) -> str:
         # x402 enabled but no valid payment → 402 Payment Required
         from .payments import get_price_for_tier
 
+        # Per-user network: testnet users get base-sepolia, mainnet users get base
+        user_tier = getattr(request.state, "payment_tier", "free")
+        user_network = "base" if user_tier == "mainnet" else "base-sepolia"
+
         headers = provider.create_payment_requirement(
             endpoint=str(request.url.path),
             tier="SOFT",
             amount=get_price_for_tier("SOFT"),
+            network=user_network,
         )
         raise HTTPException(
             status_code=402, detail="Payment required", headers=headers,

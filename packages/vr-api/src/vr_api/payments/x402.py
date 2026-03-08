@@ -138,19 +138,22 @@ class X402PaymentProvider(PaymentProvider):
         )
 
     def create_payment_requirement(
-        self, endpoint: str, tier: str, amount: Decimal
+        self, endpoint: str, tier: str, amount: Decimal, *, network: str | None = None,
     ) -> dict[str, str]:
-        """Generate x402 payment requirement headers for a 402 response."""
-        network = _get_network()
+        """Generate x402 payment requirement headers for a 402 response.
+
+        If *network* is provided (per-user tier), use it instead of the global default.
+        """
+        net = network or _get_network()
         wallet = _get_wallet_address()
 
         return {
             "X-PAYMENT-REQUIRED": "true",
             "X-PAYMENT-AMOUNT": str(amount),
             "X-PAYMENT-CURRENCY": "USDC",
-            "X-PAYMENT-NETWORK": network,
+            "X-PAYMENT-NETWORK": net,
             "X-PAYMENT-RECIPIENT": wallet,
-            "X-PAYMENT-USDC-CONTRACT": _USDC_CONTRACTS.get(network, ""),
+            "X-PAYMENT-USDC-CONTRACT": _USDC_CONTRACTS.get(net, ""),
             "X-PAYMENT-ENDPOINT": endpoint,
             "X-PAYMENT-TIER": tier,
         }

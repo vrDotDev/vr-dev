@@ -56,12 +56,14 @@ async def check_quota(
     request: Request,
     auth_id: str = Depends(require_auth),
 ) -> None:
-    """FastAPI dependency — enforces per-key daily/monthly quotas.
+    """FastAPI dependency — enforces per-key daily/monthly quotas and graduated tier gates.
 
-    Reads limits from the ``quota_records`` table.  Keys with no record
-    are unrestricted.  x402 payers bypass quota (they pay per-request).
-    Returns HTTP 429 with a ``Retry-After`` header
-    when a limit is exceeded.
+    Graduated tiers:
+    - **free**: 1000 lifetime verifications, then 403
+    - **testnet**: 10 000 lifetime verifications, then 403
+    - **mainnet**: unrestricted (x402 payers bypass)
+
+    Also enforces per-key daily/monthly quotas from ``quota_records``.
     """
     # x402 payers bypass quota — they pay per-request on-chain
     if auth_id.startswith("x402:"):
@@ -71,6 +73,23 @@ async def check_quota(
     if auth_id == "dev":
         return
 
+    # ── Graduated tier gate ──────────────────────────────────────────────
+    payment_tier = getattr(request.state, "payment_tier", None)
+    lifetime = getattr(request.state, "lifetime_verifications", 0)
+
+    if payment_tier == "free" and lifetime >= 1000:
+        raise HTTPException(
+            status_code=403,
+            detail="Free tier limit reached (1 000 verifications). Enable testnet billing on your dashboard to continue.",
+        )
+    elif payment_tier == "testnet" and lifetime >= 10_000:
+        raise HTTPException(
+            status_code=403,
+            detail="Testnet tier limit reached (10 000 verifications). Upgrade to mainnet billing on your dashboard to continue.",
+        )
+    # mainnet and unknown tiers — no gate
+
+    # ── Per-key daily/monthly quota ──────────────────────────────────────
     # Extract the DB key UUID from the keyid: prefix set by auth
     if auth_id.startswith("keyid:"):
         lookup_key = auth_id[6:]

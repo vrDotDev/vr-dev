@@ -9,6 +9,7 @@ import asyncio
 import json
 import logging
 import os
+import time as _time
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -16,6 +17,7 @@ import structlog
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request
 from fastapi.responses import StreamingResponse
+from sqlalchemy import text
 
 from vrdev.core.compose import compose
 from vrdev.core.ensemble import EnsembleVerifier
@@ -32,6 +34,7 @@ from .db import (
     get_payments_by_address,
     get_quota,
     get_revenue_summary,
+    get_session_factory,
     get_usage,
     init_db,
     list_evidence,
@@ -152,6 +155,63 @@ async def _record_payment(request: Request, result: object) -> None:
         pass  # payment recording is best-effort
 
 
+async def _record_verification(request: Request, body: object, result: object, latency_ms: int) -> None:
+    """Increment lifetimeVerifications on the user and write to verification_logs.
+
+    Best-effort — never fails the request.
+    """
+    user_id = getattr(request.state, "user_id", None)
+    api_key_id = getattr(request.state, "api_key_id", None)
+    if not user_id:
+        return
+
+    verifier_id = getattr(body, "verifier_id", "unknown")
+    results = getattr(result, "results", None)
+    verdict = "UNKNOWN"
+    score = 0.0
+    tier = "HARD"
+    evidence_hash = None
+    if results and len(results) > 0:
+        r = results[0]
+        verdict = getattr(r, "verdict", "UNKNOWN")
+        score = getattr(r, "score", 0.0)
+        tier = getattr(r, "tier", "HARD")
+        evidence_hash = getattr(r, "artifact_hash", None) or None
+
+    try:
+        factory = get_session_factory()
+        async with factory() as session:
+            # Increment lifetime verifications on user
+            await session.execute(
+                text(
+                    "UPDATE users SET lifetime_verifications = lifetime_verifications + 1 "
+                    "WHERE id = :uid"
+                ),
+                {"uid": user_id},
+            )
+            # Write to verification_logs for dashboard
+            await session.execute(
+                text(
+                    "INSERT INTO verification_logs "
+                    "(id, user_id, api_key_id, verifier_id, verdict, score, tier, evidence_hash, latency_ms, created_at) "
+                    "VALUES (gen_random_uuid(), :uid, :kid, :vid, :verdict, :score, :tier, :ehash, :lat, NOW())"
+                ),
+                {
+                    "uid": user_id,
+                    "kid": api_key_id,
+                    "vid": verifier_id,
+                    "verdict": verdict,
+                    "score": score,
+                    "tier": tier,
+                    "ehash": evidence_hash,
+                    "lat": latency_ms,
+                },
+            )
+            await session.commit()
+    except Exception:
+        pass  # Best-effort — never fail the request
+
+
 def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
     return [
         ResultItem(
@@ -186,8 +246,11 @@ async def verify_v1(
     body: VerifyRequest,
     auth_id: str = Depends(require_auth),
 ) -> VerifyResponse:
+    t0 = _time.monotonic()
     result = await _do_verify(body)
+    latency_ms = int((_time.monotonic() - t0) * 1000)
     await _record_payment(request, result)
+    await _record_verification(request, body, result, latency_ms)
     return result
 
 
