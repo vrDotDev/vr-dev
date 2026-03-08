@@ -50,6 +50,7 @@ class ResultItem(BaseModel):
     retryable: bool = False
     suggested_action: str | None = None
     step_rewards: list[float] | None = None
+    cost_usd: float | None = None
     signature: str | None = None
     signing_key_id: str | None = None
 
@@ -174,6 +175,24 @@ class StreamVerifyRequest(BaseModel):
     policy_mode: str = "fail_closed"
 
 
+class StepVerifyRequest(BaseModel):
+    """Submit a single step for progressive verification."""
+    verifier_ids: list[str]
+    step: StepInputItem
+    require_hard: bool = True
+    policy_mode: str = "fail_closed"
+    budget_limit_usd: float | None = None
+
+
+class StepVerifyResponse(BaseModel):
+    """Response for a single-step verification."""
+    results: list[ResultItem]
+    step_index: int
+    is_terminal: bool
+    trajectory_halted: bool = False
+    steps_completed: int = 0
+
+
 # ── Proof / Anchor ───────────────────────────────────────────────────────────
 
 
@@ -240,3 +259,11 @@ class PricingResponse(BaseModel):
     tiers: list[PricingTierItem]
     compose_surcharge_usdc: float
     x402_enabled: bool
+
+
+class EstimateResponse(BaseModel):
+    estimated_cost_usd: float
+    tiers_included: list[str]
+    tiers_skipped: list[str]
+    verifier_count: int
+    policy_mode: str

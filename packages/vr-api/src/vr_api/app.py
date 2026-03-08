@@ -23,7 +23,7 @@ from vrdev.core.compose import compose
 from vrdev.core.ensemble import EnsembleVerifier
 from vrdev.core.export import export_jsonl_lines
 from vrdev.core.registry import get_verifier, list_verifiers
-from vrdev.core.types import PolicyMode, StepInput, VerificationResult, VerifierInput
+from vrdev.core.types import PolicyMode, StepInput, Tier, VerificationResult, VerifierInput
 
 from .auth import require_admin_key, require_api_key, require_auth
 from .db import (
@@ -54,6 +54,7 @@ from .schemas import (
     ComposeResponse,
     EnsembleRequest,
     EnsembleResponse,
+    EstimateResponse,
     EvidenceListResponse,
     EvidenceResponse,
     ExportRequest,
@@ -72,6 +73,8 @@ from .schemas import (
     RevenueItem,
     RevenueResponse,
     SetQuotaRequest,
+    StepVerifyRequest,
+    StepVerifyResponse,
     StreamVerifyRequest,
     UsageResponse,
     UsageSummaryItem,
@@ -156,7 +159,14 @@ async def _record_payment(request: Request, result: object) -> None:
         pass  # payment recording is best-effort
 
 
-async def _record_verification(request: Request, body: object, result: object, latency_ms: int) -> None:
+async def _record_verification(
+    request: Request,
+    body: object,
+    result: object,
+    latency_ms: int,
+    step_index: int | None = None,
+    is_terminal: bool | None = None,
+) -> None:
     """Increment lifetimeVerifications on the user and write to verification_logs.
 
     Best-effort — never fails the request.
@@ -183,6 +193,7 @@ async def _record_verification(request: Request, body: object, result: object, l
     agent_name = request.headers.get("x-agent-name")
     agent_framework = request.headers.get("x-agent-framework")
     session_id = request.headers.get("x-session-id")
+    cost_usd = _tier_cost_usd(tier)
 
     try:
         factory = get_session_factory()
@@ -200,9 +211,11 @@ async def _record_verification(request: Request, body: object, result: object, l
                 text(
                     "INSERT INTO verification_logs "
                     "(id, user_id, api_key_id, verifier_id, verdict, score, tier, evidence_hash, "
-                    "agent_name, agent_framework, session_id, latency_ms, created_at) "
+                    "agent_name, agent_framework, session_id, step_index, is_terminal, "
+                    "latency_ms, cost_usd, created_at) "
                     "VALUES (gen_random_uuid(), :uid, :kid, :vid, :verdict, :score, :tier, :ehash, "
-                    ":agent_name, :agent_framework, :session_id, :lat, NOW())"
+                    ":agent_name, :agent_framework, :session_id, :step_index, :is_terminal, "
+                    ":lat, :cost_usd, NOW())"
                 ),
                 {
                     "uid": user_id,
@@ -215,7 +228,10 @@ async def _record_verification(request: Request, body: object, result: object, l
                     "agent_name": agent_name,
                     "agent_framework": agent_framework,
                     "session_id": session_id,
+                    "step_index": step_index,
+                    "is_terminal": is_terminal,
                     "lat": latency_ms,
+                    "cost_usd": cost_usd,
                 },
             )
             # Upsert agent profile if agent_name is provided
@@ -239,6 +255,19 @@ async def _record_verification(request: Request, body: object, result: object, l
         pass  # Best-effort — never fail the request
 
 
+def _tier_cost_usd(tier_value: str) -> float | None:
+    """Look up USDC cost for a tier string."""
+    from .payments import TIER_PRICES
+    price = TIER_PRICES.get(tier_value)
+    return float(price) if price is not None else None
+
+
+def _tier_costs_map() -> dict[Tier, float]:
+    """Build a Tier→float cost map from TIER_PRICES."""
+    from .payments import TIER_PRICES
+    return {Tier(k): float(v) for k, v in TIER_PRICES.items()}
+
+
 def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
     return [
         ResultItem(
@@ -255,6 +284,9 @@ def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
             step_rewards=r.step_rewards,
             signature=r.signature,
             signing_key_id=r.signing_key_id,
+            cost_usd=_tier_cost_usd(
+                r.tier.value if hasattr(r.tier, "value") else str(r.tier)
+            ),
         )
         for r in results
     ]
@@ -480,7 +512,13 @@ async def stream_verify_v1(
         raise HTTPException(status_code=422, detail="One or more verifier IDs not found")
 
     mode = PolicyMode(body.policy_mode)
-    composed = compose(verifiers, require_hard=body.require_hard, policy_mode=mode)
+    composed = compose(
+        verifiers,
+        require_hard=body.require_hard,
+        policy_mode=mode,
+        tier_costs=_tier_costs_map() if mode == PolicyMode.ESCALATION else None,
+        budget_limit_usd=getattr(body, "budget_limit_usd", None),
+    )
 
     steps = [
         StepInput(
@@ -514,6 +552,9 @@ async def stream_verify_v1(
                 retryable=r.retryable,
                 suggested_action=r.suggested_action,
                 step_rewards=r.step_rewards,
+                cost_usd=_tier_cost_usd(
+                    r.tier.value if hasattr(r.tier, "value") else str(r.tier)
+                ),
                 signature=r.signature,
                 signing_key_id=r.signing_key_id,
             ).model_dump()
@@ -524,6 +565,110 @@ async def stream_verify_v1(
         event_generator(),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+# ── Real-time step verification ─────────────────────────────────────────────────
+
+# In-memory trajectory session store — keyed by (session_id, verifier_config_hash)
+# Each entry tracks the composed verifier and steps completed so far.
+from dataclasses import dataclass, field as dc_field
+from vrdev.core.base import BaseVerifier as _BaseVerifier
+
+@dataclass
+class _TrajectorySession:
+    composed: object  # ComposedVerifier
+    steps_completed: int = 0
+    halted: bool = False
+
+_trajectory_sessions: dict[str, _TrajectorySession] = {}
+
+
+@v1.post("/verify/step", response_model=StepVerifyResponse, dependencies=_AUTH_DEPS)
+async def step_verify_v1(
+    request: Request,
+    body: StepVerifyRequest,
+    auth_id: str = Depends(require_auth),
+) -> StepVerifyResponse:
+    """Submit a single step for progressive trajectory verification.
+
+    Uses ``X-Session-ID`` header to track trajectory state across calls.
+    When ``require_hard=True`` and a HARD verifier fails, the trajectory
+    is halted and ``trajectory_halted=True`` is returned.
+    """
+    session_id = request.headers.get("x-session-id")
+    if not session_id:
+        raise HTTPException(status_code=422, detail="X-Session-ID header required for step verification")
+
+    t0 = _time.monotonic()
+
+    # Build or retrieve the composed verifier for this session
+    session_key = f"{session_id}:{','.join(sorted(body.verifier_ids))}"
+
+    if session_key not in _trajectory_sessions:
+        try:
+            verifiers = [get_verifier(vid) for vid in body.verifier_ids]
+        except Exception:
+            raise HTTPException(status_code=422, detail="One or more verifier IDs not found")
+        mode = PolicyMode(body.policy_mode)
+        composed = compose(
+            verifiers,
+            require_hard=body.require_hard,
+            policy_mode=mode,
+            tier_costs=_tier_costs_map() if mode == PolicyMode.ESCALATION else None,
+            budget_limit_usd=body.budget_limit_usd,
+        )
+        _trajectory_sessions[session_key] = _TrajectorySession(composed=composed)
+
+    ts = _trajectory_sessions[session_key]
+
+    # Reject further steps if trajectory was halted
+    if ts.halted:
+        raise HTTPException(status_code=409, detail="Trajectory halted — HARD verifier failed at an earlier step")
+
+    # Run verification for this single step
+    step = StepInput(
+        step_index=body.step.step_index,
+        completions=body.step.completions,
+        ground_truth=body.step.ground_truth,
+        context=body.step.context,
+        is_terminal=body.step.is_terminal,
+    )
+    step_results = ts.composed.verify_step(step)
+    ts.steps_completed += 1
+
+    # Check hard gate
+    trajectory_halted = False
+    if body.require_hard:
+        from vrdev.core.types import Verdict, Tier as _Tier
+        hard_failed = any(
+            r.verdict == Verdict.FAIL and r.tier == _Tier.HARD
+            for r in step_results
+        )
+        if hard_failed:
+            ts.halted = True
+            trajectory_halted = True
+
+    latency_ms = int((_time.monotonic() - t0) * 1000)
+
+    # Record each step-level result
+    await _record_verification(
+        request, body, type("_R", (), {"results": step_results})(),
+        latency_ms,
+        step_index=body.step.step_index,
+        is_terminal=body.step.is_terminal,
+    )
+
+    # Clean up session if terminal
+    if body.step.is_terminal or trajectory_halted:
+        _trajectory_sessions.pop(session_key, None)
+
+    return StepVerifyResponse(
+        results=_to_result_items(step_results),
+        step_index=body.step.step_index,
+        is_terminal=body.step.is_terminal,
+        trajectory_halted=trajectory_halted,
+        steps_completed=ts.steps_completed if not (body.step.is_terminal or trajectory_halted) else ts.steps_completed,
     )
 
 
@@ -664,6 +809,62 @@ async def pricing_v1() -> PricingResponse:
     )
 
 
+@v1.get("/estimate", response_model=EstimateResponse)
+async def estimate_v1(
+    verifier_ids: str = Query(..., description="Comma-separated verifier IDs"),
+    policy_mode: str = Query("fail_closed"),
+    budget_limit_usd: float | None = Query(None, ge=0),
+) -> EstimateResponse:
+    """Preview the cost of a compose/verify request without running it."""
+    from .payments import TIER_PRICES
+
+    ids = [v.strip() for v in verifier_ids.split(",") if v.strip()]
+    if not ids:
+        raise HTTPException(status_code=422, detail="No verifier IDs provided")
+
+    # Resolve tiers
+    tier_order = ["HARD", "SOFT", "AGENTIC"]
+    tiers_needed: dict[str, int] = {}
+    for vid in ids:
+        try:
+            v = get_verifier(vid)
+            t = v.tier.value if hasattr(v.tier, "value") else str(v.tier)
+            tiers_needed[t] = tiers_needed.get(t, 0) + 1
+        except Exception:
+            raise HTTPException(status_code=404, detail=f"Unknown verifier: {vid}")
+
+    tiers_included: list[str] = []
+    tiers_skipped: list[str] = []
+    total = 0.0
+
+    if policy_mode == "escalation":
+        budget_used = 0.0
+        for tier in tier_order:
+            count = tiers_needed.get(tier, 0)
+            if count == 0:
+                continue
+            tier_cost = float(TIER_PRICES.get(tier, 0)) * count
+            if budget_limit_usd is not None and budget_used + tier_cost > budget_limit_usd:
+                tiers_skipped.append(tier)
+                continue
+            budget_used += tier_cost
+            total += tier_cost
+            tiers_included.append(tier)
+    else:
+        for tier, count in tiers_needed.items():
+            cost = float(TIER_PRICES.get(tier, 0)) * count
+            total += cost
+            tiers_included.append(tier)
+
+    return EstimateResponse(
+        estimated_cost_usd=round(total, 6),
+        tiers_included=sorted(set(tiers_included), key=lambda t: tier_order.index(t) if t in tier_order else 99),
+        tiers_skipped=tiers_skipped,
+        verifier_count=len(ids),
+        policy_mode=policy_mode,
+    )
+
+
 @v1.get("/payments/{address}", response_model=PaymentsResponse, dependencies=_AUTH_DEPS)
 async def payments_v1(
     address: str,
@@ -800,7 +1001,13 @@ async def _do_compose(body: ComposeRequest) -> ComposeResponse:
     except Exception:
         raise HTTPException(status_code=404, detail="One or more verifier IDs not found")
     mode = PolicyMode(body.policy_mode)
-    composed = compose(verifiers, require_hard=body.require_hard, policy_mode=mode)
+    composed = compose(
+        verifiers,
+        require_hard=body.require_hard,
+        policy_mode=mode,
+        tier_costs=_tier_costs_map() if mode == PolicyMode.ESCALATION else None,
+        budget_limit_usd=body.budget_limit_usd,
+    )
     inp = VerifierInput(
         completions=body.completions,
         ground_truth=body.ground_truth,
