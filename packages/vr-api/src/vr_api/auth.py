@@ -58,7 +58,7 @@ async def _validate_db_key(api_key: str) -> bool:
 
             await session.execute(
                 text("UPDATE api_keys SET last_used_at = :now WHERE id = :id"),
-                {"now": datetime.now(timezone.utc), "id": result[0]},
+                {"now": datetime.now(timezone.utc).replace(tzinfo=None), "id": str(result[0])},
             )
             await session.commit()
             return True

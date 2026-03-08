@@ -145,10 +145,22 @@ async def init_db(url: str | None = None) -> None:
         db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
     elif db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
+    # asyncpg doesn't accept sslmode — translate to the ssl connect_arg
+    connect_args: dict[str, Any] = {}
+    if "sslmode=" in db_url:
+        from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+
+        parsed = urlparse(db_url)
+        qs = parse_qs(parsed.query)
+        if qs.pop("sslmode", None):
+            import ssl as _ssl
+            connect_args["ssl"] = _ssl.create_default_context()
+        new_query = urlencode(qs, doseq=True)
+        db_url = urlunparse(parsed._replace(query=new_query))
     engine_kwargs: dict[str, Any] = {"echo": False}
     if db_url.startswith("postgresql"):
         engine_kwargs.update(pool_size=5, max_overflow=10)
-    _engine = create_async_engine(db_url, **engine_kwargs)
+    _engine = create_async_engine(db_url, connect_args=connect_args, **engine_kwargs)
     _session_factory = async_sessionmaker(_engine, expire_on_commit=False)
     async with _engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

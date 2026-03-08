@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+from datetime import datetime, timezone
 
 import structlog
 
@@ -36,7 +37,7 @@ async def anchor_batch() -> dict | None:
     from .db import get_latest_anchor
 
     latest = await get_latest_anchor()
-    since = latest.created_at if latest else None
+    since = latest.created_at if latest else datetime.min.replace(tzinfo=timezone.utc)
     hashes = await list_evidence_since(since)
 
     if not hashes:
