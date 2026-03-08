@@ -67,15 +67,15 @@ class UsageRecord(Base):
     __tablename__ = "usage_records"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    api_key = Column(String(128), nullable=False, index=True)
+    api_key_id = Column(String(128), nullable=False, index=True)
     endpoint = Column(String(256), nullable=False)
     method = Column(String(8), nullable=False)
     status_code = Column(Integer, nullable=False)
     latency_ms = Column(Integer, nullable=False, default=0)
     created_at = Column(
-        DateTime(timezone=True),
+        DateTime,
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
     )
 
 
@@ -87,19 +87,20 @@ class QuotaRecord(Base):
 
     __tablename__ = "quota_records"
 
-    api_key = Column(String(128), primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    api_key_id = Column(String(128), unique=True, nullable=False)
     daily_limit = Column(Integer, nullable=False, default=1000)
     monthly_limit = Column(Integer, nullable=False, default=10000)
     created_at = Column(
-        DateTime(timezone=True),
+        DateTime,
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
     )
     updated_at = Column(
-        DateTime(timezone=True),
+        DateTime,
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
+        onupdate=lambda: datetime.now(timezone.utc).replace(tzinfo=None),
     )
 
 
@@ -272,7 +273,7 @@ async def record_usage(
     factory = get_session_factory()
     async with factory() as session:
         record = UsageRecord(
-            api_key=api_key,
+            api_key_id=api_key,
             endpoint=endpoint,
             method=method,
             status_code=status_code,
@@ -296,20 +297,20 @@ async def get_usage(
     async with factory() as session:
         stmt = (
             select(
-                UsageRecord.api_key,
+                UsageRecord.api_key_id,
                 func.count(UsageRecord.id).label("request_count"),
                 func.avg(UsageRecord.latency_ms).label("avg_latency_ms"),
             )
-            .group_by(UsageRecord.api_key)
+            .group_by(UsageRecord.api_key_id)
             .order_by(func.count(UsageRecord.id).desc())
             .limit(limit)
         )
         if api_key:
-            stmt = stmt.where(UsageRecord.api_key == api_key)
+            stmt = stmt.where(UsageRecord.api_key_id == api_key)
         result = await session.execute(stmt)
         return [
             {
-                "api_key": row.api_key,
+                "api_key": row.api_key_id,
                 "request_count": row.request_count,
                 "avg_latency_ms": round(float(row.avg_latency_ms or 0), 1),
             }
@@ -324,23 +325,27 @@ async def get_quota(api_key: str) -> QuotaRecord | None:
     """Retrieve the quota record for an API key (or ``None``)."""
     factory = get_session_factory()
     async with factory() as session:
-        return await session.get(QuotaRecord, api_key)
+        stmt = select(QuotaRecord).where(QuotaRecord.api_key_id == api_key).limit(1)
+        result = await session.execute(stmt)
+        return result.scalar_one_or_none()
 
 
 async def set_quota(api_key: str, daily_limit: int, monthly_limit: int) -> QuotaRecord:
     """Create or update the quota for an API key."""
     factory = get_session_factory()
     async with factory() as session:
-        existing = await session.get(QuotaRecord, api_key)
+        stmt = select(QuotaRecord).where(QuotaRecord.api_key_id == api_key).limit(1)
+        result = await session.execute(stmt)
+        existing = result.scalar_one_or_none()
         if existing is not None:
             existing.daily_limit = daily_limit
             existing.monthly_limit = monthly_limit
-            existing.updated_at = datetime.now(timezone.utc)
+            existing.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
             await session.commit()
             await session.refresh(existing)
             return existing
         record = QuotaRecord(
-            api_key=api_key,
+            api_key_id=api_key,
             daily_limit=daily_limit,
             monthly_limit=monthly_limit,
         )
@@ -356,7 +361,7 @@ async def get_usage_count(api_key: str, since: datetime) -> int:
     async with factory() as session:
         stmt = (
             select(func.count(UsageRecord.id))
-            .where(UsageRecord.api_key == api_key)
+            .where(UsageRecord.api_key_id == api_key)
             .where(UsageRecord.created_at >= since)
         )
         result = await session.execute(stmt)

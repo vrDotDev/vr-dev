@@ -68,7 +68,7 @@ async def check_quota(
     if quota is None:
         return  # no quota configured → unrestricted
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
 
     # Daily check
     day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
