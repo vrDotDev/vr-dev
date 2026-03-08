@@ -60,10 +60,19 @@ Railway will:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `VR_DATABASE_URL` | PostgreSQL connection string | Yes |
-| `VR_REDIS_URL` | Redis connection string | Yes |
-| `VR_API_KEY_SALT` | Salt for API key hashing | Yes |
+| `VR_DATABASE_URL` | PostgreSQL connection string (NeonDB) | Yes |
+| `VR_REDIS_URL` | Redis connection string (add Redis plugin) | Yes |
+| `VR_ADMIN_KEY` | Secret for `/v1/quota/*` admin endpoints | Yes |
+| `VR_SIGNING_KEY` | Ed25519 PEM private key (escape `\n`) | Yes |
 | `OPENAI_API_KEY` | For SOFT-tier LLM verifiers | If using SOFT tier |
+| `VR_ANCHOR_PRIVATE_KEY` | Ethereum private key for on-chain anchoring | If anchoring |
+| `VR_ANCHOR_CONTRACT` | EvidenceAnchor contract address on Base | If anchoring |
+| `VR_BASE_RPC_URL` | Base RPC endpoint (default: `https://sepolia.base.org`) | If anchoring |
+| `VR_X402_ENABLED` | Enable x402 USDC payment gating (`1` or `0`) | No (default `0`) |
+| `VR_X402_WALLET_ADDRESS` | USDC recipient wallet on Base | If x402 enabled |
+| `VR_X402_NETWORK` | `base-sepolia` or `base` | If x402 enabled |
+| `VR_CDP_API_KEY` | Coinbase CDP API key ID | If x402 enabled |
+| `VR_CDP_API_SECRET` | Coinbase CDP API secret | If x402 enabled |
 | `PORT` | Auto-set by Railway | No |
 
 ### Verify Deployment

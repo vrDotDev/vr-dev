@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 EXPECTED_VERSION = "1.0.0"
-EXPECTED_VERIFIER_COUNT = 30
+EXPECTED_VERIFIER_COUNT = 38
 
 PASS = "\033[32m✓\033[0m"
 FAIL = "\033[31m✗\033[0m"
