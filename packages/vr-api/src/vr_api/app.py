@@ -38,6 +38,7 @@ from .db import (
     get_usage,
     init_db,
     list_evidence,
+    list_evidence_by_batch,
     list_evidence_since,
     set_quota,
     store_anchor,
@@ -178,6 +179,11 @@ async def _record_verification(request: Request, body: object, result: object, l
         tier = getattr(r, "tier", "HARD")
         evidence_hash = getattr(r, "artifact_hash", None) or None
 
+    # Parse agent metadata headers
+    agent_name = request.headers.get("x-agent-name")
+    agent_framework = request.headers.get("x-agent-framework")
+    session_id = request.headers.get("x-session-id")
+
     try:
         factory = get_session_factory()
         async with factory() as session:
@@ -193,8 +199,10 @@ async def _record_verification(request: Request, body: object, result: object, l
             await session.execute(
                 text(
                     "INSERT INTO verification_logs "
-                    "(id, user_id, api_key_id, verifier_id, verdict, score, tier, evidence_hash, latency_ms, created_at) "
-                    "VALUES (gen_random_uuid(), :uid, :kid, :vid, :verdict, :score, :tier, :ehash, :lat, NOW())"
+                    "(id, user_id, api_key_id, verifier_id, verdict, score, tier, evidence_hash, "
+                    "agent_name, agent_framework, session_id, latency_ms, created_at) "
+                    "VALUES (gen_random_uuid(), :uid, :kid, :vid, :verdict, :score, :tier, :ehash, "
+                    ":agent_name, :agent_framework, :session_id, :lat, NOW())"
                 ),
                 {
                     "uid": user_id,
@@ -204,9 +212,28 @@ async def _record_verification(request: Request, body: object, result: object, l
                     "score": score,
                     "tier": tier,
                     "ehash": evidence_hash,
+                    "agent_name": agent_name,
+                    "agent_framework": agent_framework,
+                    "session_id": session_id,
                     "lat": latency_ms,
                 },
             )
+            # Upsert agent profile if agent_name is provided
+            if agent_name:
+                passed = 1 if verdict == "PASS" else 0
+                await session.execute(
+                    text(
+                        "INSERT INTO agent_profiles (id, name, framework, first_seen, last_seen, total_verifications, pass_rate) "
+                        "VALUES (gen_random_uuid(), :name, :fw, NOW(), NOW(), 1, :passed) "
+                        "ON CONFLICT (name) DO UPDATE SET "
+                        "framework = COALESCE(EXCLUDED.framework, agent_profiles.framework), "
+                        "last_seen = NOW(), "
+                        "total_verifications = agent_profiles.total_verifications + 1, "
+                        "pass_rate = (agent_profiles.pass_rate * agent_profiles.total_verifications + :passed) "
+                        "/ (agent_profiles.total_verifications + 1)"
+                    ),
+                    {"name": agent_name, "fw": agent_framework, "passed": float(passed)},
+                )
             await session.commit()
     except Exception:
         pass  # Best-effort — never fail the request
@@ -520,22 +547,18 @@ async def evidence_proof_v1(
         raise HTTPException(status_code=404, detail="Anchor record not found")
 
     # Re-build Merkle tree for the batch to get the proof
-    from datetime import datetime, timezone
     from .merkle import build_merkle_tree, get_inclusion_proof, verify_inclusion
 
-    batch_evidence = await list_evidence_since(
-        datetime.min.replace(tzinfo=timezone.utc)
-    )
-    batch_hashes = [
-        e.artifact_hash for e in batch_evidence if e.batch_id == record.batch_id
-    ]
+    batch_evidence = await list_evidence_by_batch(record.batch_id)
+    batch_hashes = [e.artifact_hash.removeprefix("sha256:") for e in batch_evidence]
 
     if not batch_hashes:
         raise HTTPException(status_code=404, detail="No evidence in batch")
 
+    leaf_hex = artifact_hash.removeprefix("sha256:")
     tree = build_merkle_tree(batch_hashes)
-    proof = get_inclusion_proof(tree, artifact_hash)
-    verified = verify_inclusion(anchor.merkle_root, artifact_hash, proof)
+    proof = get_inclusion_proof(tree, leaf_hex)
+    verified = verify_inclusion(anchor.merkle_root, leaf_hex, proof)
 
     return ProofResponse(
         artifact_hash=artifact_hash,
@@ -582,6 +605,43 @@ async def anchor_v1(
     if result is None:
         return {"status": "no_evidence", "message": "No un-anchored evidence to anchor"}
     return {"status": "anchored", **result}
+
+
+@v1.get("/anchor/latest", dependencies=_AUTH_DEPS)
+async def anchor_latest_v1(
+    auth_id: str = Depends(require_auth),
+):
+    """Return the most recent anchor batch."""
+    anchor = await get_latest_anchor()
+    if anchor is None:
+        raise HTTPException(status_code=404, detail="No anchors yet")
+    return {
+        "batch_id": anchor.batch_id,
+        "merkle_root": anchor.merkle_root,
+        "leaf_count": anchor.leaf_count,
+        "tx_hash": anchor.tx_hash,
+        "chain": anchor.chain,
+        "created_at": anchor.created_at.isoformat(),
+    }
+
+
+@v1.get("/anchor/{batch_id}", dependencies=_AUTH_DEPS)
+async def anchor_detail_v1(
+    batch_id: int,
+    auth_id: str = Depends(require_auth),
+):
+    """Return anchor batch metadata by ID."""
+    anchor = await get_anchor(batch_id)
+    if anchor is None:
+        raise HTTPException(status_code=404, detail="Anchor not found")
+    return {
+        "batch_id": anchor.batch_id,
+        "merkle_root": anchor.merkle_root,
+        "leaf_count": anchor.leaf_count,
+        "tx_hash": anchor.tx_hash,
+        "chain": anchor.chain,
+        "created_at": anchor.created_at.isoformat(),
+    }
 
 
 # ── Payment / Pricing endpoints ──────────────────────────────────────────────────

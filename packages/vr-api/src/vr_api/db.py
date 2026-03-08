@@ -463,6 +463,19 @@ async def update_evidence_batch_id(
         return result.rowcount  # type: ignore[return-value]
 
 
+async def list_evidence_by_batch(batch_id: int) -> list[EvidenceRecord]:
+    """Return all evidence records belonging to a given anchor batch."""
+    factory = get_session_factory()
+    async with factory() as session:
+        stmt = (
+            select(EvidenceRecord)
+            .where(EvidenceRecord.batch_id == batch_id)
+            .order_by(EvidenceRecord.created_at.asc())
+        )
+        result = await session.execute(stmt)
+        return list(result.scalars().all())
+
+
 # ── Payment CRUD ─────────────────────────────────────────────────────────────
 
 

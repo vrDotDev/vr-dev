@@ -38,12 +38,13 @@ async def anchor_batch() -> dict | None:
 
     latest = await get_latest_anchor()
     since = latest.created_at if latest else datetime.min.replace(tzinfo=timezone.utc)
-    hashes = await list_evidence_since(since)
+    records = await list_evidence_since(since)
 
-    if not hashes:
+    if not records:
         logger.info("anchor.skip", reason="no new evidence")
         return None
 
+    hashes = [r.artifact_hash.removeprefix("sha256:") for r in records]
     tree = build_merkle_tree(hashes)
     root_hex = tree.root_hex
     logger.info("anchor.tree_built", leaf_count=len(hashes), root=root_hex)
@@ -69,8 +70,9 @@ async def anchor_batch() -> dict | None:
         chain=chain,
     )
 
-    # Update evidence records with batch_id
-    await update_evidence_batch_id(hashes, anchor.batch_id)
+    # Update evidence records with batch_id (use full artifact_hash keys)
+    artifact_hashes = [r.artifact_hash for r in records]
+    await update_evidence_batch_id(artifact_hashes, anchor.batch_id)
 
     return {
         "batch_id": anchor.batch_id,
