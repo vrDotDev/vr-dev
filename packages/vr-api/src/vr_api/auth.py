@@ -34,12 +34,15 @@ def _hash_key(raw: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-async def _validate_db_key(api_key: str) -> bool:
-    """Check the key hash against the ``api_keys`` table and bump last_used_at."""
+async def _validate_db_key(api_key: str) -> str | None:
+    """Check the key hash against the ``api_keys`` table and bump last_used_at.
+
+    Returns the key's UUID (``api_keys.id``) on success, or ``None``.
+    """
     try:
         factory = get_session_factory()
     except RuntimeError:
-        return False  # DB not initialised — skip DB check
+        return None  # DB not initialised — skip DB check
 
     key_hash = _hash_key(api_key)
     try:
@@ -54,16 +57,17 @@ async def _validate_db_key(api_key: str) -> bool:
             )
             result = row.first()
             if result is None:
-                return False
+                return None
 
+            key_id = str(result[0])
             await session.execute(
                 text("UPDATE api_keys SET last_used_at = :now WHERE id = :id"),
-                {"now": datetime.now(timezone.utc).replace(tzinfo=None), "id": str(result[0])},
+                {"now": datetime.now(timezone.utc).replace(tzinfo=None), "id": key_id},
             )
             await session.commit()
-            return True
+            return key_id
     except Exception:
-        return False  # Table missing (SQLite tests) or DB error — skip
+        return None  # Table missing (SQLite tests) or DB error — skip
 
 
 async def require_api_key(
@@ -80,8 +84,10 @@ async def require_api_key(
         return api_key
 
     # 2. Check NeonDB api_keys table
-    if api_key and await _validate_db_key(api_key):
-        return api_key
+    if api_key:
+        key_id = await _validate_db_key(api_key)
+        if key_id:
+            return f"keyid:{key_id}"
 
     # 3. Dev mode — no env keys configured and DB has no keys table yet
     if not env_keys:
@@ -124,8 +130,10 @@ async def require_auth(request: Request) -> str:
     if api_key:
         if env_keys and api_key in env_keys:
             return api_key
-        if await _validate_db_key(api_key):
-            return api_key
+        key_id = await _validate_db_key(api_key)
+        if key_id:
+            request.state.api_key_id = key_id
+            return f"keyid:{key_id}"
 
     # 2. Try x402 payment (X-PAYMENT header) ───────────────────────────────
     from .payments.x402 import _is_x402_enabled, get_x402_provider

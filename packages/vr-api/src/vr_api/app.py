@@ -355,7 +355,7 @@ async def get_quota_v1(
     if quota is None:
         raise HTTPException(status_code=404, detail=f"No quota for key: {api_key}")
     return QuotaResponse(quota=QuotaItem(
-        api_key=quota.api_key,
+        api_key=quota.api_key_id,
         daily_limit=quota.daily_limit,
         monthly_limit=quota.monthly_limit,
     ))
@@ -369,7 +369,7 @@ async def set_quota_v1(
 ) -> QuotaResponse:
     quota = await set_quota(api_key, body.daily_limit, body.monthly_limit)
     return QuotaResponse(quota=QuotaItem(
-        api_key=quota.api_key,
+        api_key=quota.api_key_id,
         daily_limit=quota.daily_limit,
         monthly_limit=quota.monthly_limit,
     ))

@@ -29,15 +29,18 @@ class UsageMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         latency_ms = int((time.monotonic() - start) * 1000)
 
-        # Extract API key (may be absent on /health)
-        api_key = request.headers.get("x-api-key", "anonymous")
+        # Extract resolved key UUID from request state (set by auth middleware)
+        api_key_id = getattr(request.state, "api_key_id", None)
+        if not api_key_id:
+            # Fallback: use header value (will likely fail FK, but is caught)
+            api_key_id = request.headers.get("x-api-key", "anonymous")
         endpoint = request.url.path
         method = request.method
 
         # Fire-and-forget — don't block the response
         try:
             await record_usage(
-                api_key=api_key,
+                api_key=api_key_id,
                 endpoint=endpoint,
                 method=method,
                 status_code=response.status_code,
@@ -64,7 +67,20 @@ async def check_quota(
     if auth_id.startswith("x402:"):
         return
 
-    quota = await get_quota(auth_id)
+    # dev mode — unrestricted
+    if auth_id == "dev":
+        return
+
+    # Extract the DB key UUID from the keyid: prefix set by auth
+    if auth_id.startswith("keyid:"):
+        lookup_key = auth_id[6:]
+    else:
+        lookup_key = auth_id  # env key — lookup by raw key
+
+    try:
+        quota = await get_quota(lookup_key)
+    except Exception:
+        return  # DB error — don't block the request
     if quota is None:
         return  # no quota configured → unrestricted
 
@@ -72,7 +88,7 @@ async def check_quota(
 
     # Daily check
     day_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    daily_count = await get_usage_count(auth_id, day_start)
+    daily_count = await get_usage_count(lookup_key, day_start)
     if daily_count >= quota.daily_limit:
         seconds_left = int((day_start + timedelta(days=1) - now).total_seconds())
         raise HTTPException(
@@ -83,7 +99,7 @@ async def check_quota(
 
     # Monthly check
     month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    monthly_count = await get_usage_count(auth_id, month_start)
+    monthly_count = await get_usage_count(lookup_key, month_start)
     if monthly_count >= quota.monthly_limit:
         # Next month start
         if now.month == 12:

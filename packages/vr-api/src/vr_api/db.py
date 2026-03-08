@@ -10,9 +10,26 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import Column, DateTime, Float, Integer, Numeric, String, Text, delete, func, select
+from sqlalchemy import Column, DateTime, Float, Integer, Numeric, String, Text, TypeDecorator, delete, func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
+
+
+# ── Dialect-adaptive UUID column ─────────────────────────────────────────────
+
+
+class KeyIdType(TypeDecorator):
+    """UUID on PostgreSQL, plain String on SQLite (for tests)."""
+
+    impl = String
+    cache_ok = True
+
+    def load_dialect_impl(self, dialect):
+        if dialect.name == "postgresql":
+            from sqlalchemy.dialects.postgresql import UUID as PgUUID
+
+            return dialect.type_descriptor(PgUUID(as_uuid=False))
+        return dialect.type_descriptor(String(128))
 
 # ── ORM model ────────────────────────────────────────────────────────────────
 
@@ -67,7 +84,7 @@ class UsageRecord(Base):
     __tablename__ = "usage_records"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    api_key_id = Column(String(128), nullable=False, index=True)
+    api_key_id = Column(KeyIdType(), nullable=False, index=True)
     endpoint = Column(String(256), nullable=False)
     method = Column(String(8), nullable=False)
     status_code = Column(Integer, nullable=False)
@@ -88,7 +105,7 @@ class QuotaRecord(Base):
     __tablename__ = "quota_records"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    api_key_id = Column(String(128), unique=True, nullable=False)
+    api_key_id = Column(KeyIdType(), unique=True, nullable=False)
     daily_limit = Column(Integer, nullable=False, default=1000)
     monthly_limit = Column(Integer, nullable=False, default=10000)
     created_at = Column(
