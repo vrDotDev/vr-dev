@@ -18,12 +18,8 @@ Environment variables:
 
 from __future__ import annotations
 
-import hashlib
-import hmac
 import json
-import logging
 import os
-import time
 from decimal import Decimal
 
 import structlog

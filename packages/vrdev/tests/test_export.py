@@ -5,7 +5,6 @@ from __future__ import annotations
 import io
 import json
 
-import pytest
 
 from vrdev.core.export import export_jsonl, export_jsonl_lines
 from vrdev.core.types import (
@@ -173,7 +172,7 @@ class TestExportJsonl:
         count = export_jsonl(results, inp, "vr/test", buf)
         assert count == 2
         buf.seek(0)
-        lines = [l for l in buf.readlines() if l.strip()]
+        lines = [line for line in buf.readlines() if line.strip()]
         assert len(lines) == 2
 
     def test_writes_to_real_file(self, tmp_path):

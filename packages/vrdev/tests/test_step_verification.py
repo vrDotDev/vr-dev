@@ -3,7 +3,6 @@
 from vrdev.core.base import BaseVerifier
 from vrdev.core.compose import ComposedVerifier
 from vrdev.core.types import (
-    PolicyMode,
     StepInput,
     Tier,
     VerificationResult,

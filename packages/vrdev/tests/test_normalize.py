@@ -1,6 +1,5 @@
 """Tests for z-score normalization."""
 
-import pytest
 
 from vrdev.core.normalize import z_score_normalize
 

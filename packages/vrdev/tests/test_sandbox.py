@@ -3,10 +3,9 @@
 import os
 import tempfile
 
-import pytest
 
 from vrdev.core.types import Verdict
-from vrdev.runners.sandbox import ALLOWED_COMMANDS, execute_sandboxed
+from vrdev.runners.sandbox import execute_sandboxed
 
 
 # ── Allowlist enforcement ────────────────────────────────────────────────────

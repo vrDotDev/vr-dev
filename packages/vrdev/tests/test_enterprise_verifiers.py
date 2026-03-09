@@ -6,16 +6,12 @@ real API credentials (GitHub, Slack, Stripe, Jira).
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.core.types import Tier, Verdict, VerifierInput
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# Git domain - PrMergedVerifier
-# ═══════════════════════════════════════════════════════════════════════════════
-
-from vrdev.tasks.git import PrMergedVerifier
+from vrdev.tasks.git import CiPassedVerifier, PrMergedVerifier, WorkflowPassedVerifier
+from vrdev.tasks.messaging import SlackMessageSentVerifier, SlackReactionAddedVerifier
+from vrdev.tasks.payment import ChargeSucceededVerifier, RefundProcessedVerifier
+from vrdev.tasks.project import TicketTransitionedVerifier
 
 
 class TestPrMerged:
@@ -65,8 +61,6 @@ class TestPrMerged:
 # Git domain - CiPassedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
-from vrdev.tasks.git import CiPassedVerifier
-
 
 class TestCiPassed:
     def _make(self, pre_result: dict) -> VerifierInput:
@@ -106,8 +100,6 @@ class TestCiPassed:
 # Git domain - WorkflowPassedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
-from vrdev.tasks.git import WorkflowPassedVerifier
-
 
 class TestWorkflowPassed:
     def _make(self, pre_result: dict) -> VerifierInput:
@@ -139,8 +131,6 @@ class TestWorkflowPassed:
 # ═══════════════════════════════════════════════════════════════════════════════
 # Messaging domain - SlackMessageSentVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
-
-from vrdev.tasks.messaging import SlackMessageSentVerifier
 
 
 class TestSlackMessageSent:
@@ -175,8 +165,6 @@ class TestSlackMessageSent:
 # Messaging domain - SlackReactionAddedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
-from vrdev.tasks.messaging import SlackReactionAddedVerifier
-
 
 class TestSlackReactionAdded:
     def _make(self, pre_result: dict) -> VerifierInput:
@@ -202,8 +190,6 @@ class TestSlackReactionAdded:
 # ═══════════════════════════════════════════════════════════════════════════════
 # Payment domain - ChargeSucceededVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
-
-from vrdev.tasks.payment import ChargeSucceededVerifier
 
 
 class TestChargeSucceeded:
@@ -258,8 +244,6 @@ class TestChargeSucceeded:
 # Payment domain - RefundProcessedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
-from vrdev.tasks.payment import RefundProcessedVerifier
-
 
 class TestRefundProcessed:
     def _make(self, pre_result: dict) -> VerifierInput:
@@ -294,8 +278,6 @@ class TestRefundProcessed:
 # ═══════════════════════════════════════════════════════════════════════════════
 # Project domain - TicketTransitionedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
-
-from vrdev.tasks.project import TicketTransitionedVerifier
 
 
 class TestTicketTransitioned:

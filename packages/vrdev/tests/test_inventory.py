@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.core.types import Tier, Verdict, VerifierInput
 from vrdev.tasks.tau2.inventory import InventoryUpdatedVerifier

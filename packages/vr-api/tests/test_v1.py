@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import asyncio
-import json
 
-import pytest
 from fastapi.testclient import TestClient
 
 from vr_api.app import app
-from vr_api.db import init_db, close_db, set_quota
+from vr_api.db import set_quota
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────

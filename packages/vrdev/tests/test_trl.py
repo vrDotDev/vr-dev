@@ -6,10 +6,8 @@ adapter without any external dependencies.
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
-import pytest
 
 from vrdev.adapters.trl import to_trl_reward_func
 from vrdev.core.base import BaseVerifier

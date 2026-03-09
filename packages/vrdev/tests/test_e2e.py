@@ -15,7 +15,6 @@ tests run deterministically without external services.
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.adapters.openclaw import compose_chain, explain_failure, run_verifier
 from vrdev.core.compose import compose

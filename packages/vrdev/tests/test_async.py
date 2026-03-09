@@ -11,9 +11,8 @@ import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pytest
-import pytest_asyncio
 
-from vrdev.core.types import Tier, Verdict, VerifierInput
+from vrdev.core.types import Verdict, VerifierInput
 from vrdev.runners.http import async_http_get, async_http_post
 from vrdev.tasks.tau2.policy import ConstraintNotViolatedVerifier
 

@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import json
-from unittest.mock import MagicMock, patch
 
 import pytest
 
 from vrdev.cli.synth import (
-    GeneratedVerifier,
     _build_system_prompt,
     _build_user_prompt,
     _infer_tier,

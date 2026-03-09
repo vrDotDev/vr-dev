@@ -6,7 +6,6 @@ no real IMAP server needed.
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.core.types import Tier, Verdict, VerifierInput
 from vrdev.tasks.aiv.email import SentFolderConfirmedVerifier

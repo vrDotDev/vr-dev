@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from fastapi.testclient import TestClient
 
-from vr_api.app import app, _trajectory_sessions
+from vr_api.app import _trajectory_sessions
 
 
 _VERIFIER_ID = "vr/tau2.policy.constraint_not_violated"

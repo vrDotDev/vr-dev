@@ -1,8 +1,6 @@
 """Tests for the SSE streaming verification endpoint and new Phase B endpoints."""
 
-import json
 
-import pytest
 
 
 class TestStreamVerify:

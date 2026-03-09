@@ -6,7 +6,6 @@ and explain_failure for all four verdict types.
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.adapters.openclaw import (
     compose_chain,

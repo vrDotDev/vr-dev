@@ -6,7 +6,6 @@ All are HARD-tier deterministic verifiers that inspect file contents.
 from __future__ import annotations
 
 import csv
-import io
 import json
 import os
 import time
@@ -83,7 +82,7 @@ class JsonValidVerifier(BaseVerifier):
             if breakdown.get("type_match", 1.0) < 1.0:
                 hints.append(f"Expected JSON type '{expected_type}', got {type(data).__name__}")
             if breakdown.get("keys_match", 1.0) < 1.0:
-                hints.append(f"Missing expected keys in JSON object")
+                hints.append("Missing expected keys in JSON object")
         return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["fs:read"],
                                  repair_hints=hints)
 

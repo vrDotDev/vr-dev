@@ -1,10 +1,8 @@
 """Tests for the skill router (Thompson sampling contextual bandit)."""
 
-import json
 import tempfile
 from pathlib import Path
 
-import pytest
 
 from vrdev.core.types import PromotionStage, SkillArtifact, Verdict
 from vrdev.skills.router import BetaDistribution, SkillRouter

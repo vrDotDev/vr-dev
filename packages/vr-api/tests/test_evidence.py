@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import json
 
-import pytest
 
 from vr_api.db import (
     cleanup_expired,

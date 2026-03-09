@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.core.types import Verdict, VerifierInput
 from vrdev.tasks.tau2.refund import RefundProcessedVerifier

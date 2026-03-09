@@ -10,7 +10,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import Column, DateTime, Float, Integer, Numeric, String, Text, TypeDecorator, delete, func, select, text
+from sqlalchemy import Column, DateTime, Float, Integer, Numeric, String, Text, TypeDecorator, delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 

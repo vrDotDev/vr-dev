@@ -5,7 +5,6 @@ Uses StubJudge injected via the constructor - no real LLM API calls.
 
 from __future__ import annotations
 
-import json
 
 import pytest
 

@@ -11,10 +11,6 @@ from typing import Any, Callable
 
 from .base import BaseVerifier
 from .types import (
-    AttackResistance,
-    PolicyMode,
-    Provenance,
-    ResultMetadata,
     Tier,
     VerificationResult,
     Verdict,

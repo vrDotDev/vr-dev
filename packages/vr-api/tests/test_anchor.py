@@ -5,18 +5,13 @@ from __future__ import annotations
 import asyncio
 import hashlib
 
-import pytest
 
 from vr_api.db import (
     close_db,
     get_anchor,
-    get_latest_anchor,
     init_db,
     list_evidence_by_batch,
-    list_evidence_since,
-    store_anchor,
     store_evidence,
-    update_evidence_batch_id,
 )
 from vr_api.anchor import anchor_batch
 from vr_api.merkle import build_merkle_tree, get_inclusion_proof, verify_inclusion

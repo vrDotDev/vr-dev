@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import textwrap
 from pathlib import Path
 
@@ -145,9 +144,6 @@ class TestSingleton:
 # ── Serialization ────────────────────────────────────────────────────
 class TestSerialization:
     def test_to_toml_roundtrip(self, tmp_path: Path):
-        original = VrConfig(
-            openai=VrConfig.__annotations__  # just use defaults
-        )
         cfg = VrConfig()
         toml_str = cfg.to_toml()
         # Write and reload

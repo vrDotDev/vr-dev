@@ -10,7 +10,6 @@ read-only commands can be executed (ls, stat, cat, grep, git, etc.).
 from __future__ import annotations
 
 import time
-from typing import Any
 
 from ...core.base import BaseVerifier
 from ...core.types import Tier, VerificationResult, Verdict, VerifierInput

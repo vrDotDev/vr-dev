@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-import pytest
 
 from vrdev.core.types import Tier, Verdict, VerifierInput
 from vrdev.tasks.filesystem.file_created import FileCreatedVerifier

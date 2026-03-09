@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from vrdev.adapters.gem import GEMRewardWrapper
-from vrdev.core.types import Tier, Verdict, VerifierInput
+from vrdev.core.types import Tier
 from vrdev.tasks.tau2.policy import ConstraintNotViolatedVerifier
 
 

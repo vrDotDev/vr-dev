@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
-import pytest
 
 from vr_api.observability import configure_logging, configure_tracing, get_tracer
 

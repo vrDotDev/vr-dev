@@ -4,10 +4,9 @@ Covers all verdict combinations and policy_mode behavior as required
 by Phase 0 Step 2: 15+ tests for the composition engine.
 """
 
-import pytest
 
 from vrdev.core.base import BaseVerifier
-from vrdev.core.compose import ComposedVerifier, compose
+from vrdev.core.compose import compose
 from vrdev.core.types import (
     PolicyMode,
     Provenance,

@@ -6,7 +6,6 @@ provides a real HTTP mock server on an auto-assigned port.
 
 from __future__ import annotations
 
-import pytest
 
 from vrdev.core.types import Tier, Verdict, VerifierInput
 from vrdev.tasks.tau2.retail import OrderCancelledVerifier

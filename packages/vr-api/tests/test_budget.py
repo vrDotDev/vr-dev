@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import pytest
-from fastapi.testclient import TestClient
 
-from vr_api.app import app
 
 
 # ── Fixtures ─────────────────────────────────────────────────────────────────
