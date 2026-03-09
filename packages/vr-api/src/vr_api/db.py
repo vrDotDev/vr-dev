@@ -213,6 +213,9 @@ async def store_evidence(
     signing_key_id: str | None = None,
 ) -> EvidenceRecord:
     """Insert a new evidence record (append-only, ignore duplicates)."""
+    MAX_EVIDENCE_BYTES = 1_048_576  # 1 MB
+    if len(evidence_json) > MAX_EVIDENCE_BYTES:
+        evidence_json = evidence_json[:MAX_EVIDENCE_BYTES]
     factory = get_session_factory()
     async with factory() as session:
         existing = await session.get(EvidenceRecord, artifact_hash)

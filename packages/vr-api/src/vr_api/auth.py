@@ -11,6 +11,7 @@ Fallback behaviour:
 from __future__ import annotations
 
 import hashlib
+import hmac
 import os
 from datetime import datetime, timezone
 
@@ -113,7 +114,9 @@ async def require_api_key(
     env_keys = _get_env_keys()
 
     # 1. Check env var keys (admin / CI)
-    if env_keys and api_key and api_key in env_keys:
+    if env_keys and api_key and any(
+        hmac.compare_digest(api_key, k) for k in env_keys
+    ):
         return api_key
 
     # 2. Check NeonDB api_keys table
@@ -141,7 +144,7 @@ async def require_admin_key(
     admin_key = os.environ.get("VR_ADMIN_KEY", "")
     if not admin_key:
         return "dev"  # admin auth disabled (development mode)
-    if api_key != admin_key:
+    if not api_key or not hmac.compare_digest(api_key, admin_key):
         raise HTTPException(status_code=403, detail="Admin access required")
     return api_key
 
@@ -162,7 +165,9 @@ async def require_auth(request: Request) -> str:
     # 1. Try API key auth (X-API-Key header) ───────────────────────────────
     api_key = request.headers.get("X-API-Key")
     if api_key:
-        if env_keys and api_key in env_keys:
+        if env_keys and any(
+            hmac.compare_digest(api_key, k) for k in env_keys
+        ):
             return api_key
         db_result = await _validate_db_key(api_key)
         if db_result:

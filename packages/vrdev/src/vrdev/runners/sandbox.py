@@ -79,9 +79,10 @@ def execute_sandboxed(
         }
 
     try:
+        cmd_list = shlex.split(command)
         result = subprocess.run(
-            command,
-            shell=True,
+            cmd_list,
+            shell=False,
             capture_output=True,
             text=True,
             timeout=timeout,

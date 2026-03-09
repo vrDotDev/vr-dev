@@ -13,6 +13,10 @@ RUN pip install --no-cache-dir /tmp/vr-api && rm -rf /tmp/vr-api
 # Production extras
 RUN pip install --no-cache-dir asyncpg "redis[hiredis]>=5.0" uvicorn[standard]
 
+# Run as non-root user
+RUN addgroup --system vrapi && adduser --system --ingroup vrapi vrapi
+USER vrapi
+
 EXPOSE 8000
 
 CMD ["sh", "-c", "uvicorn vr_api.app:app --host 0.0.0.0 --port ${PORT:-8000}"]
