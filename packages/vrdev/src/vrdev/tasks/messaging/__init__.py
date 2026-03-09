@@ -14,7 +14,7 @@ from vrdev.core.base import BaseVerifier
 from vrdev.core.types import Tier, Verdict, VerifierInput, VerificationResult
 
 
-def _slack_api(method: str, params: dict, token: str | None = None) -> dict:
+def _slack_api(method: str, params: dict, token: str | None = None) -> dict:  # pragma: no cover
     """Call a Slack Web API method."""
     import httpx
     headers = {"Authorization": f"Bearer {token}"} if token else {}

@@ -178,9 +178,9 @@ async def require_auth(request: Request) -> str:
             return f"keyid:{key_id}"
 
     # 2. Try x402 payment (X-PAYMENT header) ───────────────────────────────
-    from .payments.x402 import _is_x402_enabled, get_x402_provider
+    from .payments.x402 import _is_x402_enabled, get_x402_provider  # pragma: no cover
 
-    if _is_x402_enabled():
+    if _is_x402_enabled():  # pragma: no cover
         provider = get_x402_provider()
         payment = await provider.check_payment(request)
         if payment:

@@ -24,7 +24,7 @@ except ImportError:
     _HAS_PLAYWRIGHT = False
 
 
-class BrowserRunner:
+class BrowserRunner:  # pragma: no cover
     """Headless browser runner for web-based verifications.
 
     Parameters

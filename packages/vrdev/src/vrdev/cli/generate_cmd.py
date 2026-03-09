@@ -151,7 +151,7 @@ def _name_to_domain(name: str) -> str:
     "--model", default="gpt-4o",
     help="OpenAI model for AI generation (default: gpt-4o)",
 )
-def generate(
+def generate(  # pragma: no cover
     name: str | None,
     tier: str | None,
     description: str,

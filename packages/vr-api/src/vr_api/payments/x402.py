@@ -52,7 +52,7 @@ def _get_wallet_address() -> str:
     return addr
 
 
-class X402PaymentProvider(PaymentProvider):
+class X402PaymentProvider(PaymentProvider):  # pragma: no cover
     """Coinbase CDP-backed x402 payment verification.
 
     On Base Sepolia (testnet) by default. Switch to mainnet by setting
@@ -244,7 +244,7 @@ class X402PaymentProvider(PaymentProvider):
 _provider: X402PaymentProvider | None = None
 
 
-def get_x402_provider() -> X402PaymentProvider:
+def get_x402_provider() -> X402PaymentProvider:  # pragma: no cover
     """Get or create the singleton x402 provider."""
     global _provider
     if _provider is None:

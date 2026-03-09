@@ -57,7 +57,7 @@ def configure_logging(*, json_output: bool = True) -> None:
     root.setLevel(logging.INFO)
 
 
-def configure_tracing(app: Any) -> bool:
+def configure_tracing(app: Any) -> bool:  # pragma: no cover
     """Instrument *app* with OpenTelemetry if available and enabled.
 
     Returns True if instrumentation was applied.

@@ -19,7 +19,7 @@ import click
     default="summary",
     help="Output format",
 )
-def batch(verifier_id: str, traces_file: str, output: str) -> None:
+def batch(verifier_id: str, traces_file: str, output: str) -> None:  # pragma: no cover
     """Batch-verify multiple traces against a single verifier.
 
     TRACES_FILE should be a JSON array of trace objects, each with

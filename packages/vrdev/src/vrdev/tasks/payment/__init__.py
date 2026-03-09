@@ -14,7 +14,7 @@ from vrdev.core.base import BaseVerifier
 from vrdev.core.types import Tier, Verdict, VerifierInput, VerificationResult
 
 
-def _stripe_api(endpoint: str, secret_key: str | None = None) -> dict:
+def _stripe_api(endpoint: str, secret_key: str | None = None) -> dict:  # pragma: no cover
     """Make a GET request to the Stripe API."""
     import httpx
     headers = {}

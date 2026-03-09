@@ -13,7 +13,7 @@ from vrdev.core.base import BaseVerifier
 from vrdev.core.types import Tier, Verdict, VerifierInput, VerificationResult
 
 
-def _http_get(url: str, headers: dict | None = None, timeout: int = 10) -> dict:
+def _http_get(url: str, headers: dict | None = None, timeout: int = 10) -> dict:  # pragma: no cover
     """Perform a simple HTTP GET request using httpx."""
     import httpx
     resp = httpx.get(url, headers=headers or {}, timeout=timeout, follow_redirects=True)

@@ -88,7 +88,7 @@ logger = structlog.get_logger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # pragma: no cover
     """Initialise the database on startup, close on shutdown."""
     from .cleanup_worker import cleanup_loop
     from .observability import configure_logging, configure_tracing

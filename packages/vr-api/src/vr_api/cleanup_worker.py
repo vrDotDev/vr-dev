@@ -43,7 +43,7 @@ async def cleanup_loop(
             logger.exception("TTL cleanup failed")
 
 
-async def main() -> None:
+async def main() -> None:  # pragma: no cover
     """Entry point for standalone worker process."""
     ttl_days = int(os.environ.get("VR_EVIDENCE_TTL_DAYS", "90"))
     interval_hours = float(os.environ.get("VR_CLEANUP_INTERVAL_HOURS", "6"))

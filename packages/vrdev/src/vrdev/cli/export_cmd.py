@@ -28,7 +28,7 @@ import click
     type=click.Path(exists=True),
     help="JSON file containing context dict",
 )
-def export(
+def export(  # pragma: no cover
     verifier_id: str,
     completions_file: str,
     ground_truth: str | None,

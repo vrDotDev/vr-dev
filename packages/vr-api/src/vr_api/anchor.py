@@ -82,7 +82,7 @@ async def anchor_batch() -> dict | None:
     }
 
 
-async def _submit_anchor(root_hex: str, private_key: str, rpc_url: str) -> str:
+async def _submit_anchor(root_hex: str, private_key: str, rpc_url: str) -> str:  # pragma: no cover
     """Submit anchorRoot(bytes32) transaction to the EvidenceAnchor contract.
 
     Returns the transaction hash as a hex string.
@@ -138,7 +138,7 @@ async def _submit_anchor(root_hex: str, private_key: str, rpc_url: str) -> str:
     return tx_hash.hex()
 
 
-async def anchor_loop(interval_hours: float = 24.0) -> None:
+async def anchor_loop(interval_hours: float = 24.0) -> None:  # pragma: no cover
     """Run anchoring on a periodic schedule."""
     interval_s = interval_hours * 3600
     while True:

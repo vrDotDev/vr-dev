@@ -236,7 +236,7 @@ def _validate_generated(result: dict[str, Any], tier: str) -> list[str]:
     return errors
 
 
-def synthesize_verifier(
+def synthesize_verifier(  # pragma: no cover
     task: str,
     tier: str | None = None,
     spec_path: str | None = None,

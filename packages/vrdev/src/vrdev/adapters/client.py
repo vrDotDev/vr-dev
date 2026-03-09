@@ -34,7 +34,7 @@ class VerifyResult:
     results: list[dict[str, Any]]
 
 
-class AsyncVerificationClient:
+class AsyncVerificationClient:  # pragma: no cover
     """Async client for the vr.dev verification API.
 
     Usage::

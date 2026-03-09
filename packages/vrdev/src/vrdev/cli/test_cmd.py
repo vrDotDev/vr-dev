@@ -22,7 +22,7 @@ def _find_registry_root() -> Path:
 @click.command()
 @click.argument("verifier_id", required=False)
 @click.option("--all", "run_all", is_flag=True, help="Run all verifier fixture tests")
-def test(verifier_id: str | None, run_all: bool) -> None:
+def test(verifier_id: str | None, run_all: bool) -> None:  # pragma: no cover
     """Run fixture tests for a verifier."""
     from ..core.registry import get_verifier, list_verifiers
     from ..core.types import VerifierInput

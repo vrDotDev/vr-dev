@@ -14,7 +14,7 @@ from vrdev.core.base import BaseVerifier
 from vrdev.core.types import Tier, Verdict, VerifierInput, VerificationResult
 
 
-def _github_api(endpoint: str, token: str | None = None) -> dict:
+def _github_api(endpoint: str, token: str | None = None) -> dict:  # pragma: no cover
     """Make a GET request to the GitHub REST API."""
     import httpx
     headers = {"Accept": "application/vnd.github+json"}

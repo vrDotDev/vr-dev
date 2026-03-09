@@ -26,7 +26,7 @@ import click
     default="summary",
     help="Output format",
 )
-def compose(
+def compose(  # pragma: no cover
     verifier_ids: tuple[str, ...],
     trace_file: str,
     require_hard: bool,

@@ -262,6 +262,85 @@ class TestQuotaAdmin:
 # ══════════════════════════════════════════════════════════════════════════════
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# Pricing, estimate, keys, anchor, payments, revenue
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+class TestPricing:
+    def test_pricing_returns_tiers(self, client):
+        resp = client.get("/v1/pricing")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "tiers" in data
+        assert isinstance(data["tiers"], list)
+        assert "x402_enabled" in data
+
+    def test_estimate_basic(self, client):
+        resp = client.get(
+            "/v1/estimate",
+            params={"verifier_ids": "vr/tau2.policy.constraint_not_violated"},
+        )
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "estimated_cost_usd" in data
+        assert data["verifier_count"] == 1
+
+    def test_estimate_escalation(self, client):
+        resp = client.get(
+            "/v1/estimate",
+            params={
+                "verifier_ids": "vr/tau2.policy.constraint_not_violated",
+                "policy_mode": "escalation",
+                "budget_limit_usd": 0.001,
+            },
+        )
+        assert resp.status_code == 200
+
+    def test_estimate_unknown_verifier(self, client):
+        resp = client.get("/v1/estimate", params={"verifier_ids": "vr/nope"})
+        assert resp.status_code == 404
+
+
+class TestKeys:
+    def test_keys_endpoint(self, client):
+        resp = client.get("/v1/keys")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "keys" in data
+        assert isinstance(data["keys"], list)
+
+
+class TestAnchorEndpoints:
+    def test_anchor_latest_none(self, client):
+        resp = client.get("/v1/anchor/latest")
+        assert resp.status_code == 404
+
+    def test_anchor_detail_not_found(self, client):
+        resp = client.get("/v1/anchor/999")
+        assert resp.status_code == 404
+
+    def test_anchor_trigger(self, client):
+        resp = client.post("/v1/anchor")
+        assert resp.status_code == 200
+        assert resp.json()["status"] == "no_evidence"
+
+
+class TestPaymentsEndpoints:
+    def test_payments_empty(self, client):
+        resp = client.get("/v1/payments/0x1234567890abcdef1234567890abcdef12345678")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["payments"] == []
+        assert data["count"] == 0
+
+    def test_revenue_empty(self, client):
+        resp = client.get("/v1/revenue")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["revenue"] == []
+
+
 class TestQuotaEnforcement:
     def test_no_quota_unrestricted(self, authed_client):
         """Keys with no QuotaRecord should be unrestricted."""

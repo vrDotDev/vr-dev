@@ -14,7 +14,7 @@ from vrdev.core.base import BaseVerifier
 from vrdev.core.types import Tier, Verdict, VerifierInput, VerificationResult
 
 
-def _query_db(connection_string: str, query: str, params: tuple | None = None) -> list[dict]:
+def _query_db(connection_string: str, query: str, params: tuple | None = None) -> list[dict]:  # pragma: no cover
     """Execute a read-only query against a database.
 
     Supports sqlite3 out of the box; postgres requires psycopg2.

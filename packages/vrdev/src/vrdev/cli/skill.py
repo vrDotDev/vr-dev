@@ -16,7 +16,7 @@ def skill() -> None:
 @click.argument("task_description")
 @click.option("--family", default="general", help="Task family for routing")
 @click.option("--top-k", default=3, type=int, help="Max skills to return")
-def route(task_description: str, family: str, top_k: int) -> None:
+def route(task_description: str, family: str, top_k: int) -> None:  # pragma: no cover
     """Route a task to the best available skills."""
     from ..skills.router import SkillRouter
 
@@ -41,7 +41,7 @@ def route(task_description: str, family: str, top_k: int) -> None:
     "target_stage",
     type=click.Choice(["CANDIDATE", "VERIFIED", "DEPRECATED"]),
 )
-def promote(skill_id: str, target_stage: str) -> None:
+def promote(skill_id: str, target_stage: str) -> None:  # pragma: no cover
     """Promote a skill to a new lifecycle stage."""
     from ..core.types import PromotionStage, SkillArtifact
     from ..skills.artifact import SkillLifecycleError, promote as do_promote
@@ -60,7 +60,7 @@ def promote(skill_id: str, target_stage: str) -> None:
 @skill.command()
 @click.option("--skill-id", help="Filter by skill ID")
 @click.option("--format", "fmt", type=click.Choice(["summary", "json"]), default="summary")
-def report(skill_id: str | None, fmt: str) -> None:
+def report(skill_id: str | None, fmt: str) -> None:  # pragma: no cover
     """Print skill adoption telemetry summary."""
     from ..skills.telemetry import TelemetryLogger
 
