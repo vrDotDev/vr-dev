@@ -1,25 +1,25 @@
 {
   "config": {
     "num_episodes": 100,
-    "corrupt_ratio": 0.35,
+    "num_corrupt": 35,
     "seed": 42
   },
   "summary": {
-    "num_clean": 60,
-    "num_corrupt": 40,
+    "num_clean": 65,
+    "num_corrupt": 35,
     "soft_only": {
       "false_positive_rate": 1.0,
-      "false_positives": 40,
-      "true_positives": 60,
+      "false_positives": 35,
+      "true_positives": 65,
       "avg_score": 1.0,
       "avg_latency_ms": 0.1
     },
     "hard_gated": {
       "false_positive_rate": 0.0,
       "false_positives": 0,
-      "true_positives": 60,
-      "avg_score": 0.6,
-      "avg_latency_ms": 17.9
+      "true_positives": 65,
+      "avg_score": 0.65,
+      "avg_latency_ms": 23.0
     },
     "score_divergence_corrupt": 1.0
   },
@@ -29,21 +29,21 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.2
+      "latency_ms": 1.2
     },
     {
       "episode": 1,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 2,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 3,
@@ -57,7 +57,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 5,
@@ -68,56 +68,56 @@
     },
     {
       "episode": 6,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 7,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 8,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 9,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 10,
-      "corrupt": true,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 0.1
-    },
-    {
-      "episode": 11,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
-      "episode": 12,
+      "episode": 11,
       "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
+    },
+    {
+      "episode": 12,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 0.2
     },
     {
       "episode": 13,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -138,7 +138,7 @@
     },
     {
       "episode": 16,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -159,21 +159,21 @@
     },
     {
       "episode": 19,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 20,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 1.1
     },
     {
       "episode": 21,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -187,7 +187,7 @@
     },
     {
       "episode": 23,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -201,14 +201,14 @@
     },
     {
       "episode": 25,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 26,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -225,18 +225,18 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 29,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 30,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -299,7 +299,7 @@
     },
     {
       "episode": 39,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -320,14 +320,14 @@
     },
     {
       "episode": 42,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 43,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -341,35 +341,35 @@
     },
     {
       "episode": 45,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 46,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 47,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 48,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 49,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -383,7 +383,7 @@
     },
     {
       "episode": 51,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -404,7 +404,7 @@
     },
     {
       "episode": 54,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -418,7 +418,7 @@
     },
     {
       "episode": 56,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -446,21 +446,21 @@
     },
     {
       "episode": 60,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 61,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 62,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -481,28 +481,28 @@
     },
     {
       "episode": 65,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 66,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 67,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 68,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -537,7 +537,7 @@
     },
     {
       "episode": 73,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -558,7 +558,7 @@
     },
     {
       "episode": 76,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -572,14 +572,14 @@
     },
     {
       "episode": 78,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 79,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -600,7 +600,7 @@
     },
     {
       "episode": 82,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -649,35 +649,35 @@
     },
     {
       "episode": 89,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 90,
-      "corrupt": true,
+      "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 91,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 92,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
     },
     {
       "episode": 93,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
       "latency_ms": 0.1
@@ -694,35 +694,35 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 96,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 97,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.3
     },
     {
       "episode": 98,
-      "corrupt": false,
+      "corrupt": true,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     },
     {
       "episode": 99,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 0.1
+      "latency_ms": 0.2
     }
   ],
   "episodes_hard": [
@@ -731,31 +731,31 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 37.5,
+      "latency_ms": 92.0,
       "hard_gate_failed": false
     },
     {
       "episode": 1,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.7,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 35.1,
+      "hard_gate_failed": false
     },
     {
       "episode": 2,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 20.1,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 33.8,
+      "hard_gate_failed": false
     },
     {
       "episode": 3,
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 16.3,
+      "latency_ms": 28.6,
       "hard_gate_failed": true
     },
     {
@@ -763,7 +763,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.4,
+      "latency_ms": 31.6,
       "hard_gate_failed": false
     },
     {
@@ -771,435 +771,35 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.0,
+      "latency_ms": 36.2,
       "hard_gate_failed": false
     },
     {
       "episode": 6,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 22.1,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 19.8,
+      "hard_gate_failed": true
     },
     {
       "episode": 7,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 28.4,
+      "hard_gate_failed": false
     },
     {
       "episode": 8,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 31.2,
+      "hard_gate_failed": true
     },
     {
       "episode": 9,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 10,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 11,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 21.7,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 12,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 13,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 22.9,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 14,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 15,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 21.9,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 16,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.2,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 17,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 18,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 19,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 20,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 22.4,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 21,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 22,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 23,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 24,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 27.6,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 25,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.4,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 26,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.2,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 27,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 20.0,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 28,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 18.5,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 29,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 30,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 31,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.4,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 32,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 23.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 33,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 19.4,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 34,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 35,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 36,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 22.3,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 37,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 38,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.2,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 39,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 15.9,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 40,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 41,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 22.3,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 42,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 43,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.2,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 44,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 45,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 22.2,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 46,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 17.3,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 47,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.5,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 48,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 49,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 50,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 22.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 51,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 52,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 53,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 54,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 22.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 55,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 56,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 15.9,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 57,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
-    },
-    {
-      "episode": 58,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": true
-    },
-    {
-      "episode": 59,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
@@ -1207,35 +807,435 @@
       "hard_gate_failed": false
     },
     {
-      "episode": 60,
+      "episode": 10,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.2,
+      "latency_ms": 31.9,
       "hard_gate_failed": false
+    },
+    {
+      "episode": 11,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 26.9,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 12,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 32.6,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 13,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 19.9,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 14,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 27.2,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 15,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 20.7,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 16,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 18.3,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 17,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.6,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 18,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.0,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 19,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 41.3,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 20,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 19.3,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 21,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.1,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 22,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 19.6,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 23,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 31.4,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 24,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.4,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 25,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.2,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 26,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 18.3,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 27,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 23.0,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 28,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 20.8,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 29,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 18.3,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 30,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.6,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 31,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 23.6,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 32,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 18.5,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 33,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 31.5,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 34,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.1,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 35,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.2,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 36,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 25.2,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 37,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.8,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 38,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 24.1,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 39,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 20.2,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 40,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 27.0,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 41,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.6,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 42,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.9,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 43,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.7,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 44,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.3,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 45,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 26.6,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 46,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 23.3,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 47,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.2,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 48,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 18.5,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 49,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 25.6,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 50,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.0,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 51,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.0,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 52,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.2,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 53,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.1,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 54,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 31.2,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 55,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.6,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 56,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.4,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 57,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 22.0,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 58,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 28.7,
+      "hard_gate_failed": true
+    },
+    {
+      "episode": 59,
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.3,
+      "hard_gate_failed": false
+    },
+    {
+      "episode": 60,
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 21.2,
+      "hard_gate_failed": true
     },
     {
       "episode": 61,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.2,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.1,
+      "hard_gate_failed": true
     },
     {
       "episode": 62,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.0,
+      "hard_gate_failed": true
     },
     {
       "episode": 63,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 22.3,
+      "latency_ms": 23.7,
       "hard_gate_failed": false
     },
     {
@@ -1243,47 +1243,47 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.2,
+      "latency_ms": 17.1,
       "hard_gate_failed": false
     },
     {
       "episode": 65,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.2,
+      "hard_gate_failed": true
     },
     {
       "episode": 66,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 15.9,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 16.9,
+      "hard_gate_failed": false
     },
     {
       "episode": 67,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 23.9,
+      "hard_gate_failed": false
     },
     {
       "episode": 68,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 22.3,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.0,
+      "hard_gate_failed": false
     },
     {
       "episode": 69,
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 16.2,
+      "latency_ms": 17.1,
       "hard_gate_failed": true
     },
     {
@@ -1291,7 +1291,7 @@
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 16.2,
+      "latency_ms": 18.1,
       "hard_gate_failed": true
     },
     {
@@ -1299,7 +1299,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.2,
+      "latency_ms": 21.0,
       "hard_gate_failed": false
     },
     {
@@ -1307,23 +1307,23 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 22.3,
+      "latency_ms": 28.8,
       "hard_gate_failed": false
     },
     {
       "episode": 73,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 19.6,
+      "hard_gate_failed": false
     },
     {
       "episode": 74,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.1,
+      "latency_ms": 17.7,
       "hard_gate_failed": false
     },
     {
@@ -1331,47 +1331,47 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 15.9,
+      "latency_ms": 17.0,
       "hard_gate_failed": false
     },
     {
       "episode": 76,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.3,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 23.3,
+      "hard_gate_failed": true
     },
     {
       "episode": 77,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 22.8,
+      "latency_ms": 17.3,
       "hard_gate_failed": false
     },
     {
       "episode": 78,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.1,
+      "hard_gate_failed": false
     },
     {
       "episode": 79,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 17.0,
+      "hard_gate_failed": false
     },
     {
       "episode": 80,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.2,
+      "latency_ms": 20.0,
       "hard_gate_failed": false
     },
     {
@@ -1379,23 +1379,23 @@
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 22.0,
+      "latency_ms": 30.0,
       "hard_gate_failed": true
     },
     {
       "episode": 82,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.2,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.6,
+      "hard_gate_failed": true
     },
     {
       "episode": 83,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.2,
+      "latency_ms": 17.3,
       "hard_gate_failed": false
     },
     {
@@ -1403,7 +1403,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.0,
+      "latency_ms": 18.1,
       "hard_gate_failed": false
     },
     {
@@ -1411,7 +1411,7 @@
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 16.3,
+      "latency_ms": 24.0,
       "hard_gate_failed": true
     },
     {
@@ -1419,7 +1419,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 22.0,
+      "latency_ms": 17.4,
       "hard_gate_failed": false
     },
     {
@@ -1427,7 +1427,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.2,
+      "latency_ms": 17.6,
       "hard_gate_failed": false
     },
     {
@@ -1435,55 +1435,55 @@
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 16.1,
+      "latency_ms": 23.7,
       "hard_gate_failed": true
     },
     {
       "episode": 89,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 23.1,
+      "hard_gate_failed": false
     },
     {
       "episode": 90,
-      "corrupt": true,
-      "verdict": "FAIL",
-      "score": 0.0,
-      "latency_ms": 22.3,
-      "hard_gate_failed": true
+      "corrupt": false,
+      "verdict": "PASS",
+      "score": 1.0,
+      "latency_ms": 24.9,
+      "hard_gate_failed": false
     },
     {
       "episode": 91,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 17.1,
+      "hard_gate_failed": true
     },
     {
       "episode": 92,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 15.9,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 18.3,
+      "hard_gate_failed": true
     },
     {
       "episode": 93,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 20.4,
+      "hard_gate_failed": true
     },
     {
       "episode": 94,
       "corrupt": true,
       "verdict": "FAIL",
       "score": 0.0,
-      "latency_ms": 16.0,
+      "latency_ms": 33.6,
       "hard_gate_failed": true
     },
     {
@@ -1491,7 +1491,7 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 22.4,
+      "latency_ms": 23.4,
       "hard_gate_failed": false
     },
     {
@@ -1499,31 +1499,31 @@
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 16.0,
+      "latency_ms": 34.1,
       "hard_gate_failed": false
     },
     {
       "episode": 97,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.0,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 26.3,
+      "hard_gate_failed": true
     },
     {
       "episode": 98,
-      "corrupt": false,
-      "verdict": "PASS",
-      "score": 1.0,
-      "latency_ms": 16.1,
-      "hard_gate_failed": false
+      "corrupt": true,
+      "verdict": "FAIL",
+      "score": 0.0,
+      "latency_ms": 29.5,
+      "hard_gate_failed": true
     },
     {
       "episode": 99,
       "corrupt": false,
       "verdict": "PASS",
       "score": 1.0,
-      "latency_ms": 22.1,
+      "latency_ms": 38.6,
       "hard_gate_failed": false
     }
   ]

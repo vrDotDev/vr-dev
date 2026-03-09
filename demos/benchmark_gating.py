@@ -142,11 +142,15 @@ def main() -> None:
 
     random.seed(42)
     num_episodes = 100
-    corrupt_ratio = 0.35  # 35% of episodes have corrupt agent outputs
+    num_corrupt_target = 35  # exactly 35% corrupt
+
+    # Deterministically assign exactly 35 corrupt episodes via shuffle
+    episode_labels = [True] * num_corrupt_target + [False] * (num_episodes - num_corrupt_target)
+    random.shuffle(episode_labels)
 
     api_base = _start_mock_server()
     print(f"Mock API at {api_base}")
-    print(f"Running {num_episodes} episodes ({int(corrupt_ratio * 100)}% corrupt)...\n")
+    print(f"Running {num_episodes} episodes ({num_corrupt_target} corrupt)...\n")
 
     # ── Build verifiers ─────────────────────────────────────────────────
 
@@ -178,7 +182,7 @@ def main() -> None:
     results_hard: list[dict] = []
 
     for i in range(num_episodes):
-        corrupt = random.random() < corrupt_ratio
+        corrupt = episode_labels[i]
         episode = _generate_episode(i, corrupt)
 
         # Agent always claims success
@@ -282,7 +286,7 @@ def main() -> None:
     output = {
         "config": {
             "num_episodes": num_episodes,
-            "corrupt_ratio": corrupt_ratio,
+            "num_corrupt": num_corrupt_target,
             "seed": 42,
         },
         "summary": {

@@ -36,22 +36,22 @@ Seed: 42.  All results reproducible via `python benchmark_gating.py`.
 | Metric | Soft-only | Hard-gated |
 |--------|-----------|------------|
 | False positive rate | **100%** | **0%** |
-| False positives | 40 | 0 |
-| True positives | 60 | 60 |
-| Avg score (all episodes) | 1.000 | 0.600 |
+| False positives | 35 | 0 |
+| True positives | 65 | 65 |
+| Avg score (all episodes) | 1.000 | 0.650 |
 | Avg score (corrupt episodes) | 1.000 | 0.000 |
 | Score divergence (corrupt) | 1.000 | - |
-| Avg latency | 0.1 ms | 17.9 ms |
+| Avg latency | 0.1 ms | 23.0 ms |
 
 ## Key Finding
 
 **Every corrupt agent output was rewarded by the soft-only strategy.**
-The rubric judge gave a perfect 1.0 score to all 40 corrupt episodes
+The rubric judge gave a perfect 1.0 score to all 35 corrupt episodes
 because the agent's *text* was polished and included all expected
 information - even though the underlying state was wrong.
 
-Hard-gated composition caught all 40 corrupt episodes with zero false
-positives and zero false negatives.  The latency overhead was ~18 ms
+Hard-gated composition caught all 35 corrupt episodes with zero false
+positives and zero false negatives.  The latency overhead was ~23 ms
 per episode (entirely from HTTP mock requests).
 
 ## Score Divergence
