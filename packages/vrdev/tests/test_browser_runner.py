@@ -1,4 +1,4 @@
-"""Tests for runners/browser.py — Playwright BrowserRunner."""
+"""Tests for runners/browser.py - Playwright BrowserRunner."""
 
 from __future__ import annotations
 
@@ -124,7 +124,7 @@ class TestMockBrowserRunner:
         result = mock.navigate("http://shop.test/products/1")
         assert result["verdict"] == Verdict.PASS
         assert result["status_code"] == 200
-        assert result["title"] == "Widget Pro — Shop"
+        assert result["title"] == "Widget Pro - Shop"
 
     def test_navigate_unknown_page(self):
         mock = MockBrowserRunner(pages=MOCK_PAGES)

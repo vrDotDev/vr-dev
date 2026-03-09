@@ -1,4 +1,4 @@
-"""Registry loader — validates and hydrates VERIFIER.json / SKILL.json files.
+"""Registry loader - validates and hydrates VERIFIER.json / SKILL.json files.
 
 Provides ``validate_spec()`` for JSON-Schema validation of registry specs,
 and ``load_verifier_spec()`` / ``load_skill_spec()`` for parsing specs into
@@ -105,7 +105,7 @@ def validate_spec(data: dict[str, Any], schema: dict[str, Any], path: Path | str
     try:
         import jsonschema
     except ImportError:
-        return ["jsonschema not installed — cannot validate"]
+        return ["jsonschema not installed - cannot validate"]
 
     validator = jsonschema.Draft7Validator(schema)
     return [

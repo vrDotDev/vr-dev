@@ -1,6 +1,6 @@
-"""vr/aiv.calendar.event_created — AGENTIC verifier for calendar event creation.
+"""vr/aiv.calendar.event_created - AGENTIC verifier for calendar event creation.
 
-Source: VAGEN (arXiv:2602.00575) — calendar domain
+Source: VAGEN (arXiv:2602.00575) - calendar domain
 Queries a CalDAV-like REST API to confirm a calendar event was created
 matching the expected date, title, and participants.
 """

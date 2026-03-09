@@ -1,4 +1,4 @@
-"""Mock browser runner for unit tests — no real Playwright dependency.
+"""Mock browser runner for unit tests - no real Playwright dependency.
 
 Provides ``MockBrowserRunner`` that returns canned responses for all
 browser operations, matching the BrowserRunner protocol.
@@ -166,7 +166,7 @@ class MockBrowserRunner:
 MOCK_PAGES: dict[str, dict] = {
     "http://shop.test/products/1": {
         "status": 200,
-        "title": "Widget Pro — Shop",
+        "title": "Widget Pro - Shop",
         "body": '<html><body><h1 class="product-title">Widget Pro</h1>'
         '<span class="price">$29.99</span>'
         '<button id="add-to-cart">Add to Cart</button></body></html>',
@@ -187,7 +187,7 @@ MOCK_PAGES: dict[str, dict] = {
     },
     "http://shop.test/cart/empty": {
         "status": 200,
-        "title": "Cart — Shop",
+        "title": "Cart - Shop",
         "body": '<html><body><p class="empty-msg">Your cart is empty.</p></body></html>',
         "elements": {
             "p.empty-msg": {

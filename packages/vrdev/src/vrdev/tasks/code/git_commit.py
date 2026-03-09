@@ -1,4 +1,4 @@
-"""vr/git.commit_present — HARD verifier for git commit presence.
+"""vr/git.commit_present - HARD verifier for git commit presence.
 
 Source: SWE-bench (arXiv:2310.06770)
 Checks that a specific commit (by SHA prefix or message substring) exists
@@ -119,9 +119,9 @@ class CommitPresentVerifier(BaseVerifier):
         hints: list[str] = []
         if not all_pass:
             if breakdown.get("sha_match", 1.0) < 1.0:
-                hints.append("Commit SHA not found in branch — ensure changes were pushed")
+                hints.append("Commit SHA not found in branch - ensure changes were pushed")
             if breakdown.get("message_match", 1.0) < 1.0:
-                hints.append("Commit message substring not found — check commit message text")
+                hints.append("Commit message substring not found - check commit message text")
 
         return self._make_result(
             Verdict.PASS if all_pass else Verdict.FAIL,

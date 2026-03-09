@@ -1,4 +1,4 @@
-"""Tests for observability module — OTLP exporter selection and tracing."""
+"""Tests for observability module - OTLP exporter selection and tracing."""
 
 from __future__ import annotations
 

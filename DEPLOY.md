@@ -1,16 +1,16 @@
-# Deploy Guide — vr.dev v1.0.0
+# Deploy Guide - vr.dev v1.0.0
 
 ## Prerequisites
 
 - Python 3.10+
 - Docker & Docker Compose (for local/staging)
-- Railway CLI (`npm i -g @railway/cli`) — for production API
-- PyPI account with `twine` configured — for SDK publish
+- Railway CLI (`npm i -g @railway/cli`) - for production API
+- PyPI account with `twine` configured - for SDK publish
 - Hatch installed (`pip install hatch`)
 
 ---
 
-## 1. PyPI — Publish the SDK
+## 1. PyPI - Publish the SDK
 
 ```bash
 cd packages/vrdev
@@ -36,7 +36,7 @@ python -c "import vrdev; print(vrdev.__version__)"
 
 ---
 
-## 2. Railway — Deploy the API
+## 2. Railway - Deploy the API
 
 The project is configured via `railway.toml` at the repo root.
 
@@ -84,7 +84,7 @@ curl https://YOUR-APP.up.railway.app/health
 
 ---
 
-## 3. Local / Staging — Docker Compose
+## 3. Local / Staging - Docker Compose
 
 ```bash
 # From repo root (vr-dev/)
@@ -95,10 +95,10 @@ docker compose up -d
 ```
 
 Services:
-- **api**: `http://localhost:8000` — FastAPI application
+- **api**: `http://localhost:8000` - FastAPI application
 - **cleanup-worker**: Background evidence TTL cleanup (every 6h)
-- **postgres**: `localhost:5432` — PostgreSQL 16
-- **redis**: `localhost:6379` — Redis 7
+- **postgres**: `localhost:5432` - PostgreSQL 16
+- **redis**: `localhost:6379` - Redis 7
 
 Health check:
 ```bash
@@ -113,7 +113,7 @@ docker compose down -v     # stop + delete volumes (destructive)
 
 ---
 
-## 4. Frontend — Vercel (or similar)
+## 4. Frontend - Vercel (or similar)
 
 The Next.js frontend at `vrdev/` deploys to any Node.js hosting platform.
 
@@ -157,5 +157,5 @@ All must pass before deploying.
 1. `pip install vrdev==1.0.0` in a fresh virtualenv
 2. `vr verify --verifier filesystem.file_created --ground-truth '{"path": "/tmp/test.txt"}'`
 3. `curl https://YOUR-API/health` returns `{"status":"ok","version":"1.0.0"}`
-4. Visit https://vr.dev — verify registry page shows 30 verifiers
+4. Visit https://vr.dev - verify registry page shows 38 verifiers
 5. Post to Show HN (see `vr-dev-plan/LAUNCH-POSTS.md`)

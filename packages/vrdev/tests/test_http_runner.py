@@ -1,4 +1,4 @@
-"""Tests for runners/http.py — sandboxed HTTP client.
+"""Tests for runners/http.py - sandboxed HTTP client.
 
 Covers GET/POST happy paths (2xx/4xx/5xx), timeout, connection errors,
 body truncation, and the no-httpx fallback helper.
@@ -31,7 +31,7 @@ class _Handler(BaseHTTPRequestHandler):
         elif path == "/not-found":
             self._json(404, {"error": "not found"})
         elif path == "/large":
-            # 20 KB body — runner should truncate to 10 KB
+            # 20 KB body - runner should truncate to 10 KB
             self._json(200, {"data": "x" * 20_000})
         elif path == "/server-error":
             self._json(500, {"error": "internal server error"})

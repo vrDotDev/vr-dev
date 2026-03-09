@@ -51,7 +51,7 @@ def _verify(verifier_id: str, ground_truth: dict, completions: list[str] | None 
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Airline verifier — vr/tau2.airline.rebooking_correct
+# Airline verifier - vr/tau2.airline.rebooking_correct
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -84,7 +84,7 @@ class TestAirlineRebookingIntegration:
             ground_truth={
                 "booking_id": "BK-001",
                 "expected_date": "2026-04-15",
-                "expected_cabin_class": "economy",  # Wrong — actual is business
+                "expected_cabin_class": "economy",  # Wrong - actual is business
                 "expected_passengers": 2,
             },
             api_base_url=mock_tau2_url,
@@ -123,7 +123,7 @@ class TestAirlineRebookingIntegration:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Retail — vr/tau2.retail.order_cancelled
+# Retail - vr/tau2.retail.order_cancelled
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -176,7 +176,7 @@ class TestRetailOrderCancelledIntegration:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Retail — vr/tau2.retail.refund_processed
+# Retail - vr/tau2.retail.refund_processed
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -214,7 +214,7 @@ class TestRetailRefundIntegration:
             self.VERIFIER,
             ground_truth={
                 "refund_id": "RF-001",
-                "expected_amount": 100.00,  # Wrong — actual is 49.99
+                "expected_amount": 100.00,  # Wrong - actual is 49.99
             },
             api_base_url=mock_tau2_url,
         )
@@ -235,7 +235,7 @@ class TestRetailRefundIntegration:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Retail — vr/tau2.retail.inventory_updated
+# Retail - vr/tau2.retail.inventory_updated
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -262,7 +262,7 @@ class TestRetailInventoryIntegration:
             self.VERIFIER,
             ground_truth={
                 "sku": "SKU-100",
-                "expected_quantity": 99,  # Wrong — actual is 42
+                "expected_quantity": 99,  # Wrong - actual is 42
             },
             api_base_url=mock_tau2_url,
         )
@@ -295,7 +295,7 @@ class TestRetailInventoryIntegration:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Telecom — vr/tau2.telecom.plan_changed
+# Telecom - vr/tau2.telecom.plan_changed
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -323,7 +323,7 @@ class TestTelecomPlanChangedIntegration:
             self.VERIFIER,
             ground_truth={
                 "customer_id": "TEL-002",
-                "expected_plan": "Premium Unlimited",  # Wrong — actual is Basic 5GB
+                "expected_plan": "Premium Unlimited",  # Wrong - actual is Basic 5GB
             },
             api_base_url=mock_tau2_url,
         )
@@ -346,12 +346,12 @@ class TestTelecomPlanChangedIntegration:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Policy (pure logic, no HTTP) — included for completeness + benchmarking
+# Policy (pure logic, no HTTP) - included for completeness + benchmarking
 # ══════════════════════════════════════════════════════════════════════════════
 
 
 class TestPolicyConstraintIntegration:
-    """Policy verifier is pure logic — no HTTP needed. Benchmarked for baseline."""
+    """Policy verifier is pure logic - no HTTP needed. Benchmarked for baseline."""
 
     VERIFIER = "vr/tau2.policy.constraint_not_violated"
 
@@ -418,7 +418,7 @@ class TestComposePipelineIntegration:
     """Integration test for compose: multiple verifiers → composed verdict."""
 
     def test_compose_all_pass(self, mock_tau2_url, benchmark_collector):
-        """Compose policy + order_cancelled — both pass."""
+        """Compose policy + order_cancelled - both pass."""
         from vrdev.core.compose import compose
         from vrdev.core.types import PolicyMode
 
@@ -466,7 +466,7 @@ class TestComposePipelineIntegration:
                     {"rule_id": "cap", "field": "amount", "operator": "lte", "value": 100},
                 ],
                 "actions": [{"type": "buy", "amount": 50}],
-                "order_id": "ORD-002",  # Active — not cancelled
+                "order_id": "ORD-002",  # Active - not cancelled
             },
             context={"api_base_url": mock_tau2_url},
         )

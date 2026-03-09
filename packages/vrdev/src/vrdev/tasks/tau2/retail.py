@@ -1,4 +1,4 @@
-"""vr/tau2.retail.order_cancelled — HARD verifier for order cancellation state.
+"""vr/tau2.retail.order_cancelled - HARD verifier for order cancellation state.
 
 Source: τ²-bench (arXiv:2406.12045)
 Queries mock/real retail API to confirm an order is in cancelled state with

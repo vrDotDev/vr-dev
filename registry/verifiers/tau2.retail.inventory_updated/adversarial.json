@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent claims inventory update but actual state disagrees",
+  "description": "Adversarial fixtures - agent claims inventory update but actual state disagrees",
   "fixtures": [
     {
       "name": "agent_claims_restocked_but_quantity_unchanged",

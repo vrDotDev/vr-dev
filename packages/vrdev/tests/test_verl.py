@@ -1,4 +1,4 @@
-"""Tests for vrdev.adapters.verl — VrdevRewardWrapper adapter.
+"""Tests for vrdev.adapters.verl - VrdevRewardWrapper adapter.
 
 Uses FileCreatedVerifier with tmp_path and deterministic stub verifiers
 to test the veRL reward wrapper without external dependencies.

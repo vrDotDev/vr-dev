@@ -1,11 +1,11 @@
-"""vr/rubric.code.logic_correct — SOFT verifier for code logic correctness.
+"""vr/rubric.code.logic_correct - SOFT verifier for code logic correctness.
 
 Source: Simonds proofs paper (tobysimonds.com/research/2025/09/29/Proofs.html)
 4-criterion rubric scored by an LLM judge:
-  1. algorithm_correct — Does the code implement the right algorithm?
-  2. edge_cases_handled — Are edge cases properly handled?
-  3. no_logic_errors — Is the code free of logic bugs (off-by-one, etc.)?
-  4. meets_requirements — Does the code satisfy the stated requirements?
+  1. algorithm_correct - Does the code implement the right algorithm?
+  2. edge_cases_handled - Are edge cases properly handled?
+  3. no_logic_errors - Is the code free of logic bugs (off-by-one, etc.)?
+  4. meets_requirements - Does the code satisfy the stated requirements?
 
 MANDATORY GATE: Should be composed with a HARD verifier (e.g.
 ``vr/code.python.lint_ruff``) via ``compose(require_hard=True)`` so the

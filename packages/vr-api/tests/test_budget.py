@@ -1,4 +1,4 @@
-"""Tests for B4 — budget-aware verification policies and cost transparency."""
+"""Tests for B4 - budget-aware verification policies and cost transparency."""
 
 from __future__ import annotations
 

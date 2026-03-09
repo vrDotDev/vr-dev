@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — unprofessional or incomplete emails",
+  "description": "Negative fixtures - unprofessional or incomplete emails",
   "fixtures": [
     {
       "name": "no_greeting",

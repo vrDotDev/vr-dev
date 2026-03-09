@@ -1,6 +1,6 @@
-"""Tests for runners/imap.py — IMAP connection manager.
+"""Tests for runners/imap.py - IMAP connection manager.
 
-All tests use mocked imaplib connections — no real IMAP server required.
+All tests use mocked imaplib connections - no real IMAP server required.
 """
 
 from __future__ import annotations

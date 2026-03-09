@@ -11,7 +11,7 @@ from mocks.browser_mock import MockBrowserRunner, MOCK_PAGES
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Positive cases — element found
+# Positive cases - element found
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -64,7 +64,7 @@ class TestElementVisiblePositive:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Negative cases — element not found
+# Negative cases - element not found
 # ══════════════════════════════════════════════════════════════════════════════
 
 

@@ -3,11 +3,11 @@
 ## Problem
 
 When training or evaluating AI agents, reward signals must reflect
-whether the agent **actually changed system state** — not just whether
+whether the agent **actually changed system state** - not just whether
 its text output *sounds* correct.
 
 LLM-as-judge evaluators (the "soft-only" approach) score agent text
-against rubrics.  This works well for tone, formatting, and style —
+against rubrics.  This works well for tone, formatting, and style -
 but it has a fundamental blind spot: **it can't verify state changes.**
 
 An agent that says "I cancelled your order" gets a high rubric score
@@ -40,7 +40,7 @@ Seed: 42.  All results reproducible via `python benchmark_gating.py`.
 | True positives | 60 | 60 |
 | Avg score (all episodes) | 1.000 | 0.600 |
 | Avg score (corrupt episodes) | 1.000 | 0.000 |
-| Score divergence (corrupt) | 1.000 | — |
+| Score divergence (corrupt) | 1.000 | - |
 | Avg latency | 0.1 ms | 17.9 ms |
 
 ## Key Finding
@@ -48,7 +48,7 @@ Seed: 42.  All results reproducible via `python benchmark_gating.py`.
 **Every corrupt agent output was rewarded by the soft-only strategy.**
 The rubric judge gave a perfect 1.0 score to all 40 corrupt episodes
 because the agent's *text* was polished and included all expected
-information — even though the underlying state was wrong.
+information - even though the underlying state was wrong.
 
 Hard-gated composition caught all 40 corrupt episodes with zero false
 positives and zero false negatives.  The latency overhead was ~18 ms
@@ -57,7 +57,7 @@ per episode (entirely from HTTP mock requests).
 ## Score Divergence
 
 On corrupt episodes, soft-only assigned an average score of **1.000**
-while hard-gated assigned **0.000** — a divergence of 1.0.
+while hard-gated assigned **0.000** - a divergence of 1.0.
 
 This is the maximum possible divergence.  In a reinforcement learning
 context, this means corrupt completions received the **same reward as

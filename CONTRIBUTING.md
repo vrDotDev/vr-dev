@@ -1,12 +1,12 @@
 # Contributing to vr.dev
 
-Thank you for your interest in contributing to **vr.dev** — Verifiable Rewards for Real-World AI Agent Tasks!
+Thank you for your interest in contributing to **vr.dev** - Verifiable Rewards for Real-World AI Agent Tasks!
 
 ## Getting Started
 
 ```bash
 # Clone and set up
-git clone https://github.com/vr-dev/vr-dev.git
+git clone https://github.com/vrDotDev/vrdev.git
 cd vr-dev/packages/vrdev
 
 # Create a virtual environment
@@ -21,10 +21,10 @@ python -m pytest --tb=short -q
 
 ## Development Workflow
 
-1. **Branch** from `main` — use `feat/`, `fix/`, or `docs/` prefixes
-2. **Write tests first** — every verifier needs matching pytest tests
-3. **Run the suite** — `python -m pytest --tb=short -q`
-4. **Lint** — `ruff check src/ tests/`
+1. **Branch** from `main` - use `feat/`, `fix/`, or `docs/` prefixes
+2. **Write tests first** - every verifier needs matching pytest tests
+3. **Run the suite** - `python -m pytest --tb=short -q`
+4. **Lint** - `ruff check src/ tests/`
 5. **Open a PR** targeting `main`
 
 ## Adding a New Verifier
@@ -49,10 +49,10 @@ Add to `_VERIFIER_MAP` in `src/vrdev/core/registry.py`:
 ### 3. Registry Fixtures
 
 Create `registry/verifiers/<domain>.<name>/`:
-- `VERIFIER.json` — metadata, ground truth schema, scorecard
-- `positive.json` — fixtures expected to PASS
-- `negative.json` — fixtures expected to FAIL
-- `adversarial.json` (optional) — injection/gaming test cases
+- `VERIFIER.json` - metadata, ground truth schema, scorecard
+- `positive.json` - fixtures expected to PASS
+- `negative.json` - fixtures expected to FAIL
+- `adversarial.json` (optional) - injection/gaming test cases
 
 ### 4. Tests
 
@@ -73,7 +73,7 @@ Create `tests/test_<name>.py` with:
 
 ## Code Style
 
-- **Python 3.10+** — use `X | Y` union syntax, not `Union[X, Y]`
+- **Python 3.10+** - use `X | Y` union syntax, not `Union[X, Y]`
 - **Pydantic v2** models for all data structures
 - **Type hints** on all public functions
 - **Docstrings** in NumPy style
@@ -89,4 +89,4 @@ Create `tests/test_<name>.py` with:
 
 ## Questions?
 
-Open a [Discussion](https://github.com/vr-dev/vr-dev/discussions) or file an issue.
+Open a [Discussion](https://github.com/vrDotDev/vrdev/discussions) or file an issue.

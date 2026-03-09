@@ -6,13 +6,13 @@
 
 This skill runs a four-step verification pipeline against the vr.dev codebase and infrastructure:
 
-1. **Run SDK tests** — Execute `pytest` on the vrdev Python SDK. Verifier: `vr/code.python.tests_pass` (HARD). Checks exit code, parses test count, confirms zero failures.
+1. **Run SDK tests** - Execute `pytest` on the vrdev Python SDK. Verifier: `vr/code.python.tests_pass` (HARD). Checks exit code, parses test count, confirms zero failures.
 
-2. **Lint check** — Run `ruff check` on the vrdev package source. Verifier: `vr/code.python.lint_ruff` (HARD). Confirms zero lint errors across all source files.
+2. **Lint check** - Run `ruff check` on the vrdev package source. Verifier: `vr/code.python.lint_ruff` (HARD). Confirms zero lint errors across all source files.
 
-3. **Frontend health** — Load the vr.dev landing page in a browser and verify the hero section renders. Verifier: `vr/web.browser.element_visible` (AGENTIC). Confirms the page loads without error and the expected content is visible.
+3. **Frontend health** - Load the vr.dev landing page in a browser and verify the hero section renders. Verifier: `vr/web.browser.element_visible` (AGENTIC). Confirms the page loads without error and the expected content is visible.
 
-4. **Report artifact** — Verify that a JSON test report was written to disk. Verifier: `vr/filesystem.file_created` (HARD). Checks that the report file exists and contains valid JSON with the expected fields.
+4. **Report artifact** - Verify that a JSON test report was written to disk. Verifier: `vr/filesystem.file_created` (HARD). Checks that the report file exists and contains valid JSON with the expected fields.
 
 All four verifiers are composed with `require_hard=true` and `policy_mode=fail_closed`. If any HARD verifier fails, the entire pipeline scores 0.0.
 
@@ -79,6 +79,6 @@ This skill is a proof-of-concept for the agent-as-consumer thesis. The pipeline 
 3. **Evidence** is collected and stored (verification results with provenance)
 4. **The agent** reads the evidence and can act on failures (open a GitHub issue, notify the developer, attempt a fix)
 
-If vr.dev's verifiers catch a regression in vr.dev's own codebase, that's the product working as intended. If they miss a regression, that's a verifier quality issue that needs to be addressed — and the adversarial fixtures exist precisely to prevent that scenario.
+If vr.dev's verifiers catch a regression in vr.dev's own codebase, that's the product working as intended. If they miss a regression, that's a verifier quality issue that needs to be addressed - and the adversarial fixtures exist precisely to prevent that scenario.
 
-This is not just dogfooding. It's a demonstration that autonomous agents can be the primary consumer of verification infrastructure — running continuously, without human intervention, improving the systems they depend on.
+This is not just dogfooding. It's a demonstration that autonomous agents can be the primary consumer of verification infrastructure - running continuously, without human intervention, improving the systems they depend on.

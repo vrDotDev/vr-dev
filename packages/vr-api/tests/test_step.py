@@ -1,4 +1,4 @@
-"""Tests for B2 — step-level verification endpoint and trajectory sessions."""
+"""Tests for B2 - step-level verification endpoint and trajectory sessions."""
 
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ def _clear_sessions():
 
 
 class TestStepEndpoint:
-    """POST /v1/verify/step — single-step progressive verification."""
+    """POST /v1/verify/step - single-step progressive verification."""
 
     def test_step_requires_session_id(self, client):
         resp = client.post("/v1/verify/step", json={
@@ -86,7 +86,7 @@ class TestStepEndpoint:
         assert resp.json()["results"][0]["cost_usd"] is not None
 
     def test_multi_step_trajectory(self, client):
-        """Submit two steps in sequence — both should pass."""
+        """Submit two steps in sequence - both should pass."""
         for i in range(2):
             resp = client.post(
                 "/v1/verify/step",
@@ -156,7 +156,7 @@ class TestStepEndpoint:
             },
             headers={"X-Session-ID": "test-halt"},
         )
-        # Session was cleaned up on halt, so it creates a new session — but let's test
+        # Session was cleaned up on halt, so it creates a new session - but let's test
         # that after a halt + cleanup the next step starts fresh
         assert resp2.status_code in (200, 409)
 

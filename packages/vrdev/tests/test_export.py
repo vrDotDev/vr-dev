@@ -1,4 +1,4 @@
-"""Tests for vrdev.core.export — JSONL training-data export."""
+"""Tests for vrdev.core.export - JSONL training-data export."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — command output does not match expected state",
+  "description": "Negative fixtures - command output does not match expected state",
   "fixtures": [
     {
       "name": "file_not_found",

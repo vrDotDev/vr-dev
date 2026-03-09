@@ -790,7 +790,7 @@ def make_fixture(items, desc):
         if "attack_type" in it:
             f["attack_type"] = it["attack_type"]
         fixtures.append(f)
-    # Schema requires minItems: 3 — pad if needed
+    # Schema requires minItems: 3 - pad if needed
     while len(fixtures) < 3:
         idx = len(fixtures) + 1
         base = fixtures[-1].copy()

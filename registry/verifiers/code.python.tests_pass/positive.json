@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — all tests pass",
+  "description": "Positive fixtures - all tests pass",
   "fixtures": [
     {
       "name": "simple_add_all_pass",

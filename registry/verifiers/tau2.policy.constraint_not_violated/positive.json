@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — all policy constraints satisfied",
+  "description": "Positive fixtures - all policy constraints satisfied",
   "fixtures": [
     {
       "name": "refund_within_window",

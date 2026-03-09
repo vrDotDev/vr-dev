@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — command output matches expected state",
+  "description": "Positive fixtures - command output matches expected state",
   "fixtures": [
     {
       "name": "file_exists_check",

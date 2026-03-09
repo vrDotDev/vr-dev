@@ -1,4 +1,4 @@
-"""``vr verify`` — Run a verifier against a trace file or agent output."""
+"""``vr verify`` - Run a verifier against a trace file or agent output."""
 
 from __future__ import annotations
 

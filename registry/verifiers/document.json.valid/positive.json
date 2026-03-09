@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — valid JSON files",
+  "description": "Positive fixtures - valid JSON files",
   "fixtures": [
     {
       "name": "valid_json_object",

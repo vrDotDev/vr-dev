@@ -1,4 +1,4 @@
-"""``vr config`` — View and initialize vr.dev configuration."""
+"""``vr config`` - View and initialize vr.dev configuration."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — tests fail",
+  "description": "Negative fixtures - tests fail",
   "fixtures": [
     {
       "name": "all_tests_fail",

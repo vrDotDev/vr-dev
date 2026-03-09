@@ -1,4 +1,4 @@
-"""Tests for vr/git.commit_present — CommitPresentVerifier."""
+"""Tests for vr/git.commit_present - CommitPresentVerifier."""
 
 from __future__ import annotations
 

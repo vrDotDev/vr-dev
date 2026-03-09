@@ -1,4 +1,4 @@
-"""``vr mcp`` — Start the vr.dev MCP server."""
+"""``vr mcp`` - Start the vr.dev MCP server."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ def mcp():
 def serve():
     """Start the MCP server on stdio transport.
 
-    Use this with Claude Desktop or Cursor — add to your MCP config::
+    Use this with Claude Desktop or Cursor - add to your MCP config::
 
         {
             "mcpServers": {

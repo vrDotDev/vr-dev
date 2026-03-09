@@ -1,4 +1,4 @@
-"""vr/aiv.shell.state_probe — AGENTIC verifier for shell-based state probing.
+"""vr/aiv.shell.state_probe - AGENTIC verifier for shell-based state probing.
 
 Executes a sandboxed shell command to probe system state, then compares
 the captured stdout (stripped) to ``ground_truth.expected_output``.

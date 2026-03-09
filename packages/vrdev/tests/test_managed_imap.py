@@ -1,4 +1,4 @@
-"""Tests for runners/managed_imap.py — connection-pooled IMAP runner."""
+"""Tests for runners/managed_imap.py - connection-pooled IMAP runner."""
 
 from __future__ import annotations
 

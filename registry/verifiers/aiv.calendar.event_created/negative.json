@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — event not found or details mismatch",
+  "description": "Negative fixtures - event not found or details mismatch",
   "fixtures": [
     {
       "name": "nonexistent_event",

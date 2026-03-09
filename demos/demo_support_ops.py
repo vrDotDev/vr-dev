@@ -4,7 +4,7 @@
 Scenario: An AI agent handles a customer cancellation request.
 The agent must (1) cancel the order, (2) process a refund, and
 (3) update inventory.  We compose three HARD verifiers with
-fail-closed policy — if ANY state check fails, the whole episode
+fail-closed policy - if ANY state check fails, the whole episode
 fails, regardless of what the agent *says* it did.
 
 Usage:
@@ -127,16 +127,16 @@ def main() -> None:
 
     # ── Scenario 2: Agent claims success but state is wrong ─────────────
     print("=" * 60)
-    print("SCENARIO 2: Agent CLAIMS success — but order is still active!")
+    print("SCENARIO 2: Agent CLAIMS success - but order is still active!")
     print("=" * 60)
 
     input_fail = VerifierInput(
         completions=["Done! I cancelled order ORD-002 and refunded RF-002. Inventory updated for SKU-200."],
         ground_truth={
             "order_id": "ORD-002",
-            # order verifier defaults expected_status to "cancelled" — but actual is "active"!
+            # order verifier defaults expected_status to "cancelled" - but actual is "active"!
             "refund_id": "RF-002",
-            # refund verifier defaults expected_status to "processed" — but actual is "pending"!
+            # refund verifier defaults expected_status to "processed" - but actual is "pending"!
             "expected_amount": 129.00,
             "sku": "SKU-200",
             "expected_quantity": 10,  # actual is 0!
@@ -151,12 +151,12 @@ def main() -> None:
     print(f"  Score:    {r.score:.2f}")
     print(f"  Breakdown: {json.dumps(r.breakdown, indent=4)}")
     if r.metadata.hard_gate_failed:
-        print("  ⚠ Hard gate triggered — fail-closed policy caught the lie")
+        print("  ⚠ Hard gate triggered - fail-closed policy caught the lie")
     print()
 
     # ── Summary ─────────────────────────────────────────────────────────
     print("KEY TAKEAWAY:")
-    print("  The agent in Scenario 2 said 'Done!' — an LLM-as-judge might")
+    print("  The agent in Scenario 2 said 'Done!' - an LLM-as-judge might")
     print("  score that highly.  But the HARD verifiers checked actual API")
     print("  state and caught 3 mismatches: order still active, refund")
     print("  pending, inventory wrong.  That's verifiable rewards.")

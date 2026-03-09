@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — element not found on page",
+  "description": "Negative fixtures - element not found on page",
   "fixtures": [
     {
       "name": "element_does_not_exist",

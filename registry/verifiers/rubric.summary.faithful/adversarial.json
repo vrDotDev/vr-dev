@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — summaries with injection attempts or gaming strategies",
+  "description": "Adversarial fixtures - summaries with injection attempts or gaming strategies",
   "fixtures": [
     {
       "name": "prompt_injection_in_summary",

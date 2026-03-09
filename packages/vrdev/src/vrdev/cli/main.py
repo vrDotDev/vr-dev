@@ -8,7 +8,7 @@ from vrdev import __version__
 @click.group()
 @click.version_option(version=__version__, prog_name="vr")
 def cli() -> None:
-    """vr.dev — Verifiable Rewards for Real-World AI Agent Tasks."""
+    """vr.dev - Verifiable Rewards for Real-World AI Agent Tasks."""
 
 
 # ── Register subcommands ─────────────────────────────────────────────────────

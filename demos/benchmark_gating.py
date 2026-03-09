@@ -17,7 +17,7 @@ Usage:
     python benchmark_gating.py
 
 Outputs:
-    benchmark_results.json   — machine-readable results
+    benchmark_results.json   - machine-readable results
     Summary table to stdout
 """
 
@@ -154,7 +154,7 @@ def main() -> None:
     order_v = get_verifier("vr/tau2.retail.order_cancelled")
     refund_v = get_verifier("vr/tau2.retail.refund_processed")
 
-    # SOFT verifier (LLM rubric — always gives high score because the
+    # SOFT verifier (LLM rubric - always gives high score because the
     # agent's *text* sounds correct even when the state is wrong)
     soft_judge_pass = StubJudge(
         '{"greeting_present": 1, "appropriate_formality": 1, '
@@ -269,7 +269,7 @@ def main() -> None:
     print(f"  {'True positives (count)':<30} {soft_tp:>12} {hard_tp:>12}")
     print(f"  {'Avg score (all)':<30} {soft_avg_score:>12.3f} {hard_avg_score:>12.3f}")
     print(f"  {'Avg score (corrupt only)':<30} {sum(corrupt_soft_scores) / len(corrupt_soft_scores):>12.3f} {sum(corrupt_hard_scores) / len(corrupt_hard_scores):>12.3f}")
-    print(f"  {'Score divergence (corrupt)':<30} {divergence:>12.3f} {'—':>12}")
+    print(f"  {'Score divergence (corrupt)':<30} {divergence:>12.3f} {'-':>12}")
     print(f"  {'Avg latency (ms)':<30} {soft_avg_latency:>12.1f} {hard_avg_latency:>12.1f}")
     print()
     print("KEY FINDING:")

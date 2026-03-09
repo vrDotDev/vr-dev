@@ -1,4 +1,4 @@
-"""Evidence anchoring — Merkle root submission to Base L2.
+"""Evidence anchoring - Merkle root submission to Base L2.
 
 Collects un-anchored evidence hashes, builds a Merkle tree, and submits
 the root to the EvidenceAnchor smart contract on Base (Sepolia or mainnet).

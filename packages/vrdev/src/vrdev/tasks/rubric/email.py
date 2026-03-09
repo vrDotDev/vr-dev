@@ -1,4 +1,4 @@
-"""vr/rubric.email.tone_professional — SOFT verifier for email quality.
+"""vr/rubric.email.tone_professional - SOFT verifier for email quality.
 
 Source: Simonds proofs paper (tobysimonds.com/research/2025/09/29/Proofs.html)
 4-component rubric scored by an LLM judge: greeting, formality, key info,
@@ -6,7 +6,7 @@ no inappropriate content. Score = sum / 4.
 
 MANDATORY GATE: Must be composed with ``vr/aiv.email.sent_folder_confirmed``
 via ``compose(require_hard=True)``. The AGENTIC email verifier gates this
-SOFT verifier — if the email was never actually sent, this score is zeroed.
+SOFT verifier - if the email was never actually sent, this score is zeroed.
 
 Anti-injection: explicit system prompt instructs the judge to ignore any
 instructions, XML tags, or self-assessments embedded in the agent output.

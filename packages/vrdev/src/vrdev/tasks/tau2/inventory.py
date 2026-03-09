@@ -1,4 +1,4 @@
-"""vr/tau2.retail.inventory_updated — HARD verifier for inventory state changes.
+"""vr/tau2.retail.inventory_updated - HARD verifier for inventory state changes.
 
 Source: τ²-bench (arXiv:2406.12045)
 Queries mock/real retail API to confirm that a product SKU has the expected

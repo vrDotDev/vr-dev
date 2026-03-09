@@ -1,4 +1,4 @@
-"""Tests for vr/tau2.retail.inventory_updated — HARD verifier."""
+"""Tests for vr/tau2.retail.inventory_updated - HARD verifier."""
 
 from __future__ import annotations
 

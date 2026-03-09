@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — element found on page",
+  "description": "Positive fixtures - element found on page",
   "fixtures": [
     {
       "name": "product_title_visible",

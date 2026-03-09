@@ -80,7 +80,7 @@ class HttpStatusOkVerifier(BaseVerifier):
         if verdict == Verdict.FAIL:
             hints.append(f"Got status {actual_status} instead of {expected_status}")
             if actual_status >= 500:
-                hints.append("Server error — may be transient, consider retrying")
+                hints.append("Server error - may be transient, consider retrying")
                 is_retryable = True
             elif actual_status == 401 or actual_status == 403:
                 hints.append("Check auth headers and API credentials")

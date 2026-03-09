@@ -1,6 +1,6 @@
-"""vr/tau2.telecom.plan_changed — HARD verifier for telecom plan changes.
+"""vr/tau2.telecom.plan_changed - HARD verifier for telecom plan changes.
 
-Source: τ²-bench (arXiv:2406.12045) — telecom domain
+Source: τ²-bench (arXiv:2406.12045) - telecom domain
 Queries a CRM-like REST API to verify that a customer's telecom plan was
 changed to the expected plan with correct effective date.
 """

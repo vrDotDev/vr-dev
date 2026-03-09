@@ -11,7 +11,7 @@
    - `negative.json`: 3+ cases where `verdict=FAIL`, `score <= 0.3`
    - `adversarial.json`: 3+ cheat attempts that must return `verdict=FAIL`
 6. Run `vr test <verifier_id>` to confirm all fixtures pass
-7. Open a PR — CI will validate automatically
+7. Open a PR - CI will validate automatically
 
 ## Adding a Skill
 

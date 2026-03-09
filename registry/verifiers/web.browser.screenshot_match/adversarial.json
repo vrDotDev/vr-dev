@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — subtle visual differences that should fail SSIM check",
+  "description": "Adversarial fixtures - subtle visual differences that should fail SSIM check",
   "fixtures": [
     {
       "name": "agent_claims_match_but_wrong_page",

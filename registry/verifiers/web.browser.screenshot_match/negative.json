@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — pages not matching reference screenshots",
+  "description": "Negative fixtures - pages not matching reference screenshots",
   "fixtures": [
     {
       "name": "wrong_page",

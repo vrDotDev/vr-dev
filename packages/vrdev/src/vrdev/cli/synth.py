@@ -54,7 +54,7 @@ def _read_spec_file(path: str) -> str:
     content = p.read_text()
     # Truncate very large specs to stay within context window
     if len(content) > 30_000:
-        content = content[:30_000] + "\n\n... [truncated — file too large] ..."
+        content = content[:30_000] + "\n\n... [truncated - file too large] ..."
     return content
 
 
@@ -152,7 +152,7 @@ claiming success without doing the work.
 ## Rules
 
 1. The verify.py must be self-contained (no imports beyond vrdev.core.* and stdlib)
-2. HARD verifiers must NOT call any LLM — only deterministic checks
+2. HARD verifiers must NOT call any LLM - only deterministic checks
 3. Fixtures must have 3+ examples each (positive, negative, adversarial)
 4. Adversarial fixtures should test prompt injection and claim-without-evidence attacks
 5. The ground_truth_schema in VERIFIER.json must match what verify.py expects

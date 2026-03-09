@@ -1,4 +1,4 @@
-"""vr/tau2.retail.refund_processed — HARD verifier for refund state.
+"""vr/tau2.retail.refund_processed - HARD verifier for refund state.
 
 Source: τ²-bench (arXiv:2406.12045)
 Queries mock/real retail API to confirm a refund has been processed with

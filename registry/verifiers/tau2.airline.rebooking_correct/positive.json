@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — rebooking matches expected state",
+  "description": "Positive fixtures - rebooking matches expected state",
   "fixtures": [
     {
       "name": "rebooking_all_fields_match",

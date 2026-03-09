@@ -1,6 +1,6 @@
 """Tests for the SentFolderConfirmedVerifier (vr/aiv.email.sent_folder_confirmed).
 
-Uses MockIMAPRunner injected via the constructor for all tests —
+Uses MockIMAPRunner injected via the constructor for all tests -
 no real IMAP server needed.
 """
 

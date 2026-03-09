@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — order not found or wrong state",
+  "description": "Negative fixtures - order not found or wrong state",
   "fixtures": [
     {
       "name": "nonexistent_order",
@@ -13,7 +13,7 @@
     },
     {
       "name": "cancelled_order",
-      "description": "Order exists but is cancelled — not placed",
+      "description": "Order exists but is cancelled - not placed",
       "input": {
         "completions": ["done"],
         "ground_truth": {

@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — orders found in confirmed/placed state",
+  "description": "Positive fixtures - orders found in confirmed/placed state",
   "fixtures": [
     {
       "name": "confirmed_order_with_items",

@@ -1,1 +1,1 @@
-"""Rubric-based soft verifiers — Simonds-derived."""
+"""Rubric-based soft verifiers - Simonds-derived."""

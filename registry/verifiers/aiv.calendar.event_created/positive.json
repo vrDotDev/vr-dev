@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — calendar events found with correct details",
+  "description": "Positive fixtures - calendar events found with correct details",
   "fixtures": [
     {
       "name": "event_by_id",

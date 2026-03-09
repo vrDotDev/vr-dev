@@ -1,4 +1,4 @@
-"""Tests for vr/web.ecommerce.order_placed — OrderPlacedVerifier."""
+"""Tests for vr/web.ecommerce.order_placed - OrderPlacedVerifier."""
 
 from __future__ import annotations
 

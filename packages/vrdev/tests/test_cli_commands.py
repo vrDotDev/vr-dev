@@ -1,4 +1,4 @@
-"""Tests for CLI subcommands — improves coverage of cli/*.py modules."""
+"""Tests for CLI subcommands - improves coverage of cli/*.py modules."""
 
 from __future__ import annotations
 

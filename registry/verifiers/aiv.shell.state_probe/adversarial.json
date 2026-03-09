@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent claims success but shell state disagrees",
+  "description": "Adversarial fixtures - agent claims success but shell state disagrees",
   "fixtures": [
     {
       "name": "agent_claims_file_written_but_empty",

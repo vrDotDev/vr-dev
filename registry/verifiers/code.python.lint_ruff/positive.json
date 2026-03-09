@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — clean Python code passes lint",
+  "description": "Positive fixtures - clean Python code passes lint",
   "fixtures": [
     {
       "name": "clean_single_function",

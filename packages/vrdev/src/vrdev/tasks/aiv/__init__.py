@@ -1,1 +1,1 @@
-"""Agentic interactive verifiers — VAGEN-derived."""
+"""Agentic interactive verifiers - VAGEN-derived."""

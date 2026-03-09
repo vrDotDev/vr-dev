@@ -1,1 +1,1 @@
-"""Filesystem verifiers — file existence, size, and content checks."""
+"""Filesystem verifiers - file existence, size, and content checks."""

@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — order correctly cancelled",
+  "description": "Positive fixtures - order correctly cancelled",
   "fixtures": [
     {
       "name": "order_cancelled_customer_request",
@@ -12,7 +12,7 @@
     {
       "name": "order_cancelled_duplicate",
       "input": {
-        "completions": ["Order ORD-003 cancelled — it was a duplicate."],
+        "completions": ["Order ORD-003 cancelled - it was a duplicate."],
         "ground_truth": { "order_id": "ORD-003", "expected_status": "cancelled", "expected_reason": "duplicate_order" }
       },
       "expected": { "verdict": "PASS", "min_score": 1.0 }

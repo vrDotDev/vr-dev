@@ -9,7 +9,7 @@ from vrdev.tasks.tau2.refund import RefundProcessedVerifier
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Positive cases — refund found and status matches
+# Positive cases - refund found and status matches
 # ══════════════════════════════════════════════════════════════════════════════
 
 
@@ -60,7 +60,7 @@ class TestRefundPositive:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# Negative cases — refund status mismatch or not found
+# Negative cases - refund status mismatch or not found
 # ══════════════════════════════════════════════════════════════════════════════
 
 

@@ -43,7 +43,7 @@ class TestEscalationMode:
         inp = VerifierInput(completions=["test"], ground_truth={})
         results = c.verify(inp)
         # Only HARD verifier ran; SOFT and AGENTIC skipped
-        # Composed result merges into one — check evidence tiers
+        # Composed result merges into one - check evidence tiers
         assert len(results) == 1
         assert results[0].evidence.get("tier") == "HARD"
 

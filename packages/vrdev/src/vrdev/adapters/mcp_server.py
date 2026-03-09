@@ -1,13 +1,13 @@
-"""MCP server adapter for vr.dev — exposes verifiers as Model Context Protocol tools.
+"""MCP server adapter for vr.dev - exposes verifiers as Model Context Protocol tools.
 
 Requires the ``mcp`` optional dependency: ``pip install vrdev[mcp]``
 
 Tools exposed:
-  - ``list_verifiers``    — List all registered verifier IDs
-  - ``run_verifier``      — Run a verifier with given input
-  - ``compose_chain``     — Run a composed chain of verifiers
-  - ``explain_failure``   — Explain why a verification failed
-  - ``search_verifiers``  — Search verifiers by keyword
+  - ``list_verifiers``    - List all registered verifier IDs
+  - ``run_verifier``      - Run a verifier with given input
+  - ``compose_chain``     - Run a composed chain of verifiers
+  - ``explain_failure``   - Explain why a verification failed
+  - ``search_verifiers``  - Search verifiers by keyword
 
 Transport: stdio (for Claude Desktop / Cursor integration)
 """
@@ -39,7 +39,7 @@ def create_mcp_server() -> Any:
         "vr.dev",
         version="1.0.0",
         description="Verify real-world AI agent outcomes against ground truth. "
-        "30+ verifiers across 14 domains: retail, email, code, database, "
+        "38 verifiers across 19 domains: retail, airline, telecom, email, code, database, "
         "filesystem, web, git, and more. Compose verification pipelines "
         "with hard-gating to prevent reward hacking.",
     )
@@ -81,7 +81,7 @@ def create_mcp_server() -> Any:
 
         Args:
             verifier_id: Registry ID (e.g. "vr/filesystem.file_created", "vr/code.python.lint_ruff")
-            completions: Agent completion strings — what the agent said/did
+            completions: Agent completion strings - what the agent said/did
             ground_truth: Expected outcome (schema varies per verifier)
             context: Optional runtime context (API URLs, credentials, configs)
 
@@ -117,7 +117,7 @@ def create_mcp_server() -> Any:
 
         Combines multiple verifiers into a pipeline. With fail_closed policy,
         if any HARD verifier fails, the entire chain scores 0.0 regardless
-        of SOFT verifier scores — this prevents agents from gaming LLM judges.
+        of SOFT verifier scores - this prevents agents from gaming LLM judges.
 
         Example: Verify order cancellation end-to-end:
             compose_chain(
@@ -202,14 +202,14 @@ def create_mcp_server() -> Any:
                     val_str = str(v_val)[:200]
                     lines.append(f"  - {k}: {val_str}")
             if r.verdict.value != "PASS":
-                lines.append("\n**Why it failed**: Check the breakdown scores — "
+                lines.append("\n**Why it failed**: Check the breakdown scores - "
                             "any sub-check at 0.0 indicates the specific failure point.")
             if r.repair_hints:
                 lines.append("\n## How to Fix")
                 for hint in r.repair_hints:
                     lines.append(f"- {hint}")
                 if r.retryable:
-                    lines.append("\n*This failure may be transient — retrying could help.*")
+                    lines.append("\n*This failure may be transient - retrying could help.*")
                 if r.suggested_action:
                     lines.append(f"\n**Suggested action**: {r.suggested_action}")
             lines.append("")

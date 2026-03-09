@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — refund not processed or not found",
+  "description": "Negative fixtures - refund not processed or not found",
   "fixtures": [
     {
       "name": "refund_still_pending",

@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — professional emails scoring >= 0.75",
+  "description": "Positive fixtures - professional emails scoring >= 0.75",
   "fixtures": [
     {
       "name": "professional_email_full_score",

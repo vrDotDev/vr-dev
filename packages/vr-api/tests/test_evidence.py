@@ -1,4 +1,4 @@
-"""Tests for evidence persistence — store and retrieve via GET /evidence/{hash}."""
+"""Tests for evidence persistence - store and retrieve via GET /evidence/{hash}."""
 
 from __future__ import annotations
 

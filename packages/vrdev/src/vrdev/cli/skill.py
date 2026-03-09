@@ -1,4 +1,4 @@
-"""``vr skill`` — Manage skill artifacts and routing."""
+"""``vr skill`` - Manage skill artifacts and routing."""
 
 from __future__ import annotations
 

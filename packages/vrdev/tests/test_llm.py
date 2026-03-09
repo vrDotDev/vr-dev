@@ -65,5 +65,5 @@ class TestOpenAIJudgeImport:
 
         # But instantiation should either work (if openai is installed)
         # or raise ImportError
-        # We don't assert which — depends on environment
+        # We don't assert which - depends on environment
         assert OpenAIJudge is not None

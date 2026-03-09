@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent claims commit exists but it does not",
+  "description": "Adversarial fixtures - agent claims commit exists but it does not",
   "fixtures": [
     {
       "name": "agent_claims_committed_but_no_commit",

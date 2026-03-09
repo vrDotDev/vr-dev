@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent claims valid JSON but verification fails",
+  "description": "Adversarial fixtures - agent claims valid JSON but verification fails",
   "fixtures": [
     {
       "name": "agent_claims_valid_but_file_missing",

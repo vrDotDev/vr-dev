@@ -1,7 +1,7 @@
 # vrdev Demos
 
 Self-contained demo scripts showing vrdev's verifiable-rewards pipeline.
-Each script embeds its own mock server — no external services required.
+Each script embeds its own mock server - no external services required.
 
 ## Prerequisites
 
@@ -24,8 +24,8 @@ python benchmark_gating.py     # Case study: soft-only vs hard-gated (100 episod
 
 Each demo runs **two scenarios**:
 
-1. **PASS** — the agent did its job correctly; all verifiers confirm state changes.
-2. **FAIL** — the agent _claimed_ success but hard verifiers catch the lie.
+1. **PASS** - the agent did its job correctly; all verifiers confirm state changes.
+2. **FAIL** - the agent _claimed_ success but hard verifiers catch the lie.
 
 The benchmark script quantifies this across 100 episodes and writes
 `benchmark_results.json`.

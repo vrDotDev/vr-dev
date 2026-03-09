@@ -1,4 +1,4 @@
-"""Tests for MCP server adapter — tool registration and basic invocation.
+"""Tests for MCP server adapter - tool registration and basic invocation.
 
 These tests validate the server construction logic without requiring
 the mcp package to be installed. They mock FastMCP to capture tool

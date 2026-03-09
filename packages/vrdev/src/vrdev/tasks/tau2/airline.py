@@ -1,4 +1,4 @@
-"""vr/tau2.airline.rebooking_correct — HARD verifier for flight rebooking state.
+"""vr/tau2.airline.rebooking_correct - HARD verifier for flight rebooking state.
 
 Source: τ²-bench (arXiv:2406.12045)
 Queries mock/real airline API to confirm booking fields match expected

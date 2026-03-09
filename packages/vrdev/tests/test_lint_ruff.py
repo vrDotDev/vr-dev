@@ -1,4 +1,4 @@
-"""Tests for vr/code.python.lint_ruff — LintRuffVerifier."""
+"""Tests for vr/code.python.lint_ruff - LintRuffVerifier."""
 
 from __future__ import annotations
 

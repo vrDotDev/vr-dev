@@ -1,4 +1,4 @@
-# vr.dev — Verifiable Rewards for Real-World AI Agent Tasks
+# vr.dev - Verifiable Rewards for Real-World AI Agent Tasks
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
@@ -8,7 +8,7 @@
 
 vr.dev is an open registry and composition layer for verifiable reward functions
 targeting real-world agentic tasks. Each verifier returns structured evidence
-artifacts — not just scores — making agent behavior auditable, debuggable, and
+artifacts - not just scores - making agent behavior auditable, debuggable, and
 trainable.
 
 ## Quick Start
@@ -47,9 +47,9 @@ Every verifier returns a `VerificationResult` with:
 
 ## Works With
 
-- **trl** (HuggingFace GRPOTrainer) — drop-in reward function
-- **verl** (ReasoningGym) — compute_score adapter
-- **OpenClaw** — agent skill for runtime verification
+- **trl** (HuggingFace GRPOTrainer) - drop-in reward function
+- **verl** (ReasoningGym) - compute_score adapter
+- **OpenClaw** - agent skill for runtime verification
 
 ## Project Structure
 
@@ -63,7 +63,7 @@ registry/schemas/     # JSON Schema validation
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT - see [LICENSE](LICENSE).
 
 ## Citation
 
@@ -71,7 +71,7 @@ If you use vr.dev in your research, please cite:
 ```bibtex
 @software{vrdev2026,
   title={vr.dev: Verifiable Rewards for Real-World AI Agent Tasks},
-  url={https://github.com/vr-dev/vr-dev},
+  url={https://github.com/vrDotDev/vrdev},
   year={2026}
 }
 ```

@@ -1,4 +1,4 @@
-"""Tests for adapters/openclaw.py — OpenClaw agent integration.
+"""Tests for adapters/openclaw.py - OpenClaw agent integration.
 
 Covers run_verifier, compose_chain, verify_task (including error fallback),
 and explain_failure for all four verdict types.

@@ -208,7 +208,7 @@ class TextContainsVerifier(BaseVerifier):
             if not case_sensitive:
                 hints.append("Search was case-insensitive")
             else:
-                hints.append("Check case sensitivity — set case_sensitive: false if needed")
+                hints.append("Check case sensitivity - set case_sensitive: false if needed")
         return self._make_result(verdict, score, breakdown, evidence, input_data, permissions=["fs:read"],
                                  repair_hints=hints)
 
@@ -312,7 +312,7 @@ class PdfPageCountVerifier(BaseVerifier):
             evidence["error"] = "file not found"
             return self._make_result(Verdict.FAIL, 0.0, breakdown, evidence, input_data, permissions=["fs:read"])
 
-        # Use a lightweight PDF page count — just count /Type /Page entries
+        # Use a lightweight PDF page count - just count /Type /Page entries
         try:
             with open(file_path, "rb") as f:
                 content = f.read()

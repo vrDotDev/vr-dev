@@ -1,4 +1,4 @@
-"""vr/web.ecommerce.order_placed — HARD verifier for order placement.
+"""vr/web.ecommerce.order_placed - HARD verifier for order placement.
 
 Source: WebArena (arXiv:2307.13854)
 Queries e-commerce API to confirm an order was placed with expected items

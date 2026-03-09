@@ -1,4 +1,4 @@
-"""Browser runner — Playwright-based headless browser for AGENTIC verifiers.
+"""Browser runner - Playwright-based headless browser for AGENTIC verifiers.
 
 Provides a sandboxed browser interface for verifiers that need to check
 real browser DOM state (e.g., element visibility, page content).

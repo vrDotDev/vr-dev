@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — invalid or missing JSON files",
+  "description": "Negative fixtures - invalid or missing JSON files",
   "fixtures": [
     {
       "name": "file_not_found",

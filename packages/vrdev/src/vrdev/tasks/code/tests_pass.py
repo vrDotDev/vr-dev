@@ -1,4 +1,4 @@
-"""vr/code.python.tests_pass — HARD verifier for Python test execution.
+"""vr/code.python.tests_pass - HARD verifier for Python test execution.
 
 Source: Zeno-bench (code-quality track)
 Writes agent-generated Python code to a temp directory and runs
@@ -29,7 +29,7 @@ class TestsPassVerifier(BaseVerifier):
 
         {
             "test_code": str | null,     # separate test file (optional)
-            "min_pass_ratio": float      # default 1.0 — fraction required
+            "min_pass_ratio": float      # default 1.0 - fraction required
         }
 
     Context (optional)::
@@ -129,7 +129,7 @@ class TestsPassVerifier(BaseVerifier):
                     Verdict.FAIL, 0.0, breakdown, evidence, input_data,
                     permissions=["fs:write_tmp", "exec:pytest"],
                     source_benchmark="Zeno-bench", source_citation="code-quality",
-                    repair_hints=["No tests were collected — check test function naming (test_*)", "Ensure pytest can discover the test file"],
+                    repair_hints=["No tests were collected - check test function naming (test_*)", "Ensure pytest can discover the test file"],
                 )
 
             pass_ratio = passed / total
@@ -146,7 +146,7 @@ class TestsPassVerifier(BaseVerifier):
                 if failed:
                     hints.append(f"{failed} test(s) failed out of {total}")
                 if errors:
-                    hints.append(f"{errors} test(s) errored — check test dependencies are installed")
+                    hints.append(f"{errors} test(s) errored - check test dependencies are installed")
                 hints.append("Review pytest output for specific assertion failures")
 
             return self._make_result(

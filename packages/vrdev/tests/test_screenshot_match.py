@@ -1,4 +1,4 @@
-"""Tests for vr/web.browser.screenshot_match — AGENTIC verifier."""
+"""Tests for vr/web.browser.screenshot_match - AGENTIC verifier."""
 
 from __future__ import annotations
 

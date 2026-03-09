@@ -3,7 +3,7 @@
 
 Scenario: An AI agent places orders on an e-commerce site.
 We verify the order was actually placed AND cross-check the
-refund system — composing verifiers from two different domains
+refund system - composing verifiers from two different domains
 (WebArena e-commerce + τ²-bench retail) to catch edge cases.
 
 This demo uses HTTP-level verifiers only (no Playwright needed).
@@ -144,7 +144,7 @@ def main() -> None:
 
     # ── Scenario 2: Cancelled order + denied refund ─────────────────────
     print("=" * 60)
-    print("SCENARIO 2: Agent claims success — but order was cancelled!")
+    print("SCENARIO 2: Agent claims success - but order was cancelled!")
     print("=" * 60)
 
     input_fail = VerifierInput(
@@ -167,14 +167,14 @@ def main() -> None:
     print(f"  Score:    {r.score:.2f}")
     print(f"  Breakdown: {json.dumps(r.breakdown, indent=4)}")
     if r.metadata.hard_gate_failed:
-        print("  ⚠ Hard gate triggered — order was cancelled + refund denied")
+        print("  ⚠ Hard gate triggered - order was cancelled + refund denied")
     print()
 
     # ── Summary ─────────────────────────────────────────────────────────
     print("KEY TAKEAWAY:")
     print("  Cross-domain composition lets you verify BOTH the e-commerce")
     print("  platform state AND the payment/refund state in a single call.")
-    print("  The agent in Scenario 2 said 'placed successfully' — but the")
+    print("  The agent in Scenario 2 said 'placed successfully' - but the")
     print("  order was actually cancelled and the refund was denied.")
     print()
     print("NOTE: This demo uses HTTP-level verifiers.  vrdev also ships")

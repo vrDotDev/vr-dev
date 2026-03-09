@@ -1,8 +1,8 @@
-"""vr/tau2.policy.constraint_not_violated — HARD verifier for domain policy compliance.
+"""vr/tau2.policy.constraint_not_violated - HARD verifier for domain policy compliance.
 
 Source: τ²-bench (arXiv:2406.12045)
 Pure-logic verifier: takes domain policy rules and an action trace, checks
-whether any rules were violated. Most generalizable — works for retail,
+whether any rules were violated. Most generalizable - works for retail,
 airline, telecom, or any domain with codifiable policies.
 """
 

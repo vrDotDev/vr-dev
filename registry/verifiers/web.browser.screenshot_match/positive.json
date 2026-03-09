@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — pages matching reference screenshots",
+  "description": "Positive fixtures - pages matching reference screenshots",
   "fixtures": [
     {
       "name": "identical_page",

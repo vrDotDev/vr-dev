@@ -1,4 +1,4 @@
-"""vr/web.browser.element_visible — AGENTIC verifier for DOM element visibility.
+"""vr/web.browser.element_visible - AGENTIC verifier for DOM element visibility.
 
 Source: WebArena (arXiv:2307.13854)
 Navigates to a URL via BrowserRunner and checks whether a specific CSS

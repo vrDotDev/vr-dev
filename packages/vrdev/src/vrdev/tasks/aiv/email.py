@@ -1,9 +1,9 @@
-"""vr/aiv.email.sent_folder_confirmed — AGENTIC verifier for sent email.
+"""vr/aiv.email.sent_folder_confirmed - AGENTIC verifier for sent email.
 
 Source: VAGEN (arXiv:2602.00575)
 Opens IMAP connection to Sent folder, searches for matching message by
 recipient and subject fragment within a time window. This is the headline
-demo verifier — proves the "latent state" insight that UI confirmation
+demo verifier - proves the "latent state" insight that UI confirmation
 does not equal actual delivery.
 """
 

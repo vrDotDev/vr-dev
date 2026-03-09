@@ -1,4 +1,4 @@
-"""``vr inspect`` — display a detailed scorecard for a verifier.
+"""``vr inspect`` - display a detailed scorecard for a verifier.
 
 Usage::
 
@@ -82,12 +82,12 @@ def inspect(verifier_id: str, as_json: bool) -> None:
     click.echo(f"\n{'═' * 60}")
     click.echo(f"  {verifier_id}  v{spec.get('version', '?')}")
     click.echo(f"{'═' * 60}")
-    click.echo(f"  Description : {spec.get('description', '—')}")
+    click.echo(f"  Description : {spec.get('description', '-')}")
     click.echo(f"  Tier        : {spec.get('tier', '?')}")
     click.echo(f"  Domain      : {spec.get('domain', '?')}")
     click.echo(f"  Task Type   : {spec.get('task_type', '?')}")
-    click.echo(f"  Benchmark   : {spec.get('source_benchmark') or '—'}")
-    click.echo(f"  Citation    : {spec.get('source_citation', '—')}")
+    click.echo(f"  Benchmark   : {spec.get('source_benchmark') or '-'}")
+    click.echo(f"  Citation    : {spec.get('source_citation', '-')}")
     click.echo(f"  Contributor : {spec.get('contributor', '?')}")
     click.echo()
 
@@ -97,9 +97,9 @@ def inspect(verifier_id: str, as_json: bool) -> None:
     click.echo(f"  Evidence Quality : {scorecard.get('evidence_quality', '?')}")
     click.echo(f"  Intended Use     : {scorecard.get('intended_use', '?')}")
     if attack:
-        click.echo(f"  Injection Risk   : {attack.get('injection_risk', '—')}")
-        click.echo(f"  Format Gaming    : {attack.get('format_gaming_risk', '—')}")
-        click.echo(f"  Tool Spoofing    : {attack.get('tool_spoofing_risk', '—')}")
+        click.echo(f"  Injection Risk   : {attack.get('injection_risk', '-')}")
+        click.echo(f"  Format Gaming    : {attack.get('format_gaming_risk', '-')}")
+        click.echo(f"  Tool Spoofing    : {attack.get('tool_spoofing_risk', '-')}")
     click.echo()
 
     perms = spec.get("permissions_required", [])

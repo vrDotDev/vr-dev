@@ -1,4 +1,4 @@
-"""Multi-agent verification ensembles — experimental (Phase C4).
+"""Multi-agent verification ensembles - experimental (Phase C4).
 
 Run the same verifier multiple times and apply voting strategies to produce
 a consensus result.  Useful for non-deterministic (SOFT) verifiers where

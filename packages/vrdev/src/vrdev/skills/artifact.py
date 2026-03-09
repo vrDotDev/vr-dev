@@ -4,7 +4,7 @@ Lifecycle: DRAFT → CANDIDATE → VERIFIED → DEPRECATED
                      ↕               ↓
                    DRAFT        CANDIDATE (demotion)
 
-DEPRECATED is terminal — no transitions out.
+DEPRECATED is terminal - no transitions out.
 """
 
 from __future__ import annotations

@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — email not found in Sent folder",
+  "description": "Negative fixtures - email not found in Sent folder",
   "fixtures": [
     {
       "name": "email_never_sent",

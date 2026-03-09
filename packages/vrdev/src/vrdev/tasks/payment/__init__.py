@@ -182,7 +182,7 @@ class RefundProcessedVerifier(BaseVerifier):
         if verdict == Verdict.FAIL:
             hints.append(f"Refund status is '{status}' instead of 'succeeded'")
             if status == "pending":
-                hints.append("Refund is still processing — try again later")
+                hints.append("Refund is still processing - try again later")
 
         return self._make_result(verdict, score, breakdown, evidence, input_data,
                                  permissions=["api:stripe"], repair_hints=hints,

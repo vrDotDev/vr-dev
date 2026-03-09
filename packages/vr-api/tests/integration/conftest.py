@@ -1,4 +1,4 @@
-"""Fixtures for integration tests — mock τ²-bench server + latency benchmarking.
+"""Fixtures for integration tests - mock τ²-bench server + latency benchmarking.
 
 The ``mock_tau2_url`` fixture spins up the standalone FastAPI mock server
 on an auto-assigned port using uvicorn in a background thread.

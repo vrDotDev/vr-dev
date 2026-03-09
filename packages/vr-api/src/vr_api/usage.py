@@ -37,7 +37,7 @@ class UsageMiddleware(BaseHTTPMiddleware):
         endpoint = request.url.path
         method = request.method
 
-        # Fire-and-forget — don't block the response
+        # Fire-and-forget - don't block the response
         try:
             await record_usage(
                 api_key=api_key_id,
@@ -56,7 +56,7 @@ async def check_quota(
     request: Request,
     auth_id: str = Depends(require_auth),
 ) -> None:
-    """FastAPI dependency — enforces per-key daily/monthly quotas and graduated tier gates.
+    """FastAPI dependency - enforces per-key daily/monthly quotas and graduated tier gates.
 
     Graduated tiers:
     - **free**: 1000 lifetime verifications, then 403
@@ -65,11 +65,11 @@ async def check_quota(
 
     Also enforces per-key daily/monthly quotas from ``quota_records``.
     """
-    # x402 payers bypass quota — they pay per-request on-chain
+    # x402 payers bypass quota - they pay per-request on-chain
     if auth_id.startswith("x402:"):
         return
 
-    # dev mode — unrestricted
+    # dev mode - unrestricted
     if auth_id == "dev":
         return
 
@@ -87,19 +87,19 @@ async def check_quota(
             status_code=403,
             detail="Testnet tier limit reached (10 000 verifications). Upgrade to mainnet billing on your dashboard to continue.",
         )
-    # mainnet and unknown tiers — no gate
+    # mainnet and unknown tiers - no gate
 
     # ── Per-key daily/monthly quota ──────────────────────────────────────
     # Extract the DB key UUID from the keyid: prefix set by auth
     if auth_id.startswith("keyid:"):
         lookup_key = auth_id[6:]
     else:
-        lookup_key = auth_id  # env key — lookup by raw key
+        lookup_key = auth_id  # env key - lookup by raw key
 
     try:
         quota = await get_quota(lookup_key)
     except Exception:
-        return  # DB error — don't block the request
+        return  # DB error - don't block the request
     if quota is None:
         return  # no quota configured → unrestricted
 

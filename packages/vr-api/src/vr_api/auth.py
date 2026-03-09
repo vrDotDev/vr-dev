@@ -42,7 +42,7 @@ async def _validate_db_key(api_key: str) -> tuple[str, int] | None:
     try:
         factory = get_session_factory()
     except RuntimeError:
-        return None  # DB not initialised — skip DB check
+        return None  # DB not initialised - skip DB check
 
     key_hash = _hash_key(api_key)
     try:
@@ -68,7 +68,7 @@ async def _validate_db_key(api_key: str) -> tuple[str, int] | None:
             await session.commit()
             return key_id, user_id
     except Exception:
-        return None  # Table missing (SQLite tests) or DB error — skip
+        return None  # Table missing (SQLite tests) or DB error - skip
 
 
 async def _get_user_payment_info(user_id: int) -> dict | None:
@@ -123,7 +123,7 @@ async def require_api_key(
             key_id, _user_id = db_result
             return f"keyid:{key_id}"
 
-    # 3. Dev mode — no env keys configured and DB has no keys table yet
+    # 3. Dev mode - no env keys configured and DB has no keys table yet
     if not env_keys:
         return "dev"
 
@@ -204,7 +204,7 @@ async def require_auth(request: Request) -> str:
             status_code=402, detail="Payment required", headers=headers,
         )
 
-    # 3. Dev mode — no env keys configured → allow unauthenticated access
+    # 3. Dev mode - no env keys configured → allow unauthenticated access
     if not env_keys:
         return "dev"
 

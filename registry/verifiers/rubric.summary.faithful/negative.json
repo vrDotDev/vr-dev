@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — unfaithful or hallucinated summaries",
+  "description": "Negative fixtures - unfaithful or hallucinated summaries",
   "fixtures": [
     {
       "name": "hallucinated_statistics",

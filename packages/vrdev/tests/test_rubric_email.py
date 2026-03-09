@@ -1,6 +1,6 @@
 """Tests for the ToneProfessionalVerifier (vr/rubric.email.tone_professional).
 
-Uses StubJudge injected via the constructor — no real LLM API calls.
+Uses StubJudge injected via the constructor - no real LLM API calls.
 """
 
 from __future__ import annotations

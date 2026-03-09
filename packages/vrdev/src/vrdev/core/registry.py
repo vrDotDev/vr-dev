@@ -1,4 +1,4 @@
-"""Verifier registry — discovers and instantiates verifiers by ID.
+"""Verifier registry - discovers and instantiates verifiers by ID.
 
 Uses lazy imports to avoid loading all verifier modules at startup.
 """
@@ -33,31 +33,31 @@ _VERIFIER_MAP: dict[str, str] = {
     "vr/tau2.retail.inventory_updated": "vrdev.tasks.tau2.inventory:InventoryUpdatedVerifier",
     # Phase 7
     "vr/aiv.shell.state_probe": "vrdev.tasks.aiv.shell_state_probe:ShellStateProbeVerifier",
-    # Phase 14 — document domain
+    # Phase 14 - document domain
     "vr/document.json.valid": "vrdev.tasks.document:JsonValidVerifier",
     "vr/document.csv.row_count": "vrdev.tasks.document:CsvRowCountVerifier",
     "vr/document.text.contains": "vrdev.tasks.document:TextContainsVerifier",
     "vr/document.yaml.valid": "vrdev.tasks.document:YamlValidVerifier",
     "vr/document.pdf.page_count": "vrdev.tasks.document:PdfPageCountVerifier",
-    # Phase 14 — database domain
+    # Phase 14 - database domain
     "vr/database.row.exists": "vrdev.tasks.database:RowExistsVerifier",
     "vr/database.row.updated": "vrdev.tasks.database:RowUpdatedVerifier",
     "vr/database.table.row_count": "vrdev.tasks.database:TableRowCountVerifier",
-    # Phase 14 — api domain
+    # Phase 14 - api domain
     "vr/api.http.status_ok": "vrdev.tasks.api:HttpStatusOkVerifier",
     "vr/api.http.response_matches": "vrdev.tasks.api:HttpResponseMatchesVerifier",
     "vr/api.http.header_present": "vrdev.tasks.api:HttpHeaderPresentVerifier",
-    # Phase C — git enterprise
+    # Phase C - git enterprise
     "vr/git.pr.merged": "vrdev.tasks.git:PrMergedVerifier",
     "vr/git.ci.passed": "vrdev.tasks.git:CiPassedVerifier",
     "vr/ci.github.workflow_passed": "vrdev.tasks.git:WorkflowPassedVerifier",
-    # Phase C — messaging
+    # Phase C - messaging
     "vr/messaging.slack.message_sent": "vrdev.tasks.messaging:SlackMessageSentVerifier",
     "vr/messaging.slack.reaction_added": "vrdev.tasks.messaging:SlackReactionAddedVerifier",
-    # Phase C — payment
+    # Phase C - payment
     "vr/payment.stripe.charge_succeeded": "vrdev.tasks.payment:ChargeSucceededVerifier",
     "vr/payment.stripe.refund_processed": "vrdev.tasks.payment:RefundProcessedVerifier",
-    # Phase C — project management
+    # Phase C - project management
     "vr/project.jira.ticket_transitioned": "vrdev.tasks.project:TicketTransitionedVerifier",
 }
 

@@ -1,4 +1,4 @@
-"""vr/filesystem.file_created — HARD verifier for file existence and content.
+"""vr/filesystem.file_created - HARD verifier for file existence and content.
 
 Source: OSWorld (arXiv:2404.07972)
 Validates that a file exists at the expected path with optional size and
@@ -141,7 +141,7 @@ class FileCreatedVerifier(BaseVerifier):
         if breakdown.get("size_check", 1.0) < 1.0:
             hints.append(f"File size {evidence.get('actual_size', '?')} below minimum {min_size}")
         if breakdown.get("content_hash", 1.0) < 1.0:
-            hints.append("Content hash mismatch — file contents differ from expected")
+            hints.append("Content hash mismatch - file contents differ from expected")
 
         return self._make_result(
             verdict, score, breakdown, evidence, input_data,

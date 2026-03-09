@@ -1,4 +1,4 @@
-"""vr/code.python.lint_ruff — HARD verifier for Python lint cleanliness.
+"""vr/code.python.lint_ruff - HARD verifier for Python lint cleanliness.
 
 Source: Zeno-bench (code-quality track)
 Writes agent-generated Python code to a temp file and runs ``ruff check``
@@ -28,14 +28,14 @@ class LintRuffVerifier(BaseVerifier):
     Ground truth schema::
 
         {
-            "max_violations": int  # default 0 — threshold for PASS
+            "max_violations": int  # default 0 - threshold for PASS
         }
 
     Context (optional)::
 
         {
-            "ruff_select": str | null,   # e.g. "E,F,W" — rule selectors
-            "ruff_ignore": str | null     # e.g. "E501"  — rules to ignore
+            "ruff_select": str | null,   # e.g. "E,F,W" - rule selectors
+            "ruff_ignore": str | null     # e.g. "E501"  - rules to ignore
         }
     """
 

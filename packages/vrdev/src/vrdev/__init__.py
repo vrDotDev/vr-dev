@@ -1,4 +1,4 @@
-"""vr.dev — Verifiable Rewards for Real-World AI Agent Tasks."""
+"""vr.dev - Verifiable Rewards for Real-World AI Agent Tasks."""
 
 from vrdev.core.types import (
     Verdict,

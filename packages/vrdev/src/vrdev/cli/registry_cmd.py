@@ -1,4 +1,4 @@
-"""``vr registry`` — list, validate, and search verifier/skill specs."""
+"""``vr registry`` - list, validate, and search verifier/skill specs."""
 
 from __future__ import annotations
 
@@ -44,12 +44,12 @@ def validate(path: Path):
         errors = validate_verifier_spec(data, path)
 
     if errors:
-        click.secho(f"✗ {path} — {len(errors)} error(s):", fg="red")
+        click.secho(f"✗ {path} - {len(errors)} error(s):", fg="red")
         for err in errors:
             click.echo(f"  • {err}")
         raise SystemExit(1)
     else:
-        click.secho(f"✓ {path} — valid", fg="green")
+        click.secho(f"✓ {path} - valid", fg="green")
 
 
 @registry.command()

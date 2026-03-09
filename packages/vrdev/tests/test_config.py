@@ -1,4 +1,4 @@
-"""Tests for VrConfig — TOML loading, env-var overrides, caching, CLI."""
+"""Tests for VrConfig - TOML loading, env-var overrides, caching, CLI."""
 
 from __future__ import annotations
 

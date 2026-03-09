@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent appears to succeed but verification should catch the deception",
+  "description": "Adversarial fixtures - agent appears to succeed but verification should catch the deception",
   "fixtures": [
     {
       "name": "tests_pass_but_critical_skipped",

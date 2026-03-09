@@ -112,7 +112,7 @@ class TestVerifyTrajectory:
             StepInput(step_index=2, completions=["step2"]),
         ]
         results = composed.verify_trajectory(steps)
-        # Should stop at step 1 (the failing step) — returns partial results
+        # Should stop at step 1 (the failing step) - returns partial results
         assert len(results) == 2
         assert results[0][0].verdict == Verdict.PASS
         assert results[1][0].verdict == Verdict.FAIL

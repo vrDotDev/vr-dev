@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — file exists with expected properties",
+  "description": "Positive fixtures - file exists with expected properties",
   "fixtures": [
     {
       "name": "file_exists_basic",

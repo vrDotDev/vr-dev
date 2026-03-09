@@ -1,4 +1,4 @@
-"""Observability setup — structured logging via structlog, optional OpenTelemetry.
+"""Observability setup - structured logging via structlog, optional OpenTelemetry.
 
 Call :func:`configure_logging` at application startup to set up structlog
 with JSON output.  If OpenTelemetry is installed and ``OTEL_ENABLED=1``,
@@ -76,7 +76,7 @@ def configure_tracing(app: Any) -> bool:
         )
     except ImportError:
         logging.getLogger(__name__).warning(
-            "OTEL_ENABLED=1 but opentelemetry packages not installed — skipping"
+            "OTEL_ENABLED=1 but opentelemetry packages not installed - skipping"
         )
         return False
 
@@ -93,7 +93,7 @@ def configure_tracing(app: Any) -> bool:
             provider.add_span_processor(SimpleSpanProcessor(GrpcExporter()))
         except ImportError:
             logging.getLogger(__name__).warning(
-                "OTEL_EXPORTER=otlp-grpc but grpc exporter not installed — "
+                "OTEL_EXPORTER=otlp-grpc but grpc exporter not installed - "
                 "pip install opentelemetry-exporter-otlp-proto-grpc"
             )
             return False
@@ -106,7 +106,7 @@ def configure_tracing(app: Any) -> bool:
             provider.add_span_processor(SimpleSpanProcessor(HttpExporter()))
         except ImportError:
             logging.getLogger(__name__).warning(
-                "OTEL_EXPORTER=otlp-http but http exporter not installed — "
+                "OTEL_EXPORTER=otlp-http but http exporter not installed - "
                 "pip install opentelemetry-exporter-otlp-proto-http"
             )
             return False

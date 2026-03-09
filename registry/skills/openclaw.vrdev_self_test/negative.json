@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — self-test checks correctly detect failures",
+  "description": "Negative fixtures - self-test checks correctly detect failures",
   "fixtures": [
     {
       "name": "tests_fail",

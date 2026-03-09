@@ -1,4 +1,4 @@
-"""Tests for dashboard analytics — agent header parsing and profile upsert."""
+"""Tests for dashboard analytics - agent header parsing and profile upsert."""
 
 from __future__ import annotations
 

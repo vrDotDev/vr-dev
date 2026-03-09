@@ -1,4 +1,4 @@
-"""Tests for Merkle anchor batch pipeline — DB round-trip without on-chain."""
+"""Tests for Merkle anchor batch pipeline - DB round-trip without on-chain."""
 
 from __future__ import annotations
 

@@ -1,10 +1,10 @@
 """Adapter for OpenClaw agent skill integration.
 
 Provides:
-- ``explain_failure``  — turn a failed result into retry instructions
-- ``run_verifier``     — run a single verifier by registry ID
-- ``compose_chain``    — build a composed verifier chain and run it
-- ``verify_task``      — run all relevant verifiers for a task description
+- ``explain_failure``  - turn a failed result into retry instructions
+- ``run_verifier``     - run a single verifier by registry ID
+- ``compose_chain``    - build a composed verifier chain and run it
+- ``verify_task``      - run all relevant verifiers for a task description
 """
 
 from __future__ import annotations
@@ -168,7 +168,7 @@ def explain_failure(result: VerificationResult) -> dict:
 
     if result.verdict == Verdict.UNVERIFIABLE:
         return {
-            "likely_cause": "Ambiguous system state — could not confirm or deny",
+            "likely_cause": "Ambiguous system state - could not confirm or deny",
             "suggested_action": (
                 "Retry the task and verification. If this persists, "
                 "the environment may not support the required verification method."
@@ -197,7 +197,7 @@ def explain_failure(result: VerificationResult) -> dict:
         "message": (
             f"Verification FAILED (score: {result.score:.2f}). "
             + (
-                "Hard gate triggered — a required check failed."
+                "Hard gate triggered - a required check failed."
                 if result.metadata.hard_gate_failed
                 else ""
             )
@@ -218,7 +218,7 @@ def _suggest_correction(result: VerificationResult) -> str:
     for component, score in result.breakdown.items():
         if score < 0.5:
             suggestions.append(
-                f"Component '{component}' scored {score:.2f} — needs improvement."
+                f"Component '{component}' scored {score:.2f} - needs improvement."
             )
 
     return " ".join(suggestions) if suggestions else "Re-attempt the task."

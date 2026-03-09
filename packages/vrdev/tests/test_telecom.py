@@ -1,4 +1,4 @@
-"""Tests for vr/tau2.telecom.plan_changed — PlanChangedVerifier."""
+"""Tests for vr/tau2.telecom.plan_changed - PlanChangedVerifier."""
 
 from __future__ import annotations
 

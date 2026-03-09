@@ -1,4 +1,4 @@
-"""``vr batch`` — Batch-verify multiple traces against a verifier."""
+"""``vr batch`` - Batch-verify multiple traces against a verifier."""
 
 from __future__ import annotations
 

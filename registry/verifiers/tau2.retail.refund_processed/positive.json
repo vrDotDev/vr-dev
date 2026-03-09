@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — refund processed successfully",
+  "description": "Positive fixtures - refund processed successfully",
   "fixtures": [
     {
       "name": "refund_processed_customer_request",

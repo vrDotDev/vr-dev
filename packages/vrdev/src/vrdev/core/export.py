@@ -1,4 +1,4 @@
-"""Training-data export — write VerificationResults as JSONL.
+"""Training-data export - write VerificationResults as JSONL.
 
 Each line is a self-contained JSON object suitable for GRPO / DPO
 training pipelines:

@@ -1,4 +1,4 @@
-"""Tests for vr/rubric.summary.faithful — SOFT verifier."""
+"""Tests for vr/rubric.summary.faithful - SOFT verifier."""
 
 from __future__ import annotations
 

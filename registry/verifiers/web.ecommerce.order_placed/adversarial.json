@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent claims order placed but actual state disagrees",
+  "description": "Adversarial fixtures - agent claims order placed but actual state disagrees",
   "fixtures": [
     {
       "name": "agent_claims_ordered_but_not_placed",

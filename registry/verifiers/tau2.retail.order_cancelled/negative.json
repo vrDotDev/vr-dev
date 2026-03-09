@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — order not cancelled or wrong reason",
+  "description": "Negative fixtures - order not cancelled or wrong reason",
   "fixtures": [
     {
       "name": "order_still_active",

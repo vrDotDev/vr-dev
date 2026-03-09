@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — faithful summaries",
+  "description": "Positive fixtures - faithful summaries",
   "fixtures": [
     {
       "name": "fully_faithful_summary",

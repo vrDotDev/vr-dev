@@ -1,4 +1,4 @@
-"""Tests for usage tracking — record_usage, get_usage, and GET /usage endpoint."""
+"""Tests for usage tracking - record_usage, get_usage, and GET /usage endpoint."""
 
 from __future__ import annotations
 

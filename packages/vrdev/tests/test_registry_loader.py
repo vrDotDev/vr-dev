@@ -1,4 +1,4 @@
-"""Tests for registry loader — validation, hydration, and search."""
+"""Tests for registry loader - validation, hydration, and search."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — all self-test checks pass",
+  "description": "Positive fixtures - all self-test checks pass",
   "fixtures": [
     {
       "name": "all_tests_pass",

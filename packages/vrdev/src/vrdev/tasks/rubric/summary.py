@@ -1,4 +1,4 @@
-"""vr/rubric.summary.faithful — SOFT verifier for summary faithfulness.
+"""vr/rubric.summary.faithful - SOFT verifier for summary faithfulness.
 
 Source: Simonds proofs paper (tobysimonds.com/research/2025/09/29/Proofs.html)
 3-component rubric scored by an LLM judge: factual accuracy, coverage of

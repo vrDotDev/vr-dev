@@ -98,7 +98,7 @@ class ResultMetadata(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# VerificationResult — the canonical output of every verifier
+# VerificationResult - the canonical output of every verifier
 # ---------------------------------------------------------------------------
 
 class VerificationResult(BaseModel):
@@ -147,7 +147,7 @@ class VerificationResult(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# VerifierInput — the canonical input to every verifier
+# VerifierInput - the canonical input to every verifier
 # ---------------------------------------------------------------------------
 
 class VerifierInput(BaseModel):
@@ -169,7 +169,7 @@ class StepInput(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# VerifierScorecard — metadata per registry entry
+# VerifierScorecard - metadata per registry entry
 # ---------------------------------------------------------------------------
 
 class AttackSurface(BaseModel):
@@ -191,7 +191,7 @@ class VerifierScorecard(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Skill Artifact — governed agent skill representation
+# Skill Artifact - governed agent skill representation
 # ---------------------------------------------------------------------------
 
 class SkillArtifact(BaseModel):
@@ -212,7 +212,7 @@ class SkillArtifact(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Skill Adoption Telemetry — per-routing-decision event
+# Skill Adoption Telemetry - per-routing-decision event
 # ---------------------------------------------------------------------------
 
 class SkillAdoptionTelemetry(BaseModel):

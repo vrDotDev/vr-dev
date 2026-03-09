@@ -1,4 +1,4 @@
-"""Standalone τ²-bench mock server — FastAPI implementation.
+"""Standalone τ²-bench mock server - FastAPI implementation.
 
 Serves canned airline, retail, telecom, and calendar API responses matching
 the ground_truth schemas expected by all 5 HTTP-based τ²-bench verifiers:

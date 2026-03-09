@@ -1,4 +1,4 @@
-"""Tests for vr/rubric.code.logic_correct — LogicCorrectVerifier."""
+"""Tests for vr/rubric.code.logic_correct - LogicCorrectVerifier."""
 
 from __future__ import annotations
 
@@ -126,7 +126,7 @@ class TestLogicCorrectError:
         assert results[0].verdict == Verdict.ERROR
 
     def test_markdown_wrapped_json(self):
-        """Judge wraps response in markdown code fence — should still parse."""
+        """Judge wraps response in markdown code fence - should still parse."""
         md_judge = StubJudge(
             '```json\n{"algorithm_correct": 1, "edge_cases_handled": 1, '
             '"no_logic_errors": 1, "meets_requirements": 1}\n```'

@@ -3,7 +3,7 @@
 
 Checks:
   1. SDK importable and version correct
-  2. All 30 verifiers loadable from registry
+  2. All 38 verifiers loadable from registry
   3. CLI entry point responds
   4. Composition engine works
   5. Registry validation passes (0 errors)
@@ -53,8 +53,8 @@ def main():
     except ImportError as e:
         check("vrdev importable", False, str(e))
 
-    # ── 2. Registry: all 30 verifiers loadable ───────────────────
-    print("\n[2/5] Registry — load all verifiers")
+    # ── 2. Registry: all 38 verifiers loadable ───────────────────
+    print("\n[2/5] Registry - load all verifiers")
     try:
         from vrdev.core.registry import list_verifiers, get_verifier
 

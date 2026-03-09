@@ -2,7 +2,7 @@
 
 Supports dual auth: traditional API key (quota-limited) and x402 USDC
 micropayments (pay-per-request). The PaymentProvider interface allows
-pluggable payment backends — currently x402 via Coinbase CDP.
+pluggable payment backends - currently x402 via Coinbase CDP.
 
 No native tokens. USDC only.
 """
@@ -26,7 +26,7 @@ class PaymentTier(str, Enum):
     AGENTIC = "AGENTIC"
 
 
-# Pricing in USDC — reflects cost structure (deterministic < LLM < browser)
+# Pricing in USDC - reflects cost structure (deterministic < LLM < browser)
 TIER_PRICES: dict[str, Decimal] = {
     PaymentTier.HARD: Decimal("0.005"),
     PaymentTier.SOFT: Decimal("0.05"),

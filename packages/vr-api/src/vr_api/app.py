@@ -1,4 +1,4 @@
-"""FastAPI application — routes delegate to ``vrdev`` core, zero verifier logic here.
+"""FastAPI application - routes delegate to ``vrdev`` core, zero verifier logic here.
 
 All routes live under ``/v1/`` (except ``/health``).
 """
@@ -169,7 +169,7 @@ async def _record_verification(
 ) -> None:
     """Increment lifetimeVerifications on the user and write to verification_logs.
 
-    Best-effort — never fails the request.
+    Best-effort - never fails the request.
     """
     user_id = getattr(request.state, "user_id", None)
     api_key_id = getattr(request.state, "api_key_id", None)
@@ -252,7 +252,7 @@ async def _record_verification(
                 )
             await session.commit()
     except Exception:
-        pass  # Best-effort — never fail the request
+        pass  # Best-effort - never fail the request
 
 
 def _tier_cost_usd(tier_value: str) -> float | None:
@@ -293,7 +293,7 @@ def _to_result_items(results: list[VerificationResult]) -> list[ResultItem]:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# /v1/ Router — all first-class endpoints
+# /v1/ Router - all first-class endpoints
 # ══════════════════════════════════════════════════════════════════════════════
 
 v1 = APIRouter(prefix="/v1", tags=["v1"])
@@ -399,7 +399,7 @@ async def batch_verify_v1(
     return result
 
 
-# ── Ensemble endpoint (C4 — experimental) ─────────────────────────────────────────
+# ── Ensemble endpoint (C4 - experimental) ─────────────────────────────────────────
 
 
 @v1.post("/ensemble", response_model=EnsembleResponse, dependencies=_AUTH_DEPS)
@@ -570,7 +570,7 @@ async def stream_verify_v1(
 
 # ── Real-time step verification ─────────────────────────────────────────────────
 
-# In-memory trajectory session store — keyed by (session_id, verifier_config_hash)
+# In-memory trajectory session store - keyed by (session_id, verifier_config_hash)
 # Each entry tracks the composed verifier and steps completed so far.
 from dataclasses import dataclass, field as dc_field
 from vrdev.core.base import BaseVerifier as _BaseVerifier
@@ -624,7 +624,7 @@ async def step_verify_v1(
 
     # Reject further steps if trajectory was halted
     if ts.halted:
-        raise HTTPException(status_code=409, detail="Trajectory halted — HARD verifier failed at an earlier step")
+        raise HTTPException(status_code=409, detail="Trajectory halted - HARD verifier failed at an earlier step")
 
     # Run verification for this single step
     step = StepInput(
@@ -910,7 +910,7 @@ async def revenue_v1(
 app.include_router(v1)
 
 
-# Health (no auth, no rate limit — always bare)
+# Health (no auth, no rate limit - always bare)
 @app.get("/health", response_model=HealthResponse)
 async def health() -> HealthResponse:
     return HealthResponse(status="ok", version="1.0.0")
@@ -977,7 +977,7 @@ async def _do_verify(body: VerifyRequest) -> VerifyResponse:
 
 
 async def _do_verify_single(body: VerifyRequest) -> VerifyResponse:
-    """Run a single verify — used by batch endpoint. Exceptions propagate."""
+    """Run a single verify - used by batch endpoint. Exceptions propagate."""
     return await _do_verify(body)
 
 

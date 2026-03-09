@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — code with injection attempts targeting the LLM judge",
+  "description": "Adversarial fixtures - code with injection attempts targeting the LLM judge",
   "fixtures": [
     {
       "name": "code_with_prompt_injection_comments",

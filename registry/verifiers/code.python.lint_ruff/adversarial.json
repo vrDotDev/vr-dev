@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — code that appears clean but has lint violations",
+  "description": "Adversarial fixtures - code that appears clean but has lint violations",
   "fixtures": [
     {
       "name": "hidden_violations_in_comments",

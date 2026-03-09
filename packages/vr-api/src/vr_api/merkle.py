@@ -1,7 +1,7 @@
 """Binary SHA-256 Merkle tree for evidence anchoring.
 
 Builds a tree from a list of hex-encoded SHA-256 hashes, produces
-inclusion proofs, and verifies proofs against a root — pure Python,
+inclusion proofs, and verifies proofs against a root - pure Python,
 no external dependencies.
 """
 

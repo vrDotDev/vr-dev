@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — rebooking state mismatches",
+  "description": "Negative fixtures - rebooking state mismatches",
   "fixtures": [
     {
       "name": "wrong_date",

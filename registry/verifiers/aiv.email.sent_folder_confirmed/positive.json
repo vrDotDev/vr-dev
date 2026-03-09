@@ -1,5 +1,5 @@
 {
-  "description": "Positive fixtures — email found in Sent folder",
+  "description": "Positive fixtures - email found in Sent folder",
   "fixtures": [
     {
       "name": "email_found_exact_match",

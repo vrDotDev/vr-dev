@@ -1,4 +1,4 @@
-"""Tests for vr/aiv.calendar.event_created — EventCreatedVerifier."""
+"""Tests for vr/aiv.calendar.event_created - EventCreatedVerifier."""
 
 from __future__ import annotations
 

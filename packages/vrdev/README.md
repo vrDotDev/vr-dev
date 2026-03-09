@@ -1,6 +1,6 @@
-# vr.dev — Verifiable Rewards for Real-World AI Agent Tasks
+# vr.dev - Verifiable Rewards for Real-World AI Agent Tasks
 
-**v1.0.0 — 30 verifiers · 14 domains · composition engine · Merkle evidence**
+**v1.0.0 - 38 verifiers, 19 domains, composition engine, Merkle evidence**
 
 > Evidence-bearing, auditable verification of AI agent completions across
 > filesystem, API, email, calendar, code-quality, e-commerce, git, and telecom domains.
@@ -168,9 +168,9 @@ export VRDEV_HTTP_TIMEOUT="30.0"
 
 ### Verification Tiers
 
-- **HARD** — Deterministic, state-based checks (API calls, file existence, lint output)
-- **SOFT** — LLM-judged rubric evaluation (stochastic, requires `vrdev[llm]`)
-- **AGENTIC** — Latent-state verification via external systems (IMAP, CalDAV)
+- **HARD** - Deterministic, state-based checks (API calls, file existence, lint output)
+- **SOFT** - LLM-judged rubric evaluation (stochastic, requires `vrdev[llm]`)
+- **AGENTIC** - Latent-state verification via external systems (IMAP, CalDAV)
 
 ---
 
@@ -243,11 +243,11 @@ if not errors:
 Export verification results as JSONL for GRPO / DPO pipelines:
 
 ```bash
-# CLI — export to file
+# CLI - export to file
 vr export vr/filesystem.file_created completions.txt \
   -g ground_truth.json -o train.jsonl
 
-# CLI — pipe to stdout
+# CLI - pipe to stdout
 vr export vr/code.python.lint_ruff code_samples.json
 ```
 
@@ -312,7 +312,7 @@ uvicorn vr_api.app:app --reload
 ## Development
 
 ```bash
-git clone https://github.com/vr-dev-org/vr-dev.git
+git clone https://github.com/vrDotDev/vrdev.git
 cd vr-dev/packages/vrdev
 pip install -e ".[dev]"
 pytest                  # run all tests
@@ -366,10 +366,10 @@ tests/
 
 ## Verdict Enum
 
-- **PASS** — verification succeeded
-- **FAIL** — verification found a deficiency
-- **UNVERIFIABLE** — could not determine (ambiguous state)
-- **ERROR** — infrastructure/config failure (not an agent failure)
+- **PASS** - verification succeeded
+- **FAIL** - verification found a deficiency
+- **UNVERIFIABLE** - could not determine (ambiguous state)
+- **ERROR** - infrastructure/config failure (not an agent failure)
 
 ## License
 

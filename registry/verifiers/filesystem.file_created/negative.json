@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — file missing or wrong properties",
+  "description": "Negative fixtures - file missing or wrong properties",
   "fixtures": [
     {
       "name": "file_does_not_exist",

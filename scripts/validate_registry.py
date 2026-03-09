@@ -37,7 +37,7 @@ def validate_json_schema(data: dict, schema: dict, path: str) -> list[str]:
     try:
         import jsonschema
     except ImportError:
-        return [f"{path}: jsonschema not installed — cannot validate"]
+        return [f"{path}: jsonschema not installed - cannot validate"]
 
     validator = jsonschema.Draft7Validator(schema)
     return [

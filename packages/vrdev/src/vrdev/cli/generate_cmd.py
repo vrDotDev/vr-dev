@@ -176,7 +176,7 @@ def generate(
         _generate_ai(task, tier, output, api_spec, sql_schema, model)
         return
 
-    # Template mode — requires --name and --tier
+    # Template mode - requires --name and --tier
     if not name:
         raise click.UsageError("--name is required in template mode. Use --task for AI generation.")
     if not tier:
@@ -231,14 +231,14 @@ def generate(
     click.echo(f"✓ Scaffolded verifier: {verifier_id}")
     click.echo(f"  Directory: {out_dir}")
     click.echo(f"  Files created:")
-    click.echo(f"    VERIFIER.json   — spec (edit ground_truth_schema)")
-    click.echo(f"    verify.py       — implementation (fill in TODO)")
-    click.echo(f"    positive.json   — add 3+ passing fixtures")
-    click.echo(f"    negative.json   — add 3+ failing fixtures")
-    click.echo(f"    adversarial.json — add 3+ adversarial fixtures")
+    click.echo(f"    VERIFIER.json   - spec (edit ground_truth_schema)")
+    click.echo(f"    verify.py       - implementation (fill in TODO)")
+    click.echo(f"    positive.json   - add 3+ passing fixtures")
+    click.echo(f"    negative.json   - add 3+ failing fixtures")
+    click.echo(f"    adversarial.json - add 3+ adversarial fixtures")
     click.echo()
     click.echo(f"  Next steps:")
-    click.echo(f"    1. Edit verify.py — implement _verify_single()")
+    click.echo(f"    1. Edit verify.py - implement _verify_single()")
     click.echo(f"    2. Add to registry.py: \"{verifier_id}\": \"module:{class_name}\"")
     click.echo(f"    3. Add fixture data to positive/negative/adversarial.json")
     click.echo(f"    4. Run: vr registry validate {out_dir}")
@@ -304,11 +304,11 @@ def _generate_ai(
     click.echo(f"  Description: {result.description}")
     click.echo(f"  Directory: {out_dir}")
     click.echo(f"  Files:")
-    click.echo(f"    verify.py         — AI-generated implementation")
-    click.echo(f"    VERIFIER.json     — spec with ground_truth_schema")
-    click.echo(f"    positive.json     — {len(result.positive_fixtures.get('fixtures', []))} fixtures")
-    click.echo(f"    negative.json     — {len(result.negative_fixtures.get('fixtures', []))} fixtures")
-    click.echo(f"    adversarial.json  — {len(result.adversarial_fixtures.get('fixtures', []))} fixtures")
+    click.echo(f"    verify.py         - AI-generated implementation")
+    click.echo(f"    VERIFIER.json     - spec with ground_truth_schema")
+    click.echo(f"    positive.json     - {len(result.positive_fixtures.get('fixtures', []))} fixtures")
+    click.echo(f"    negative.json     - {len(result.negative_fixtures.get('fixtures', []))} fixtures")
+    click.echo(f"    adversarial.json  - {len(result.adversarial_fixtures.get('fixtures', []))} fixtures")
 
     if result.warnings:
         click.echo()

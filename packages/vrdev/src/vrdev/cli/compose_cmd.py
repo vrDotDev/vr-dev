@@ -1,4 +1,4 @@
-"""``vr compose`` — Run a composed verifier chain."""
+"""``vr compose`` - Run a composed verifier chain."""
 
 from __future__ import annotations
 

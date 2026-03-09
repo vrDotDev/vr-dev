@@ -1,4 +1,4 @@
-"""``vr test`` — Run fixture tests for a verifier."""
+"""``vr test`` - Run fixture tests for a verifier."""
 
 from __future__ import annotations
 
@@ -100,7 +100,7 @@ def test(verifier_id: str | None, run_all: bool) -> None:
                         total_fail += 1
 
                 except Exception as exc:
-                    click.echo(f"    ❌ {fixture['name']}: ERROR — {exc}")
+                    click.echo(f"    ❌ {fixture['name']}: ERROR - {exc}")
                     total_fail += 1
 
     click.echo(f"\n{'═' * 60}")

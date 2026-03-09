@@ -33,7 +33,7 @@ def _load_toml(path: Path) -> dict[str, Any]:
             try:
                 import tomli as tomllib  # type: ignore[no-redef]
             except ImportError:
-                # No TOML parser available — silently skip config file
+                # No TOML parser available - silently skip config file
                 return {}
         with open(path, "rb") as f:
             return tomllib.load(f)
@@ -119,7 +119,7 @@ class VrConfig(BaseModel):
         """Serialize config to TOML format (for ``vr config init``)."""
         lines = [
             "# vr.dev configuration",
-            "# See: https://github.com/vr-dev/vrdev",
+            "# See: https://github.com/vrDotDev/vrdev",
             "",
             "[openai]",
             f'api_key = "{self.openai.api_key}"',

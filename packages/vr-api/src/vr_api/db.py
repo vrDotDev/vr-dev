@@ -1,4 +1,4 @@
-"""Evidence persistence — append-only storage for verification results.
+"""Evidence persistence - append-only storage for verification results.
 
 Uses SQLAlchemy async with PostgreSQL (production) or SQLite (testing).
 Connection string is read from ``DATABASE_URL`` env var.
@@ -163,7 +163,7 @@ async def init_db(url: str | None = None) -> None:
         db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
     elif db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
-    # asyncpg doesn't accept sslmode — translate to the ssl connect_arg
+    # asyncpg doesn't accept sslmode - translate to the ssl connect_arg
     connect_args: dict[str, Any] = {}
     if "sslmode=" in db_url:
         from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
@@ -195,7 +195,7 @@ async def close_db() -> None:
 
 def get_session_factory() -> async_sessionmaker[AsyncSession]:
     if _session_factory is None:
-        raise RuntimeError("Database not initialised — call init_db() first")
+        raise RuntimeError("Database not initialised - call init_db() first")
     return _session_factory
 
 

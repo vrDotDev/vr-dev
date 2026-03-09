@@ -1,4 +1,4 @@
-"""Per-key token-bucket rate limiter — in-memory or Redis-backed.
+"""Per-key token-bucket rate limiter - in-memory or Redis-backed.
 
 When ``VR_REDIS_URL`` is set, a Redis-backed bucket provides persistence
 across restarts and multi-instance deployments.  When unset, the original
@@ -140,7 +140,7 @@ async def close_bucket() -> None:
 
 
 async def check_rate_limit(request: Request) -> None:
-    """FastAPI dependency — raises 429 when the bucket is exhausted."""
+    """FastAPI dependency - raises 429 when the bucket is exhausted."""
     key = request.headers.get("X-API-Key", "anonymous")
     bucket = _get_bucket()
     if isinstance(bucket, RedisTokenBucket):

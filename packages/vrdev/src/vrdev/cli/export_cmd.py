@@ -1,4 +1,4 @@
-"""``vr export`` — Export verification results as JSONL training data."""
+"""``vr export`` - Export verification results as JSONL training data."""
 
 from __future__ import annotations
 

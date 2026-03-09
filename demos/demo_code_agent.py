@@ -2,8 +2,8 @@
 """Demo: Code-agent verification pipeline.
 
 Scenario: An AI agent writes Python code, runs tests, and commits.
-We compose three HARD verifiers — lint (ruff), tests (pytest), and
-git commit presence — with fail-closed policy.
+We compose three HARD verifiers - lint (ruff), tests (pytest), and
+git commit presence - with fail-closed policy.
 
 Requirements (beyond vrdev):
     pip install ruff pytest
@@ -86,7 +86,7 @@ def test_larger_values():
 '''
 
 BUGGY_CODE = '''\
-import os, sys, json, re  # noqa: F401 — unused imports (lint violation)
+import os, sys, json, re  # noqa: F401 - unused imports (lint violation)
 import pathlib  # unused
 
 def fibonacci(n):
@@ -169,13 +169,13 @@ def main() -> None:
         print(f"  Score:    {r.score:.2f}")
         print(f"  Breakdown: {json.dumps(r.breakdown, indent=4)}")
         if r.metadata.hard_gate_failed:
-            print("  ⚠ Hard gate triggered — lint violations caught")
+            print("  ⚠ Hard gate triggered - lint violations caught")
         print()
 
         # ── Summary ─────────────────────────────────────────────────────
         print("KEY TAKEAWAY:")
         print("  Both scenarios committed code and passed tests.  But Scenario 2")
-        print("  had unused imports and variables — the lint verifier caught them.")
+        print("  had unused imports and variables - the lint verifier caught them.")
         print("  With require_hard=True, a single HARD failure gates the whole")
         print("  episode to FAIL, preventing low-quality code from being rewarded.")
 

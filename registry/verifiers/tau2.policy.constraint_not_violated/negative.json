@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — policy constraints violated",
+  "description": "Negative fixtures - policy constraints violated",
   "fixtures": [
     {
       "name": "refund_past_window",

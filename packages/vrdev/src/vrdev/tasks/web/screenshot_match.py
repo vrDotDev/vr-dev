@@ -1,4 +1,4 @@
-"""vr/web.browser.screenshot_match — AGENTIC verifier for visual regression.
+"""vr/web.browser.screenshot_match - AGENTIC verifier for visual regression.
 
 Source: WebArena (arXiv:2307.13854)
 Navigates to a URL via BrowserRunner, captures a screenshot, and compares

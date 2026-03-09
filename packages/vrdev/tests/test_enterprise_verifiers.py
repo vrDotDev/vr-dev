@@ -12,7 +12,7 @@ from vrdev.core.types import Tier, Verdict, VerifierInput
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Git domain — PrMergedVerifier
+# Git domain - PrMergedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.git import PrMergedVerifier
@@ -62,7 +62,7 @@ class TestPrMerged:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Git domain — CiPassedVerifier
+# Git domain - CiPassedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.git import CiPassedVerifier
@@ -103,7 +103,7 @@ class TestCiPassed:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Git domain — WorkflowPassedVerifier
+# Git domain - WorkflowPassedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.git import WorkflowPassedVerifier
@@ -137,7 +137,7 @@ class TestWorkflowPassed:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Messaging domain — SlackMessageSentVerifier
+# Messaging domain - SlackMessageSentVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.messaging import SlackMessageSentVerifier
@@ -172,7 +172,7 @@ class TestSlackMessageSent:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Messaging domain — SlackReactionAddedVerifier
+# Messaging domain - SlackReactionAddedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.messaging import SlackReactionAddedVerifier
@@ -200,7 +200,7 @@ class TestSlackReactionAdded:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Payment domain — ChargeSucceededVerifier
+# Payment domain - ChargeSucceededVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.payment import ChargeSucceededVerifier
@@ -255,7 +255,7 @@ class TestChargeSucceeded:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Payment domain — RefundProcessedVerifier
+# Payment domain - RefundProcessedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.payment import RefundProcessedVerifier
@@ -292,7 +292,7 @@ class TestRefundProcessed:
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Project domain — TicketTransitionedVerifier
+# Project domain - TicketTransitionedVerifier
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from vrdev.tasks.project import TicketTransitionedVerifier

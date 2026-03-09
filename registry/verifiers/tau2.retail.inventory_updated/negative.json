@@ -1,5 +1,5 @@
 {
-  "description": "Negative fixtures — inventory not matching expected state",
+  "description": "Negative fixtures - inventory not matching expected state",
   "fixtures": [
     {
       "name": "wrong_quantity",

@@ -1,4 +1,4 @@
-"""Tests for vrdev.adapters.trl — to_trl_reward_func adapter.
+"""Tests for vrdev.adapters.trl - to_trl_reward_func adapter.
 
 Uses FileCreatedVerifier with tmp_path to test the TRL reward function
 adapter without any external dependencies.
@@ -106,7 +106,7 @@ class TestTrlRewardFuncBasic:
 
 
 class TestTrlRewardFuncScores:
-    """Score fidelity — adapter preserves verifier scores."""
+    """Score fidelity - adapter preserves verifier scores."""
 
     def test_partial_scores_preserved(self):
         fn = to_trl_reward_func(PartialScoreVerifier())

@@ -1,5 +1,5 @@
 {
-  "description": "Adversarial fixtures — agent claims event created but calendar state disagrees",
+  "description": "Adversarial fixtures - agent claims event created but calendar state disagrees",
   "fixtures": [
     {
       "name": "agent_claims_event_but_not_created",
