@@ -54,12 +54,28 @@ Every verifier returns a `VerificationResult` with:
 ## Project Structure
 
 ```
-packages/vrdev/       # Python SDK
-packages/vr-api/      # Hosted verification API (coming soon)
-registry/verifiers/   # Verifier metadata + fixtures
+packages/vrdev/       # Python SDK (pip install vrdev)
+packages/vr-api/      # Hosted verification API (FastAPI)
+registry/verifiers/   # Verifier metadata + test fixtures (38 verifiers)
 registry/skills/      # Skill metadata + fixtures
 registry/schemas/     # JSON Schema validation
+contracts/            # Solidity evidence anchor (Base L2)
+demos/                # Runnable examples and benchmarks
+docs/                 # Additional documentation
 ```
+
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add
+verifiers, including a table of [verifier ideas](CONTRIBUTING.md#ideas-for-verifiers)
+waiting to be built. You can also [request a verifier](https://github.com/vrDotDev/vrdev/issues/new?template=verifier_request.md)
+via GitHub Issues.
+
+## Community
+
+- **Website**: [vr.dev](https://vr.dev)
+- **GitHub**: [github.com/vrDotDev/vrdev](https://github.com/vrDotDev/vrdev)
+- **Bluesky**: [@vr.dev](https://bsky.app/profile/vr.dev)
 
 ## License
 

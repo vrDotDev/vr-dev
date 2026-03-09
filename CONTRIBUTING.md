@@ -87,6 +87,29 @@ Create `tests/test_<name>.py` with:
 - Use `MockIMAPRunner` for email verifiers
 - Target: every verifier has ≥10 test cases
 
+## Ideas for Verifiers
+
+Looking for something to build? Here are high-value verifier ideas we'd love to see:
+
+| Domain | Verifier Idea | Tier |
+|--------|--------------|------|
+| **cloud.aws** | S3 object exists after upload | HARD |
+| **cloud.aws** | Lambda function deployed & invocable | AGENTIC |
+| **api.stripe** | Charge succeeded with correct amount | HARD |
+| **api.slack** | Message posted to correct channel | AGENTIC |
+| **database.postgres** | Migration applied successfully | HARD |
+| **filesystem** | Directory structure matches spec | HARD |
+| **git** | Branch merged with no conflicts | HARD |
+| **document.markdown** | README has required sections | HARD |
+| **api.github** | Issue created with correct labels | AGENTIC |
+| **messaging.twilio** | SMS delivered to recipient | AGENTIC |
+| **code.python** | Type-checks with mypy | HARD |
+| **code.javascript** | ESLint passes with zero errors | HARD |
+| **api.openai** | Completion matches expected schema | SOFT |
+| **browser** | Page renders expected element | AGENTIC |
+
+To request a verifier without building it yourself, use our [verifier request template](https://github.com/vrDotDev/vrdev/issues/new?template=verifier_request.md).
+
 ## Questions?
 
 Open a [Discussion](https://github.com/vrDotDev/vrdev/discussions) or file an issue.
