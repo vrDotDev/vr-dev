@@ -7,10 +7,10 @@ from __future__ import annotations
 
 import asyncio
 import json
-import logging
 import os
 import time as _time
 from contextlib import asynccontextmanager
+from dataclasses import dataclass
 from typing import Optional
 
 import structlog
@@ -25,7 +25,7 @@ from vrdev.core.export import export_jsonl_lines
 from vrdev.core.registry import get_verifier, list_verifiers
 from vrdev.core.types import PolicyMode, StepInput, Tier, VerificationResult, VerifierInput
 
-from .auth import require_admin_key, require_api_key, require_auth
+from .auth import require_admin_key, require_auth
 from .db import (
     close_db,
     get_anchor,
@@ -39,11 +39,8 @@ from .db import (
     init_db,
     list_evidence,
     list_evidence_by_batch,
-    list_evidence_since,
     set_quota,
-    store_anchor,
     store_evidence,
-    update_evidence_batch_id,
 )
 from .rate_limit import check_rate_limit
 from .schemas import (
@@ -572,9 +569,6 @@ async def stream_verify_v1(
 
 # In-memory trajectory session store - keyed by (session_id, verifier_config_hash)
 # Each entry tracks the composed verifier and steps completed so far.
-from dataclasses import dataclass, field as dc_field
-from vrdev.core.base import BaseVerifier as _BaseVerifier
-
 @dataclass
 class _TrajectorySession:
     composed: object  # ComposedVerifier

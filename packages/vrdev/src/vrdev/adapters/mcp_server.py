@@ -21,7 +21,6 @@ from typing import Any
 def _require_mcp():
     """Import and return the mcp module, raising a clear error if missing."""
     try:
-        import mcp  # noqa: F811
         from mcp.server.fastmcp import FastMCP
         return FastMCP
     except ImportError:

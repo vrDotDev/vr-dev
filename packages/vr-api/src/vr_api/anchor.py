@@ -11,13 +11,12 @@ Can run as:
 from __future__ import annotations
 
 import asyncio
-import logging
 import os
 from datetime import datetime, timezone
 
 import structlog
 
-from .db import get_session_factory, store_anchor, list_evidence_since, update_evidence_batch_id
+from .db import store_anchor, list_evidence_since, update_evidence_batch_id
 from .merkle import build_merkle_tree
 
 logger = structlog.get_logger(__name__)

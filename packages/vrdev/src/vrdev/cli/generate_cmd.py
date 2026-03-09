@@ -9,7 +9,6 @@ Usage::
 from __future__ import annotations
 
 import json
-import os
 from datetime import date
 from pathlib import Path
 
@@ -230,17 +229,17 @@ def generate(
 
     click.echo(f"✓ Scaffolded verifier: {verifier_id}")
     click.echo(f"  Directory: {out_dir}")
-    click.echo(f"  Files created:")
-    click.echo(f"    VERIFIER.json   - spec (edit ground_truth_schema)")
-    click.echo(f"    verify.py       - implementation (fill in TODO)")
-    click.echo(f"    positive.json   - add 3+ passing fixtures")
-    click.echo(f"    negative.json   - add 3+ failing fixtures")
-    click.echo(f"    adversarial.json - add 3+ adversarial fixtures")
+    click.echo("  Files created:")
+    click.echo("    VERIFIER.json   - spec (edit ground_truth_schema)")
+    click.echo("    verify.py       - implementation (fill in TODO)")
+    click.echo("    positive.json   - add 3+ passing fixtures")
+    click.echo("    negative.json   - add 3+ failing fixtures")
+    click.echo("    adversarial.json - add 3+ adversarial fixtures")
     click.echo()
-    click.echo(f"  Next steps:")
-    click.echo(f"    1. Edit verify.py - implement _verify_single()")
+    click.echo("  Next steps:")
+    click.echo("    1. Edit verify.py - implement _verify_single()")
     click.echo(f"    2. Add to registry.py: \"{verifier_id}\": \"module:{class_name}\"")
-    click.echo(f"    3. Add fixture data to positive/negative/adversarial.json")
+    click.echo("    3. Add fixture data to positive/negative/adversarial.json")
     click.echo(f"    4. Run: vr registry validate {out_dir}")
 
 
@@ -255,7 +254,7 @@ def _generate_ai(
     """AI-powered verifier generation using LLM synthesis."""
     from .synth import synthesize_verifier
 
-    click.echo(f"🤖 AI Verifier Synthesis")
+    click.echo("🤖 AI Verifier Synthesis")
     click.echo(f"  Task: {task}")
 
     spec_path = api_spec or sql_schema
@@ -303,9 +302,9 @@ def _generate_ai(
     click.echo(f"  Tier: {result.tier}")
     click.echo(f"  Description: {result.description}")
     click.echo(f"  Directory: {out_dir}")
-    click.echo(f"  Files:")
-    click.echo(f"    verify.py         - AI-generated implementation")
-    click.echo(f"    VERIFIER.json     - spec with ground_truth_schema")
+    click.echo("  Files:")
+    click.echo("    verify.py         - AI-generated implementation")
+    click.echo("    VERIFIER.json     - spec with ground_truth_schema")
     click.echo(f"    positive.json     - {len(result.positive_fixtures.get('fixtures', []))} fixtures")
     click.echo(f"    negative.json     - {len(result.negative_fixtures.get('fixtures', []))} fixtures")
     click.echo(f"    adversarial.json  - {len(result.adversarial_fixtures.get('fixtures', []))} fixtures")

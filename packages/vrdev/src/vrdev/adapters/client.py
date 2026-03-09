@@ -9,7 +9,7 @@ Requires ``httpx`` (``pip install vrdev[client]`` or ``pip install httpx``).
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, AsyncIterator
 
 try:
