@@ -78,7 +78,7 @@ Railway will:
 ### Verify Deployment
 
 ```bash
-curl https://YOUR-APP.up.railway.app/health
+curl https://api.vr.dev/health
 # {"status":"ok","version":"1.0.0"}
 ```
 
