@@ -51,7 +51,7 @@ uvicorn vr_api.app:app --reload
 ```bash
 cd packages/vr-api
 python -m pytest tests/ --ignore=tests/integration -v
-# 150+ tests
+# 160+ tests
 ```
 
 ## Dependencies

@@ -3,8 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-> **The Oracle Layer for the Agent Economy.**
-> Did the agent actually complete the task, and can you prove it?
+> **Open-source verification layer for AI agents.**
+> Verify what AI agents actually changed — not what they claimed.
 
 vr.dev is an open registry and composition layer for verifiable reward functions
 targeting real-world agentic tasks. Each verifier returns structured evidence
