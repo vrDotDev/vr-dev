@@ -46,7 +46,7 @@ class AsyncVerificationClient:  # pragma: no cover
 
     def __init__(
         self,
-        base_url: str = "https://vrdev-api-production.up.railway.app",
+        base_url: str = "https://api.vr.dev",
         api_key: str | None = None,
         agent_name: str | None = None,
         agent_framework: str | None = None,
