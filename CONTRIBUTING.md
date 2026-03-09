@@ -98,6 +98,38 @@ Looking for something to build? Here are high-value verifier ideas we'd love to 
 | **api.stripe** | Charge succeeded with correct amount | HARD |
 | **api.slack** | Message posted to correct channel | AGENTIC |
 | **database.postgres** | Migration applied successfully | HARD |
+
+## Verifier Governance
+
+### Quality Gates
+
+Every verifier PR must pass before merge:
+
+1. **≥10 test cases** — positive, negative, edge cases, and at least one adversarial fixture
+2. **Ruff clean** — `ruff check` with zero warnings
+3. **Registry spec valid** — `python scripts/validate_registry.py` passes
+4. **Fixture coverage** — `positive.json`, `negative.json` present; `adversarial.json` strongly encouraged
+5. **Maintainer review** — at least one core maintainer approves
+
+### Versioning
+
+Verifiers follow **semver** within the registry:
+
+- **Patch** (0.1.0 → 0.1.1): Bug fixes, fixture additions — backward compatible
+- **Minor** (0.1.0 → 0.2.0): New optional fields, expanded ground_truth schema — backward compatible
+- **Major** (0.x → 1.0): Breaking changes to input/output contract — requires migration notice
+
+Version is declared in each verifier's `VERIFIER.json` `version` field.
+
+### Deprecation Policy
+
+1. **Deprecation notice** added to `VERIFIER.json` with `deprecated: true` and `deprecated_by` field pointing to the replacement
+2. **Minimum 90 days** between deprecation notice and removal
+3. **Removal PR** must reference the deprecation notice commit
+
+### Domain Ownership
+
+Each registry domain (e.g., `database.*`, `aiv.*`) has one or more listed maintainers in `CODEOWNERS`. Domain maintainers review PRs for verifiers in their domain and are responsible for cross-verifier consistency within the domain.
 | **filesystem** | Directory structure matches spec | HARD |
 | **git** | Branch merged with no conflicts | HARD |
 | **document.markdown** | README has required sections | HARD |
