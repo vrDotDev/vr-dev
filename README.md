@@ -68,13 +68,13 @@ docs/                 # Additional documentation
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for how to add
 verifiers, including a table of [verifier ideas](CONTRIBUTING.md#ideas-for-verifiers)
-waiting to be built. You can also [request a verifier](https://github.com/vrDotDev/vrdev/issues/new?template=verifier_request.md)
+waiting to be built. You can also [request a verifier](https://github.com/vrDotDev/vr-dev/issues/new?template=verifier_request.md)
 via GitHub Issues.
 
 ## Community
 
 - **Website**: [vr.dev](https://vr.dev)
-- **GitHub**: [github.com/vrDotDev/vrdev](https://github.com/vrDotDev/vrdev)
+- **GitHub**: [github.com/vrDotDev/vr-dev](https://github.com/vrDotDev/vr-dev)
 - **Bluesky**: [@vr.dev](https://bsky.app/profile/vr.dev)
 
 ## License
@@ -87,7 +87,7 @@ If you use vr.dev in your research, please cite:
 ```bibtex
 @software{vrdev2026,
   title={vr.dev: Verifiable Rewards for Real-World AI Agent Tasks},
-  url={https://github.com/vrDotDev/vrdev},
+  url={https://github.com/vrDotDev/vr-dev},
   year={2026}
 }
 ```

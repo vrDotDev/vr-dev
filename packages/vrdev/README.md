@@ -312,7 +312,7 @@ uvicorn vr_api.app:app --reload
 ## Development
 
 ```bash
-git clone https://github.com/vrDotDev/vrdev.git
+git clone https://github.com/vrDotDev/vr-dev.git
 cd vr-dev/packages/vrdev
 pip install -e ".[dev]"
 pytest                  # run all tests

@@ -6,7 +6,7 @@ Thank you for your interest in contributing to **vr.dev** - Verifiable Rewards f
 
 ```bash
 # Clone and set up
-git clone https://github.com/vrDotDev/vrdev.git
+git clone https://github.com/vrDotDev/vr-dev.git
 cd vr-dev/packages/vrdev
 
 # Create a virtual environment
@@ -140,8 +140,8 @@ Each registry domain (e.g., `database.*`, `aiv.*`) has one or more listed mainta
 | **api.openai** | Completion matches expected schema | SOFT |
 | **browser** | Page renders expected element | AGENTIC |
 
-To request a verifier without building it yourself, use our [verifier request template](https://github.com/vrDotDev/vrdev/issues/new?template=verifier_request.md).
+To request a verifier without building it yourself, use our [verifier request template](https://github.com/vrDotDev/vr-dev/issues/new?template=verifier_request.md).
 
 ## Questions?
 
-Open a [Discussion](https://github.com/vrDotDev/vrdev/discussions) or file an issue.
+Open a [Discussion](https://github.com/vrDotDev/vr-dev/discussions) or file an issue.

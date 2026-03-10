@@ -119,7 +119,7 @@ class VrConfig(BaseModel):
         """Serialize config to TOML format (for ``vr config init``)."""
         lines = [
             "# vr.dev configuration",
-            "# See: https://github.com/vrDotDev/vrdev",
+            "# See: https://github.com/vrDotDev/vr-dev",
             "",
             "[openai]",
             f'api_key = "{self.openai.api_key}"',
