@@ -60,7 +60,7 @@ def api_request(
     """Make an API request and return (status_code, parsed_json)."""
     url = f"{base_url.rstrip('/')}{path}"
     headers = {
-        "Authorization": f"Bearer {api_key}",
+        "X-API-Key": api_key,
         "Content-Type": "application/json",
     }
     data = json.dumps(body).encode() if body else None
