@@ -1,1 +1,1 @@
-"""Framework adapters: trl, verl, OpenClaw."""
+"""Framework adapters: trl, verl, OpenClaw, GEM, LangChain, LangGraph."""

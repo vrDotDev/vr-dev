@@ -44,7 +44,8 @@ llm = ["openai>=1.0"]
 mcp = ["mcp>=1.26"]
 browser = ["playwright>=1.40"]
 vision = ["Pillow>=10.0"]
-all = ["openai>=1.0", "mcp>=1.26", "playwright>=1.40", "Pillow>=10.0"]
+langchain = ["langchain-core>=0.2"]
+all = ["openai>=1.0", "mcp>=1.26", "playwright>=1.40", "Pillow>=10.0", "langchain-core>=0.2"]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
